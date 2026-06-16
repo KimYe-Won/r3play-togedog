@@ -26,14 +26,17 @@ class MainOnboarding10Screen extends StatelessWidget {
   static const double designWidth = 402;
   static const double designHeight = 875;
   static const double modalWidth = 355;
+  static const double modalHeight = 217;
   static const double modalTop = 591;
   static const double modalRadius = 30;
   static const double modalPaddingHorizontal = 36;
   static const double modalPaddingVertical = 19;
-  static const double sectionGap = 24;
-  static const double iconTitleGap = 10;
+  static const double iconToContentGap = 10;
+  static const double messageToButtonsGap = 29;
   static const double iconWidth = 23;
   static const double iconHeight = 22;
+  static const double permissionButtonsWidth = 129;
+  static const double permissionButtonsHeight = 70;
   static const double permissionButtonGap = 24;
   static const double permissionButtonFontSize = 18;
 
@@ -67,6 +70,7 @@ class MainOnboarding10Screen extends StatelessWidget {
         padding: EdgeInsets.only(top: modalTopOffset),
         child: Container(
           width: modalWidth * scale,
+          constraints: BoxConstraints(minHeight: modalHeight * scale),
           padding: EdgeInsets.fromLTRB(
             modalPaddingHorizontal * scale,
             modalPaddingVertical * scale,
@@ -81,8 +85,18 @@ class MainOnboarding10Screen extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              _CameraPermissionHeader(scale: scale),
-              SizedBox(height: sectionGap * scale),
+              SizedBox(
+                width: iconWidth * scale,
+                height: iconHeight * scale,
+                child: SvgPicture.asset(
+                  'asset/onboarding_camera_icon.svg',
+                  fit: BoxFit.contain,
+                  alignment: Alignment.center,
+                ),
+              ),
+              SizedBox(height: iconToContentGap * scale),
+              _CameraPermissionMessage(scale: scale),
+              SizedBox(height: messageToButtonsGap * scale),
               _CameraPermissionButtons(
                 scale: scale,
                 onAllow: () => _onPermissionSelected(context),
@@ -125,57 +139,42 @@ class MainOnboarding10Screen extends StatelessWidget {
   }
 }
 
-class _CameraPermissionHeader extends StatelessWidget {
-  const _CameraPermissionHeader({required this.scale});
+class _CameraPermissionMessage extends StatelessWidget {
+  const _CameraPermissionMessage({required this.scale});
 
   final double scale;
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        SizedBox(
-          width: MainOnboarding10Screen.iconWidth * scale,
-          height: MainOnboarding10Screen.iconHeight * scale,
-          child: SvgPicture.asset(
-            'asset/onboarding_camera_icon.svg',
-            fit: BoxFit.contain,
-            alignment: Alignment.center,
-          ),
+    return Text.rich(
+      TextSpan(
+        style: TextStyle(
+          fontFamily: 'LGSmartUI',
+          fontSize: 14 * scale,
+          height: 1.15,
+          color: MainOnboarding10Screen.textBlack,
+          letterSpacing: 0.028 * scale,
         ),
-        SizedBox(height: MainOnboarding10Screen.iconTitleGap * scale),
-        Text.rich(
+        children: const [
           TextSpan(
-            style: TextStyle(
-              fontFamily: 'LGSmartUI',
-              fontSize: 14 * scale,
-              height: 1.15,
-              color: MainOnboarding10Screen.textBlack,
-              letterSpacing: 0.028 * scale,
-            ),
-            children: const [
-              TextSpan(
-                text: 'LG TogeDog',
-                style: TextStyle(fontWeight: FontWeight.w700),
-              ),
-              TextSpan(
-                text: '에서 카메라를 사용하여\n',
-                style: TextStyle(fontWeight: FontWeight.w400),
-              ),
-              TextSpan(
-                text: '반려견의 주변 환경을 확인하고\n',
-                style: TextStyle(fontWeight: FontWeight.w400),
-              ),
-              TextSpan(
-                text: '위험 상황을 감지하도록 허용하시겠습니까?',
-                style: TextStyle(fontWeight: FontWeight.w400),
-              ),
-            ],
+            text: 'LG TogeDog',
+            style: TextStyle(fontWeight: FontWeight.w700),
           ),
-          textAlign: TextAlign.center,
-        ),
-      ],
+          TextSpan(
+            text: '에서 카메라를 사용하여\n',
+            style: TextStyle(fontWeight: FontWeight.w400),
+          ),
+          TextSpan(
+            text: '반려견의 주변 환경을 확인하고\n',
+            style: TextStyle(fontWeight: FontWeight.w400),
+          ),
+          TextSpan(
+            text: '위험 상황을 감지하도록 허용하시겠습니까?',
+            style: TextStyle(fontWeight: FontWeight.w400),
+          ),
+        ],
+      ),
+      textAlign: TextAlign.center,
     );
   }
 }
@@ -263,7 +262,7 @@ class _CameraPermissionButtonState extends State<_CameraPermissionButton> {
               fontFamily: 'LGSmartUI',
               fontWeight: FontWeight.w700,
               fontSize: MainOnboarding10Screen.permissionButtonFontSize * scale,
-              height: 1.25,
+              height: 1.2,
               color: MainOnboarding10Screen.textBlack,
               letterSpacing: 0.036 * scale,
             ),

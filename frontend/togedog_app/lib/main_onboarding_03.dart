@@ -3,7 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gif/gif.dart';
+
+import 'home_01.dart';
 import 'main_onboarding_04.dart';
+import 'pet_profile_store.dart';
 
 /// Figma: TogeDog 전환 모달 (node 557:9467)
 class MainOnboarding03Screen extends StatefulWidget {
@@ -178,6 +181,19 @@ class _LoadingBar extends StatelessWidget {
       ),
     );
   }
+}
+
+/// 온보딩 완료 후 앱 전환에서 TogeDog 선택 시 홈으로, 최초는 03→04~14 온보딩
+Future<void> openTogedogApp(BuildContext context) async {
+  if (PetProfileStore.instance.onboardingCompleted) {
+    if (!context.mounted) return;
+    Navigator.of(context).pushAndRemoveUntil(
+      MaterialPageRoute<void>(builder: (_) => const Home01Screen()),
+      (_) => false,
+    );
+    return;
+  }
+  await openOnboarding03(context);
 }
 
 Future<void> openOnboarding03(BuildContext context) async {

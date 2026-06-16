@@ -42,6 +42,7 @@ dependencies:
   vibration: ^2.0.0
   flutter_svg: ^2.0.10+1
   gif: ^2.3.0
+  camera: ^0.11.0+2
 
 dev_dependencies:
   flutter_test:

@@ -43,7 +43,7 @@ class _MainOnboarding01ScreenState extends State<MainOnboarding01Screen> {
     setState(() => _selectedApp = result);
 
     if (result == OnboardingApp.togedog) {
-      await openOnboarding03(context);
+      await openTogedogApp(context);
     }
   }
 

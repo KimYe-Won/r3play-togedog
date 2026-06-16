@@ -25,25 +25,27 @@ class MainOnboardingModalFlowScreen extends StatefulWidget {
 class _MainOnboardingModalFlowScreenState
     extends State<MainOnboardingModalFlowScreen> {
   _OnboardingModalStep _step = _OnboardingModalStep.terms;
+  bool _isAdvancing = false;
 
-  void _goToLocation() {
-    setState(() => _step = _OnboardingModalStep.location);
+  Future<void> _advanceTo(_OnboardingModalStep next) async {
+    if (_isAdvancing) return;
+    _isAdvancing = true;
+    await Future<void>.delayed(onboardingModalSwitchDelay);
+    if (!mounted) return;
+    setState(() => _step = next);
+    _isAdvancing = false;
   }
 
-  void _goToNotification() {
-    setState(() => _step = _OnboardingModalStep.notification);
-  }
+  void _goToLocation() => _advanceTo(_OnboardingModalStep.location);
 
-  void _goToNearby() {
-    setState(() => _step = _OnboardingModalStep.nearby);
-  }
+  void _goToNotification() => _advanceTo(_OnboardingModalStep.notification);
 
-  void _goToCamera() {
-    setState(() => _step = _OnboardingModalStep.camera);
-  }
+  void _goToNearby() => _advanceTo(_OnboardingModalStep.nearby);
+
+  void _goToCamera() => _advanceTo(_OnboardingModalStep.camera);
 
   void _goToNextScreen() {
-    Navigator.of(context).pushReplacement(
+    Navigator.of(context).push(
       OnboardingFadeRoute<void>(
         builder: (_) => const MainOnboarding11Screen(),
       ),
@@ -64,9 +66,10 @@ class _MainOnboardingModalFlowScreenState
           ),
           const ColoredBox(color: Color(0x73000000)),
           AnimatedSwitcher(
-            duration: onboardingTransitionDuration,
-            switchInCurve: onboardingTransitionCurve,
-            switchOutCurve: onboardingTransitionCurve,
+            duration: onboardingModalSwitchDuration,
+            reverseDuration: onboardingModalSwitchReverseDuration,
+            switchInCurve: onboardingModalSwitchInCurve,
+            switchOutCurve: onboardingModalSwitchOutCurve,
             layoutBuilder: (currentChild, previousChildren) {
               return Stack(
                 fit: StackFit.expand,

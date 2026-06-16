@@ -1,0 +1,10 @@
+<svg preserveAspectRatio="none" width="100%" height="100%" overflow="visible" style="display: block;" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Group 799">
+<circle id="Ellipse 60" cx="18" cy="18" r="18" fill="var(--fill-0, #FEF1EB)"/>
+<g id="Group 798">
+<g id="Vector">
+</g>
+<path id="Vector_2" d="M10 13H26C26.2652 13 26.5196 13.1054 26.7071 13.2929C26.8946 13.4804 27 13.7348 27 14V14.5C27 16 24.483 20.073 23 21V22C23 22.2652 22.8946 22.5196 22.7071 22.7071C22.5196 22.8946 22.2652 23 22 23H14C13.7348 23 13.4804 22.8946 13.2929 22.7071C13.1054 22.5196 13 22.2652 13 22V21C11.313 19.946 9 16 9 14.5V14C9 13.7348 9.10536 13.4804 9.29289 13.2929C9.48043 13.1054 9.73478 13 10 13Z" fill="var(--fill-0, #FF7B00)" stroke="var(--stroke-0, #FF7B00)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+</g>
+</svg>

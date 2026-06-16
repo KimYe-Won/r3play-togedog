@@ -9,9 +9,11 @@ class MainOnboarding02Screen extends StatefulWidget {
   const MainOnboarding02Screen({
     super.key,
     required this.initialApp,
+    this.title = '김엘지 홈',
   });
 
   final OnboardingApp initialApp;
+  final String title;
 
   static const double designWidth = 402;
   static const Duration togedogSelectionHoldDuration =
@@ -87,6 +89,7 @@ class _MainOnboarding02ScreenState extends State<MainOnboarding02Screen> {
               top: 42 * scale,
               child: HomeTitleButton(
                 scale: scale,
+                title: widget.title,
                 isExpanded: true,
                 onPressed: _close,
               ),
@@ -471,11 +474,13 @@ class HomeTitleButton extends StatefulWidget {
     super.key,
     required this.scale,
     required this.onPressed,
+    this.title = '김엘지 홈',
     this.isExpanded = false,
   });
 
   final double scale;
   final VoidCallback onPressed;
+  final String title;
   final bool isExpanded;
 
   @override
@@ -526,7 +531,7 @@ class _HomeTitleButtonState extends State<HomeTitleButton> {
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                '김엘지 홈',
+                widget.title,
                 style: TextStyle(
                   fontFamily: 'LGSmartUI',
                   fontWeight: FontWeight.w700,
@@ -623,6 +628,7 @@ class _ChevronDownPainter extends CustomPainter {
 Future<OnboardingApp?> openOnboarding02(
   BuildContext context, {
   required OnboardingApp selectedApp,
+  String title = '김엘지 홈',
 }) {
   return showGeneralDialog<OnboardingApp>(
     context: context,
@@ -631,7 +637,10 @@ Future<OnboardingApp?> openOnboarding02(
     barrierColor: Colors.transparent,
     transitionDuration: const Duration(milliseconds: 200),
     pageBuilder: (context, animation, secondaryAnimation) {
-      return MainOnboarding02Screen(initialApp: selectedApp);
+      return MainOnboarding02Screen(
+        initialApp: selectedApp,
+        title: title,
+      );
     },
     transitionBuilder: (context, animation, secondaryAnimation, child) {
       return FadeTransition(

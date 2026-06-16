@@ -26,6 +26,7 @@ class MainOnboarding09Screen extends StatelessWidget {
   static const double designWidth = 402;
   static const double designHeight = 875;
   static const double modalWidth = 355;
+  static const double modalHeight = 217;
   static const double modalTop = 591;
   static const double modalRadius = 30;
   static const double modalPaddingHorizontal = 36;
@@ -33,6 +34,8 @@ class MainOnboarding09Screen extends StatelessWidget {
   static const double sectionGap = 24;
   static const double iconTitleGap = 10;
   static const double iconSize = 27;
+  static const double permissionButtonsWidth = 129;
+  static const double permissionButtonsHeight = 70;
   static const double permissionButtonGap = 24;
   static const double permissionButtonFontSize = 18;
 
@@ -65,6 +68,7 @@ class MainOnboarding09Screen extends StatelessWidget {
         padding: EdgeInsets.only(top: modalTopOffset),
         child: Container(
           width: modalWidth * scale,
+          constraints: BoxConstraints(minHeight: modalHeight * scale),
           padding: EdgeInsets.fromLTRB(
             modalPaddingHorizontal * scale,
             modalPaddingVertical * scale,
@@ -263,7 +267,7 @@ class _NearbyDevicePermissionButtonState
               fontWeight: FontWeight.w700,
               fontSize:
                   MainOnboarding09Screen.permissionButtonFontSize * scale,
-              height: 1.25,
+              height: 1.2,
               color: MainOnboarding09Screen.textBlack,
               letterSpacing: 0.036 * scale,
             ),
