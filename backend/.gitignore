@@ -1,0 +1,12 @@
+# Firebase service account (비밀 키 — Git에 올리지 않음)
+*-firebase-adminsdk-*.json
+firebase-service-account.json
+
+# 환경 변수
+.env
+
+# Python
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
