@@ -377,12 +377,12 @@ class TtsService {
 
 | 클래스 | 위험도 | 쿨다운 | 예시 발화 |
 |---|---|---|---|
-| car, bicycle, scooter, motorcycle | HIGH | 4초 | "왼쪽에 차량이 접근하고 있습니다" |
-| person | HIGH | 4초 | "전방에 사람이 있습니다" (근접 시만) |
-| stairs | HIGH | 4초 | "오른쪽에 계단이 감지되었습니다" |
-| dog, chair, table | MEDIUM | 5초 | "전방에 다른 강아지가 접근하고 있습니다" |
-| pole_obstacle | LOW | 5초 | "오른쪽에 장애물이 있습니다" |
-| crosswalk, traffic_light | LOW | 5초 | "전방에 횡단보도입니다" |
+| car, bicycle, scooter, motorcycle | 위험 | 4초 | "왼쪽에 차량이 접근하고 있습니다" |
+| person | 위험 | 4초 | "전방에 사람이 있습니다" (근접 시만) |
+| stairs | 위험 | 4초 | "오른쪽에 계단이 감지되었습니다" |
+| dog, chair, table | 경고 | 5초 | "전방에 다른 강아지가 접근하고 있습니다" |
+| pole_obstacle | 조심 | 5초 | "오른쪽에 장애물이 있습니다" |
+| crosswalk, traffic_light | 조심 | 5초 | "전방에 횡단보도입니다" |
 
 방향(왼쪽/전방/오른쪽)은 bbox 중심 x 좌표로 자동 결정됨.
 
@@ -411,12 +411,12 @@ audioService.alertStream    // Stream<AudioAlert> — 감지 결과
 
 | 소리 | 위험도 | 진동 | 배너 색상 |
 |---|---|---|---|
-| 차량 경적, 사이렌 | HIGH | 200ms | 빨강 #E53935 |
-| 오토바이 소리 | HIGH | 200ms | 빨강 #E53935 |
-| 개 짖는 소리 | MEDIUM | 150ms | 주황 #F57C00 |
-| 자전거 벨 | LOW | 100ms | 파랑 #1976D2 |
+| 차량 경적, 사이렌 | 위험 | 200ms | 빨강 #E53935 |
+| 오토바이 소리 | 위험 | 200ms | 빨강 #E53935 |
+| 개 짖는 소리 | 경고 | 150ms | 주황 #F57C00 |
+| 자전거 벨 | 조심 | 100ms | 파랑 #1976D2 |
 
-쿨다운: HIGH 4초, MEDIUM/LOW 6초
+쿨다운: 위험 4초, 경고/조심 6초
 
 ### 화면 오버레이 연결
 

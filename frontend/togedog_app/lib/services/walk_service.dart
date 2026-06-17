@@ -30,6 +30,7 @@ class WalkService {
       onUpdate: _onAnalyzerUpdate,
       getRemoteTrack: () => _connector.remoteVideoTrack,
       customModelPath: modelPath,
+      interval: const Duration(milliseconds: 100),
     );
     await _connector.initRenderers();
     _initialized = true;

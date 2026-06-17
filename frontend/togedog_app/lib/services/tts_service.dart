@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:ultralytics_yolo/ultralytics_yolo.dart';
+import 'package:vibration/vibration.dart';
 
 class _DangerInfo {
   const _DangerInfo(
@@ -22,7 +23,7 @@ class TtsService {
   final FlutterTts _tts = FlutterTts();
 
   // best_v3_float16.tflite 12클래스 — 위험 순위 + 한국어 알림 문구
-  // priority 1=HIGH(4초쿨다운), 2=MEDIUM/3=LOW(5초쿨다운)
+  // priority 1=위험(4초쿨다운), 2=경고/3=조심(5초쿨다운)
   static const Map<String, _DangerInfo> _dangerMap = {
     'person':           _DangerInfo(1, '사람이 있습니다', minBboxArea: 0.12, minFrames: 10),
     'stairs':           _DangerInfo(1, '계단이 감지되었습니다', minFrames: 5),
@@ -90,14 +91,19 @@ class TtsService {
       }
     }
 
-    // 3. minFrames 통과한 라벨들 중에서만 우선순위 경쟁
+    // 3. minFrames + 쿨다운 통과한 라벨들 중에서만 우선순위 경쟁
     _DangerInfo? topDanger;
     String? topLabel;
     double topCenterX = 0.5;
+    final now = DateTime.now();
 
     for (final label in detectedLabels) {
       final info = _dangerMap[label]!;
       if ((_frameCount[label] ?? 0) < info.minFrames) continue;
+
+      final cd = info.priority == 1 ? _highCooldown : _cooldown;
+      final last = _lastSpokeMap[label];
+      if (last != null && now.difference(last) < cd) continue;
 
       if (topDanger == null || info.priority < topDanger.priority) {
         topDanger = info;
@@ -108,14 +114,10 @@ class TtsService {
 
     if (topDanger == null || topLabel == null) return;
 
-    // 4. 쿨다운 + 발화 로직 (기존과 동일)
-    final now = DateTime.now();
-    final cooldown = topDanger.priority == 1 ? _highCooldown : _cooldown;
-    final last = _lastSpokeMap[topLabel];
-    if (last != null && now.difference(last) < cooldown) return;
-
+    // 4. 발화 (쿨다운 이미 경쟁 단계에서 검증)
     _lastSpokeMap[topLabel] = now;
     _tts.speak(_buildMessage(topDanger, topCenterX));
+    _vibrate(topDanger.priority);
   }
 
   // bbox 중심 x 좌표로 방향 prefix를 붙여 최종 메시지 생성
@@ -131,6 +133,15 @@ class TtsService {
       direction = '전방에';
     }
     return '$direction ${info.message}';
+  }
+
+  Future<void> _vibrate(int priority) async {
+    if ((await Vibration.hasVibrator()) != true) return;
+    switch (priority) {
+      case 1: Vibration.vibrate(duration: 300); break; // 위험
+      case 2: Vibration.vibrate(duration: 150); break; // 경고
+      case 3: Vibration.vibrate(duration: 80);  break; // 조심
+    }
   }
 
   Future<void> stop() async {

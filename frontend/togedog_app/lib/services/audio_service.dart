@@ -11,7 +11,7 @@ class AudioAlert {
     required this.label,
     required this.confidence,
   });
-  final int priority;      // 1=HIGH, 2=MEDIUM, 3=LOW
+  final int priority;      // 1=위험, 2=경고, 3=조심
   final String label;      // 한국어 이름
   final double confidence;
 }
@@ -31,7 +31,7 @@ class AudioService {
 
   // YAMNet 521개 클래스 중 관심 클래스 → 위험도 매핑
   static const Map<String, _SoundInfo> _soundMap = {
-    // HIGH
+    // 위험
     'Car':                      _SoundInfo(1, '차량 소리', 200),
     'Vehicle horn, car horn, honking': _SoundInfo(1, '차량 경적', 200),
     'Beeping, horn honking':    _SoundInfo(1, '차량 경적', 200),
@@ -39,11 +39,11 @@ class AudioService {
     'Emergency vehicle':        _SoundInfo(1, '긴급차량', 200),
     'Motorcycle':               _SoundInfo(1, '오토바이 소리', 200),
     'Engine':                   _SoundInfo(1, '오토바이 소리', 200),
-    // MEDIUM
+    // 경고
     'Dog':                      _SoundInfo(2, '개 짖는 소리', 150),
     'Bark':                     _SoundInfo(2, '개 짖는 소리', 150),
     'Yip':                      _SoundInfo(2, '개 짖는 소리', 150),
-    // LOW
+    // 조심
     'Bicycle bell':             _SoundInfo(3, '자전거 벨', 100),
     'Bell':                     _SoundInfo(3, '벨 소리', 100),
   };
