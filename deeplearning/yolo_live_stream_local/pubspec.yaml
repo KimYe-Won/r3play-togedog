@@ -1,0 +1,33 @@
+name: yolo_live_stream
+description: "같은 Wi-Fi의 두 기기를 WebRTC로 직접 연결해 영상을 실시간 송수신하고, 수신 영상에 YOLO 객체 탐지 오버레이를 얹는 Flutter 플러그인입니다."
+version: 0.2.0
+
+homepage: https://yourstar.space
+repository: https://github.com/Kiboom/Yolo-Live-Stream
+
+environment:
+  sdk: ^3.12.0
+  flutter: ">=3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  flutter_webrtc: ^0.12.11
+  ultralytics_yolo: ^0.6.1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+
+flutter:
+  plugin:
+    platforms:
+      android:
+        package: space.yourstar.yololivestream
+        pluginClass: YoloLiveStreamPlugin
+      ios:
+        pluginClass: YoloLiveStreamPlugin
+
+  uses-material-design: true
