@@ -32,7 +32,7 @@ dependencies:
     sdk: flutter
 
   cupertino_icons: ^1.0.6
-  yolo_live_stream: ^0.2.0
+  yolo_live_stream: ^0.3.0
   permission_handler: ^11.3.1
   flutter_tts: ^4.2.0
   flutter_webrtc: ^0.12.12
@@ -40,6 +40,10 @@ dependencies:
   tflite_flutter: ^0.10.4
   record: ^5.1.2
   vibration: ^2.0.0
+  flutter_svg: ^2.0.10+1
+  gif: ^2.3.0
+  camera: ^0.11.0+2
+  shared_preferences: ^2.2.3
 
 dev_dependencies:
   flutter_test:
@@ -58,13 +62,28 @@ dev_dependencies:
 # The following section is specific to Flutter packages.
 flutter:
 
-  # The following line ensures that the Material Icons font is
-  # included with your application, so that you can use the icons in
-  # the material Icons class.
   uses-material-design: true
 
   assets:
-    - asset/
+    - asset/deep_learning/
+    - asset/home/
+    - asset/mypage/
+    - asset/onboarding/
+    - asset/report/
+    - asset/splash/
+    - asset/walk/
+
+  fonts:
+    - family: LGSmartUI
+      fonts:
+        - asset: fonts/LG Smart UI Light.ttf
+          weight: 300
+        - asset: fonts/LG Smart UI Regular.ttf
+          weight: 400
+        - asset: fonts/LG Smart UI SemiBold.ttf
+          weight: 600
+        - asset: fonts/LG Smart UI Bold.ttf
+          weight: 700
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
