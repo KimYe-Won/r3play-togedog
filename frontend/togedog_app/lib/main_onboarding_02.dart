@@ -177,7 +177,7 @@ class OnboardingAppSwitchModal extends StatelessWidget {
                 child: _AppOptionCard(
                   scale: scale,
                   title: 'LG ThinQ',
-                  imageAsset: 'asset/온보딩 띵큐2_앱전환 띵큐.png',
+                  imageAsset: 'asset/onboarding/onboarding_thinq_app_switch_thinq.png',
                   backgroundColor: _thinqBackground,
                   accentColor: _thinqAccent,
                   imageTopPadding: 26 * scale,
@@ -191,7 +191,7 @@ class OnboardingAppSwitchModal extends StatelessWidget {
                 child: _AppOptionCard(
                   scale: scale,
                   title: 'LG TogeDog',
-                  imageAsset: 'asset/온보딩 띵큐2_앱전환 투게독.png',
+                  imageAsset: 'asset/onboarding/onboarding_thinq_app_switch_togedog.png',
                   backgroundColor: _togedogBackground,
                   accentColor: _togedogAccent,
                   subtitle: '반려견 케어 전문 서비스',

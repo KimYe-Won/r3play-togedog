@@ -34,7 +34,7 @@ class MainOnboarding05Screen extends StatefulWidget {
   static const double titleSubtitleGap = 6;
   static const double buttonHeight = 47;
   static const double buttonRadius = 9;
-  static const double bottomInset = 28;
+  static const double bottomInset = 63;
 
   static const Color brandPurple = Color(0xFF8756E7);
   static const Color selectedBackground = Color(0xFFF0EAFF);
@@ -360,14 +360,14 @@ class _GuidanceIcon extends StatelessWidget {
       alignment: Alignment.center,
       child: switch (type) {
         _GuidanceIconType.sound => SvgPicture.asset(
-            'asset/onboarding_guidance_sound_icon.svg',
+            'asset/onboarding/onboarding_guidance_sound_icon.svg',
             width: size * 0.88,
             height: size * 0.88,
             fit: BoxFit.contain,
             clipBehavior: Clip.none,
           ),
         _GuidanceIconType.vibration => SvgPicture.asset(
-            'asset/onboarding_guidance_vibration_icon.svg',
+            'asset/onboarding/onboarding_guidance_vibration_icon.svg',
             width: size * 0.88,
             height: size * 0.88,
             fit: BoxFit.contain,

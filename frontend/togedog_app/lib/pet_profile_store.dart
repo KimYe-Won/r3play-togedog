@@ -1,8 +1,12 @@
+import 'package:shared_preferences/shared_preferences.dart';
+
 /// 온보딩 11화면에서 입력한 보호자·반려견 프로필 (앱 전역 공유)
 class PetProfileStore {
   PetProfileStore._();
 
   static final PetProfileStore instance = PetProfileStore._();
+
+  static const String _onboardingCompletedKey = 'onboarding_completed';
 
   static const String defaultGuardianName = '보호자';
   static const String defaultPetName = '반려견';
@@ -14,11 +18,19 @@ class PetProfileStore {
   String breed = '';
   String age = '';
 
-  /// 온보딩 04~14 완료 여부 (앱 전환 시 재진입 방지)
+  /// 온보딩 04~14를 완료했거나, 나중에/취소로 홈에 도착한 경우 true
   bool onboardingCompleted = false;
+
+  Future<void> load() async {
+    final prefs = await SharedPreferences.getInstance();
+    onboardingCompleted = prefs.getBool(_onboardingCompletedKey) ?? false;
+  }
 
   void markOnboardingCompleted() {
     onboardingCompleted = true;
+    SharedPreferences.getInstance().then(
+      (prefs) => prefs.setBool(_onboardingCompletedKey, true),
+    );
   }
 
   void update({

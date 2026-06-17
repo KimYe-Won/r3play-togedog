@@ -90,10 +90,10 @@ class Noti01Screen extends StatelessWidget {
               child: ListView.separated(
                 padding: EdgeInsets.symmetric(horizontal: 26 * scale),
                 itemCount: _items.length,
-                separatorBuilder: (_, __) => Divider(
+                separatorBuilder: (_, __) => const Divider(
                   height: 1,
                   thickness: 1,
-                  color: const Color(0xFFE8E8EC),
+                  color: Color(0xFFE8E8EC),
                 ),
                 itemBuilder: (context, index) {
                   final item = _items[index];

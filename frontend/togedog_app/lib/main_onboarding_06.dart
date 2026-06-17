@@ -101,75 +101,68 @@ class _MainOnboarding06ScreenState extends State<MainOnboarding06Screen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      '약관 및',
-                      style: TextStyle(
-                        fontFamily: 'LGSmartUI',
-                        fontWeight: FontWeight.w700,
-                        fontSize: 16 * scale,
-                        height: 1.2,
-                        color: Colors.black,
-                      ),
-                    ),
-                    SizedBox(
-                      height: MainOnboarding06Screen.sectionGap * scale,
-                    ),
-                    Text(
-                      '약관 및 정책이 변경되어 재동의가 필요합니다.',
-                      style: TextStyle(
-                        fontFamily: 'LGSmartUI',
-                        fontWeight: FontWeight.w400,
-                        fontSize: 14 * scale,
-                        height: 1.4,
-                        color: Colors.black,
-                        letterSpacing: 0.028 * scale,
-                      ),
-                    ),
-                    SizedBox(
-                      height: MainOnboarding06Screen.sectionGap * scale,
-                    ),
-                    _AgreementRow(
-                      scale: scale,
-                      isChecked: _allAgreed,
-                      onToggle: () => _setAllAgreed(!_allAgreed),
-                      checkboxShape: _AgreementCheckboxShape.circle,
-                      label: '모두 동의',
-                      labelWeight: FontWeight.w600,
-                      labelSize: 16,
-                      showChevron: false,
-                    ),
-                    SizedBox(
-                      height: MainOnboarding06Screen.sectionGap * scale,
-                    ),
-                    _AgreementRow(
-                      scale: scale,
-                      isChecked: _termsOfService,
-                      onToggle: () => _setTermsOfService(!_termsOfService),
-                      checkboxShape: _AgreementCheckboxShape.square,
-                      label: '(필수) LG전자 서비스 이용약관',
-                      labelWeight: FontWeight.w400,
-                      labelSize: 14,
-                      showChevron: true,
-                    ),
-                    SizedBox(
-                      height: MainOnboarding06Screen.sectionGap * scale,
-                    ),
-                    _AgreementRow(
-                      scale: scale,
-                      isChecked: _privacyPolicy,
-                      onToggle: () => _setPrivacyPolicy(!_privacyPolicy),
-                      checkboxShape: _AgreementCheckboxShape.square,
-                      label: '(필수) LG전자 서비스 개인정보 수집•이용 동의',
-                      labelWeight: FontWeight.w400,
-                      labelSize: 14,
-                      showChevron: true,
-                    ),
-                  ],
+              Text(
+                '약관 및',
+                style: TextStyle(
+                  fontFamily: 'LGSmartUI',
+                  fontWeight: FontWeight.w700,
+                  fontSize: 16 * scale,
+                  height: 1.2,
+                  color: Colors.black,
                 ),
+              ),
+              SizedBox(
+                height: MainOnboarding06Screen.sectionGap * scale,
+              ),
+              Text(
+                '약관 및 정책이 변경되어 재동의가 필요합니다.',
+                style: TextStyle(
+                  fontFamily: 'LGSmartUI',
+                  fontWeight: FontWeight.w400,
+                  fontSize: 14 * scale,
+                  height: 1.4,
+                  color: Colors.black,
+                  letterSpacing: 0.028 * scale,
+                ),
+              ),
+              SizedBox(
+                height: MainOnboarding06Screen.sectionGap * scale,
+              ),
+              _AgreementRow(
+                scale: scale,
+                isChecked: _allAgreed,
+                onToggle: () => _setAllAgreed(!_allAgreed),
+                checkboxShape: _AgreementCheckboxShape.circle,
+                label: '모두 동의',
+                labelWeight: FontWeight.w600,
+                labelSize: 16,
+                showChevron: false,
+              ),
+              SizedBox(
+                height: MainOnboarding06Screen.sectionGap * scale,
+              ),
+              _AgreementRow(
+                scale: scale,
+                isChecked: _termsOfService,
+                onToggle: () => _setTermsOfService(!_termsOfService),
+                checkboxShape: _AgreementCheckboxShape.square,
+                label: '(필수) LG전자 서비스 이용약관',
+                labelWeight: FontWeight.w400,
+                labelSize: 14,
+                showChevron: true,
+              ),
+              SizedBox(
+                height: MainOnboarding06Screen.sectionGap * scale,
+              ),
+              _AgreementRow(
+                scale: scale,
+                isChecked: _privacyPolicy,
+                onToggle: () => _setPrivacyPolicy(!_privacyPolicy),
+                checkboxShape: _AgreementCheckboxShape.square,
+                label: '(필수) LG전자 서비스 개인정보 수집•이용 동의',
+                labelWeight: FontWeight.w400,
+                labelSize: 14,
+                showChevron: true,
               ),
               SizedBox(
                 height: MainOnboarding06Screen.contentToButtonGap * scale,
@@ -302,7 +295,7 @@ class _ChevronIcon extends StatelessWidget {
     return SizedBox(
       width: 5 * scale,
       height: 9 * scale,
-      child: CustomPaint(
+      child: const CustomPaint(
         painter: _ChevronPainter(
           color: MainOnboarding06Screen.grayBorder,
         ),

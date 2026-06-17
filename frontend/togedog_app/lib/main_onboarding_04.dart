@@ -22,7 +22,7 @@ class MainOnboarding04Screen extends StatefulWidget {
 
   static const Color brandPurple = Color(0xFF8756E7);
   static const Color textBlack = Color(0xFF1A1A1A);
-  static const String wordmarkAsset = 'asset/onboarding_togedog_wordmark.svg';
+  static const String wordmarkAsset = 'asset/onboarding/onboarding_togedog_wordmark.svg';
 
   @override
   State<MainOnboarding04Screen> createState() => _MainOnboarding04ScreenState();

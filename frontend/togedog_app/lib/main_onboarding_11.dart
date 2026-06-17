@@ -42,12 +42,12 @@ class MainOnboarding11Screen extends StatefulWidget {
   static const double buttonGap = 12;
   static const double bottomPadding = 28;
 
-  static const String dogImageAsset = 'asset/콩이.png';
-  static const String backButtonAsset = 'asset/onboarding_profile_back.svg';
-  static const String pawsDecorationAsset = 'asset/onboarding_profile_paws.svg';
-  static const String cameraBgAsset = 'asset/onboarding_profile_camera_bg.svg';
-  static const String cameraIconAsset = 'asset/onboarding_profile_camera_icon.svg';
-  static const String chevronIconAsset = 'asset/onboarding_profile_chevron.svg';
+  static const String dogImageAsset = 'asset/onboarding/onboarding_profile_dog.png';
+  static const String backButtonAsset = 'asset/onboarding/onboarding_profile_back.svg';
+  static const String pawsDecorationAsset = 'asset/onboarding/onboarding_profile_paws.svg';
+  static const String cameraBgAsset = 'asset/onboarding/onboarding_profile_camera_bg.svg';
+  static const String cameraIconAsset = 'asset/onboarding/onboarding_profile_camera_icon.svg';
+  static const String chevronIconAsset = 'asset/onboarding/onboarding_profile_chevron.svg';
 
   static const Color brandPurple = Color(0xFF8756E7);
   static const Color gradientStart = Color(0xFFFBFBFF);

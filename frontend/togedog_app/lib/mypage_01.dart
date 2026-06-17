@@ -148,7 +148,7 @@ class _ProfileSection extends StatelessWidget {
                       ),
                       SizedBox(width: 9 * scale),
                       Image.asset(
-                        'asset/mypage_edit_name.png',
+                        'asset/mypage/mypage_edit_name.png',
                         width: 15 * scale,
                         height: 15 * scale,
                         errorBuilder: (_, __, ___) => Icon(
@@ -216,7 +216,7 @@ class _UserAvatar extends StatelessWidget {
         children: [
           ClipOval(
             child: Image.asset(
-              'asset/mypage_profile_user.png',
+              'asset/mypage/mypage_profile_user.png',
               width: 78 * scale,
               height: 78 * scale,
               fit: BoxFit.cover,
@@ -232,7 +232,7 @@ class _UserAvatar extends StatelessWidget {
             right: 0,
             bottom: 0,
             child: Image.asset(
-              'asset/mypage_edit_avatar.png',
+              'asset/mypage/mypage_edit_avatar.png',
               width: 28 * scale,
               height: 28 * scale,
               errorBuilder: (_, __, ___) => Container(
@@ -267,7 +267,7 @@ class _PetAvatar extends StatelessWidget {
         alignment: Alignment.topCenter,
         children: [
           Image.asset(
-            'asset/mypage_pet_ring.png',
+            'asset/mypage/mypage_pet_ring.png',
             width: 68 * scale,
             height: 68 * scale,
             errorBuilder: (_, __, ___) => const SizedBox.shrink(),

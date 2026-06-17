@@ -21,7 +21,7 @@ class _MainOnboarding01ScreenState extends State<MainOnboarding01Screen> {
   static const double imageNativeWidth = 325;
   static const double imageNativeHeight = 890;
 
-  static const String _backgroundImageAsset = 'asset/onboarding_thinq_home.png';
+  static const String _backgroundImageAsset = 'asset/onboarding/onboarding_thinq_home.png';
 
   OnboardingApp _selectedApp = OnboardingApp.thinq;
   bool _isAppSwitchOpen = false;

@@ -85,7 +85,7 @@ class _SplashScreenState extends State<SplashScreen>
             height:
                 logoSize * (SplashScreen.logoHeight / SplashScreen.logoWidth),
             child: Image.asset(
-              'asset/splash_logo.png',
+              'asset/splash/splash_logo.png',
               fit: BoxFit.contain,
             ),
           ),

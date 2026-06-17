@@ -15,7 +15,7 @@ class MainOnboarding03Screen extends StatefulWidget {
   static const double designWidth = 402;
   static const double gifWidth = 220;
   static const Duration loadingDuration = Duration(seconds: 3);
-  static const String gifAsset = 'asset/onboarding_togedog_modal.gif';
+  static const String gifAsset = 'asset/onboarding/onboarding_togedog_modal.gif';
 
   @override
   State<MainOnboarding03Screen> createState() => _MainOnboarding03ScreenState();
@@ -53,6 +53,16 @@ class _MainOnboarding03ScreenState extends State<MainOnboarding03Screen>
     );
     if (!mounted) return;
     Navigator.of(context).pop();
+    if (!mounted) return;
+
+    if (PetProfileStore.instance.onboardingCompleted) {
+      Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute<void>(builder: (_) => const Home01Screen()),
+        (_) => false,
+      );
+      return;
+    }
+
     Navigator.of(context).pushReplacement(
       PageRouteBuilder<void>(
         transitionDuration: Duration.zero,

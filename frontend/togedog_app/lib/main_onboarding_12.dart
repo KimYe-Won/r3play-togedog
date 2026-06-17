@@ -8,6 +8,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'home_01.dart';
 import 'main_onboarding_13.dart';
 import 'onboarding_transitions.dart';
+import 'pet_profile_store.dart';
 
 /// Figma: 디바이스 검색 (node 766:8339)
 class MainOnboarding12Screen extends StatefulWidget {
@@ -47,14 +48,14 @@ class MainOnboarding12Screen extends StatefulWidget {
   static const double buttonHeight = 47;
   static const double buttonRadius = 9;
 
-  static const String productImageAsset = 'asset/onboarding_device_product.png';
-  static const String backButtonAsset = 'asset/onboarding_profile_back.svg';
-  static const String cardIconAsset = 'asset/onboarding_device_search_card_icon.svg';
-  static const String pawDecor1Asset = 'asset/onboarding_device_search_paw_decor_1.svg';
-  static const String pawDecor2Asset = 'asset/onboarding_device_search_paw_decor_2.svg';
-  static const String pawDecor3Asset = 'asset/onboarding_device_search_paw_decor_3.svg';
-  static const String starAsset = 'asset/onboarding_device_search_star.svg';
-  static const String starSmallAsset = 'asset/onboarding_device_search_star_sm.svg';
+  static const String productImageAsset = 'asset/onboarding/onboarding_device_product.png';
+  static const String backButtonAsset = 'asset/onboarding/onboarding_profile_back.svg';
+  static const String cardIconAsset = 'asset/onboarding/onboarding_device_search_card_icon.svg';
+  static const String pawDecor1Asset = 'asset/onboarding/onboarding_device_search_paw_decor_1.svg';
+  static const String pawDecor2Asset = 'asset/onboarding/onboarding_device_search_paw_decor_2.svg';
+  static const String pawDecor3Asset = 'asset/onboarding/onboarding_device_search_paw_decor_3.svg';
+  static const String starAsset = 'asset/onboarding/onboarding_device_search_star.svg';
+  static const String starSmallAsset = 'asset/onboarding/onboarding_device_search_star_sm.svg';
 
   static const Color brandPurple = Color(0xFF8756E7);
   static const Color brandPurpleAlt = Color(0xFF8256E8);
@@ -146,6 +147,7 @@ class _MainOnboarding12ScreenState extends State<MainOnboarding12Screen>
     if (_navigatedAway || _isTransitioningToWearable || !mounted) return;
     _navigatedAway = true;
     _autoNavTimer?.cancel();
+    PetProfileStore.instance.markOnboardingCompleted();
     Navigator.of(context).pushAndRemoveUntil(
       OnboardingFadeRoute<void>(
         builder: (_) => const Home01Screen(),

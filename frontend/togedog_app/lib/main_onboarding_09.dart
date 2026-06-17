@@ -141,7 +141,7 @@ class _NearbyDeviceHeader extends StatelessWidget {
           width: MainOnboarding09Screen.iconSize * scale,
           height: MainOnboarding09Screen.iconSize * scale,
           child: SvgPicture.asset(
-            'asset/onboarding_nearby_device_icon.svg',
+            'asset/onboarding/onboarding_nearby_device_icon.svg',
             fit: BoxFit.contain,
             alignment: Alignment.center,
           ),

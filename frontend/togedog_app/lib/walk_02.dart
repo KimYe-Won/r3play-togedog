@@ -26,7 +26,7 @@ class Walk02Screen extends StatelessWidget {
             top: 0,
             height: 217 * scale,
             child: Image.asset(
-              'asset/walk_top_gradient.png',
+              'asset/walk/walk_top_gradient.png',
               fit: BoxFit.fill,
               errorBuilder: (_, __, ___) => DecoratedBox(
                 decoration: BoxDecoration(
@@ -34,8 +34,8 @@ class Walk02Screen extends StatelessWidget {
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
                     colors: [
-                      Colors.black.withOpacity(0.72),
-                      Colors.black.withOpacity(0.35),
+                      Colors.black.withValues(alpha: 0.72),
+                      Colors.black.withValues(alpha: 0.35),
                       Colors.transparent,
                     ],
                   ),
@@ -54,7 +54,7 @@ class Walk02Screen extends StatelessWidget {
                   begin: Alignment.bottomCenter,
                   end: Alignment.topCenter,
                   colors: [
-                    Colors.black.withOpacity(0.65),
+                    Colors.black.withValues(alpha: 0.65),
                     Colors.transparent,
                   ],
                 ),
@@ -157,19 +157,19 @@ class Walk02Screen extends StatelessWidget {
                     children: [
                       _WalkControlButton(
                         scale: scale,
-                        asset: 'asset/walk_btn_voice.png',
+                        asset: 'asset/walk/walk_btn_voice.png',
                         label: '음성 안내',
                         fallbackIcon: Icons.mic_none,
                       ),
                       _WalkControlButton(
                         scale: scale,
-                        asset: 'asset/walk_btn_flashlight.png',
+                        asset: 'asset/walk/walk_btn_flashlight.png',
                         label: '손전등',
                         fallbackIcon: Icons.flashlight_on_outlined,
                       ),
                       _WalkControlButton(
                         scale: scale,
-                        asset: 'asset/walk_btn_vibration.png',
+                        asset: 'asset/walk/walk_btn_vibration.png',
                         label: '진동 안내',
                         fallbackIcon: Icons.vibration,
                       ),

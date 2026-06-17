@@ -96,7 +96,7 @@ class _CameraPlaceholder extends StatelessWidget {
           Icon(
             Icons.videocam_outlined,
             size: 40,
-            color: Colors.white.withOpacity(0.45),
+            color: Colors.white.withValues(alpha: 0.45),
           ),
           if (kDebugMode) ...[
             const SizedBox(height: 8),
@@ -106,7 +106,7 @@ class _CameraPlaceholder extends StatelessWidget {
                 fontFamily: 'LGSmartUI',
                 fontWeight: FontWeight.w400,
                 fontSize: 12,
-                color: Colors.white.withOpacity(0.45),
+                color: Colors.white.withValues(alpha: 0.45),
               ),
             ),
           ],

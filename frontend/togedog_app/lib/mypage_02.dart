@@ -87,7 +87,7 @@ class _Mypage02ScreenState extends State<Mypage02Screen> {
                             children: [
                               _AvatarWithCamera(
                                 scale: scale,
-                                imageAsset: 'asset/mypage_profile_user.png',
+                                imageAsset: 'asset/mypage/mypage_profile_user.png',
                               ),
                               SizedBox(width: 16 * scale),
                               Expanded(
@@ -489,7 +489,7 @@ class _NameRow extends StatelessWidget {
         ),
         SizedBox(width: 9 * scale),
         Image.asset(
-          'asset/mypage_edit_name.png',
+          'asset/mypage/mypage_edit_name.png',
           width: 15 * scale,
           height: 15 * scale,
           errorBuilder: (_, __, ___) => Icon(

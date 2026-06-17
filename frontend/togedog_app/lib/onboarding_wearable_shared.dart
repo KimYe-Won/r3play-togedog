@@ -112,27 +112,26 @@ class WearableConnectionTheme {
   static double get productRenderHeightDesign =>
       productBaseHeight * productVisualScale;
 
-  static const String productImageAsset = 'asset/onboarding_device_product.png';
-  /// Web 빌드는 한글 경로 인코딩 이슈 → ASCII 복사본 사용 (원본: asset/제품.gif)
-  static const String productGifAsset = 'asset/onboarding_wearable_product.gif';
+  static const String productImageAsset = 'asset/onboarding/onboarding_device_product.png';
+  static const String productGifAsset = 'asset/onboarding/onboarding_wearable_product.gif';
   static const String productFrontAsset =
-      'asset/onboarding_device_product_front.png';
-  static const String backButtonAsset = 'asset/onboarding_profile_back.svg';
+      'asset/onboarding/onboarding_device_product_front.png';
+  static const String backButtonAsset = 'asset/onboarding/onboarding_profile_back.svg';
   static const String cardIconAsset =
-      'asset/onboarding_device_search_card_icon.svg';
+      'asset/onboarding/onboarding_device_search_card_icon.svg';
   static const String pawDecor1Asset =
-      'asset/onboarding_device_search_paw_decor_1.svg';
+      'asset/onboarding/onboarding_device_search_paw_decor_1.svg';
   static const String pawDecor2Asset =
-      'asset/onboarding_device_search_paw_decor_2.svg';
+      'asset/onboarding/onboarding_device_search_paw_decor_2.svg';
   static const String pawDecor3Asset =
-      'asset/onboarding_device_search_paw_decor_3.svg';
-  static const String starAsset = 'asset/onboarding_device_search_star.svg';
+      'asset/onboarding/onboarding_device_search_paw_decor_3.svg';
+  static const String starAsset = 'asset/onboarding/onboarding_device_search_star.svg';
   static const String starSmallAsset =
-      'asset/onboarding_device_search_star_sm.svg';
+      'asset/onboarding/onboarding_device_search_star_sm.svg';
   static const String batteryLightningAsset =
-      'asset/onboarding_wearable_battery_lightning.svg';
+      'asset/onboarding/onboarding_wearable_battery_lightning.svg';
   static const String batteryTipAsset =
-      'asset/onboarding_wearable_battery_tip.svg';
+      'asset/onboarding/onboarding_wearable_battery_tip.svg';
 
   static const List<WearableHarnessDevice> initialDevices = [
     WearableHarnessDevice(

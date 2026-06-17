@@ -6,6 +6,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 import 'app_shell.dart';
 import 'main_onboarding_01.dart';
+import 'main_onboarding_03.dart';
 import 'main_onboarding_02.dart';
 import 'mypage_02.dart';
 import 'pet_profile_store.dart';
@@ -22,17 +23,17 @@ class Home01Screen extends StatefulWidget {
 }
 
 class _HomeAssets {
-  static const background = 'asset/홈화면_배경.png';
-  static const backgroundFallback = 'asset/home_screen_background.png';
-  static const petChevron = 'asset/home_pet_chevron.svg';
-  static const heartCircle = 'asset/home_heart_circle.svg';
-  static const heartIcon = 'asset/home_heart_icon.svg';
-  static const heartChart = 'asset/home_heart_chart.svg';
-  static const activityCircle = 'asset/home_activity_circle.svg';
-  static const activityIcon = 'asset/home_activity_icon.svg';
-  static const walkCard = 'asset/home_walk_mode_card.png';
-  static const petPhoto = 'asset/홈_콩이.png';
-  static const petPhotoFallback = 'asset/home_pet_kong.png';
+  static const background = 'asset/home/home_screen_background.png';
+  static const backgroundFallback = 'asset/home/home_screen_background.png';
+  static const petChevron = 'asset/home/home_pet_chevron.svg';
+  static const heartCircle = 'asset/home/home_heart_circle.svg';
+  static const heartIcon = 'asset/home/home_heart_icon.svg';
+  static const heartChart = 'asset/home/home_heart_chart.svg';
+  static const activityCircle = 'asset/home/home_activity_circle.svg';
+  static const activityIcon = 'asset/home/home_activity_icon.svg';
+  static const walkCard = 'asset/home/home_walk_mode_card.png';
+  static const petPhoto = 'asset/home/home_pet_kong.png';
+  static const petPhotoFallback = 'asset/home/home_pet_kong.png';
 
   static const Color heartCircleColor = Color(0xFFFBE5EC);
   static const Color activityCircleColor = Color(0xFFF0EAFF);
@@ -134,6 +135,11 @@ class _Home01ScreenState extends State<Home01Screen>
         ),
         (_) => false,
       );
+      return;
+    }
+
+    if (result == OnboardingApp.togedog) {
+      await openTogedogApp(context);
     }
   }
 

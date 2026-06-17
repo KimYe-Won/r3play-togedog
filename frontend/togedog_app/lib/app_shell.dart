@@ -14,21 +14,21 @@ const double kTogedogDesignWidth = 402;
 enum AppTab { home, walk, report, mypage }
 
 class TogedogAssets {
-  static const background = 'asset/홈화면_배경.png';
-  static const backgroundFallback = 'asset/home_screen_background.png';
-  static const bell = 'asset/home_bell.svg';
-  static const settings = 'asset/home_settings.svg';
-  static const headerChevron = 'asset/home_header_chevron.svg';
-  static const navHome = 'asset/home_nav_home.svg';
-  static const navWalkMode = 'asset/home_nav_walk_mode.svg';
-  static const navReport = 'asset/home_nav_report.svg';
-  static const navMypage = 'asset/home_nav_mypage.svg';
-  static const petPhoto = 'asset/홈_콩이.png';
-  static const petPhotoFallback = 'asset/home_pet_kong.png';
-  static const heartCircle = 'asset/home_heart_circle.svg';
-  static const heartIcon = 'asset/home_heart_icon.svg';
-  static const activityCircle = 'asset/home_activity_circle.svg';
-  static const activityIcon = 'asset/home_activity_icon.svg';
+  static const background = 'asset/home/home_screen_background.png';
+  static const backgroundFallback = 'asset/home/home_screen_background.png';
+  static const bell = 'asset/home/home_bell.svg';
+  static const settings = 'asset/home/home_settings.svg';
+  static const headerChevron = 'asset/home/home_header_chevron.svg';
+  static const navHome = 'asset/home/home_nav_home.svg';
+  static const navWalkMode = 'asset/home/home_nav_walk_mode.svg';
+  static const navReport = 'asset/home/home_nav_report.svg';
+  static const navMypage = 'asset/home/home_nav_mypage.svg';
+  static const petPhoto = 'asset/home/home_pet_kong.png';
+  static const petPhotoFallback = 'asset/home/home_pet_kong.png';
+  static const heartCircle = 'asset/home/home_heart_circle.svg';
+  static const heartIcon = 'asset/home/home_heart_icon.svg';
+  static const activityCircle = 'asset/home/home_activity_circle.svg';
+  static const activityIcon = 'asset/home/home_activity_icon.svg';
 
   static Widget svg(
     String asset, {

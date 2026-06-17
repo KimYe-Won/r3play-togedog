@@ -1,4 +1,6 @@
 // TogeDog 산책모드 탭 화면 — Figma node 1080:1391
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -15,12 +17,52 @@ class Walk01Screen extends StatefulWidget {
 }
 
 class _Walk01ScreenState extends State<Walk01Screen> {
+  static const Color _activeGreen = Color(0xFF1B9748);
+  static const Color _inactiveRed = Color(0xFFE53935);
+
   bool _soundOn = true;
+  bool _walkActive = false;
+  Duration _walkElapsed = Duration.zero;
+  Timer? _walkTimer;
+
+  @override
+  void dispose() {
+    _walkTimer?.cancel();
+    super.dispose();
+  }
 
   void _openRealtimeView() {
     Navigator.of(context).push(
       MaterialPageRoute<void>(builder: (_) => const Walk02Screen()),
     );
+  }
+
+  void _startWalk() {
+    if (_walkActive) return;
+    _walkTimer?.cancel();
+    setState(() {
+      _walkActive = true;
+      _walkElapsed = Duration.zero;
+    });
+    _walkTimer = Timer.periodic(const Duration(seconds: 1), (_) {
+      if (!mounted) return;
+      setState(() => _walkElapsed += const Duration(seconds: 1));
+    });
+  }
+
+  void _stopWalk() {
+    _walkTimer?.cancel();
+    setState(() {
+      _walkActive = false;
+      _walkElapsed = Duration.zero;
+    });
+  }
+
+  String _formatWalkDuration(Duration duration) {
+    final hours = duration.inHours.toString().padLeft(2, '0');
+    final minutes = (duration.inMinutes % 60).toString().padLeft(2, '0');
+    final seconds = (duration.inSeconds % 60).toString().padLeft(2, '0');
+    return '$hours:$minutes:$seconds';
   }
 
   @override
@@ -35,7 +77,7 @@ class _Walk01ScreenState extends State<Walk01Screen> {
         child: Column(
           children: [
             Expanded(
-              child: SingleChildScrollView(
+              child: Padding(
                 padding: EdgeInsets.fromLTRB(
                   20 * scale,
                   8 * scale,
@@ -47,15 +89,23 @@ class _Walk01ScreenState extends State<Walk01Screen> {
                   children: [
                     AppScreenHeader(scale: scale, title: '산책 모드'),
                     SizedBox(height: 20 * scale),
-                    _WalkStatusCard(scale: scale),
+                    _WalkStatusCard(
+                      scale: scale,
+                      statusColor:
+                          _walkActive ? _activeGreen : _inactiveRed,
+                      statusLabel: _walkActive ? '활성화 중' : '비활성화',
+                      elapsedText: _formatWalkDuration(_walkElapsed),
+                    ),
                     SizedBox(height: 25 * scale),
                     _LiveFeedHeader(scale: scale),
                     SizedBox(height: 8 * scale),
-                    _LiveCameraCard(
-                      scale: scale,
-                      soundOn: _soundOn,
-                      onSoundTap: () => setState(() => _soundOn = !_soundOn),
-                      onFullscreenTap: _openRealtimeView,
+                    Expanded(
+                      child: _LiveCameraCard(
+                        scale: scale,
+                        soundOn: _soundOn,
+                        onSoundTap: () => setState(() => _soundOn = !_soundOn),
+                        onFullscreenTap: _openRealtimeView,
+                      ),
                     ),
                     SizedBox(height: 13 * scale),
                     _CurrentStatusCard(scale: scale),
@@ -67,7 +117,7 @@ class _Walk01ScreenState extends State<Walk01Screen> {
                             scale: scale,
                             label: '[시작]',
                             filled: true,
-                            onTap: _openRealtimeView,
+                            onTap: _startWalk,
                           ),
                         ),
                         SizedBox(width: 13 * scale),
@@ -76,7 +126,7 @@ class _Walk01ScreenState extends State<Walk01Screen> {
                             scale: scale,
                             label: '[종료]',
                             filled: false,
-                            onTap: () => Navigator.of(context).pop(),
+                            onTap: _stopWalk,
                           ),
                         ),
                       ],
@@ -98,9 +148,17 @@ class _Walk01ScreenState extends State<Walk01Screen> {
 }
 
 class _WalkStatusCard extends StatelessWidget {
-  const _WalkStatusCard({required this.scale});
+  const _WalkStatusCard({
+    required this.scale,
+    required this.statusColor,
+    required this.statusLabel,
+    required this.elapsedText,
+  });
 
   final double scale;
+  final Color statusColor;
+  final String statusLabel;
+  final String elapsedText;
 
   @override
   Widget build(BuildContext context) {
@@ -134,19 +192,19 @@ class _WalkStatusCard extends StatelessWidget {
                     Container(
                       width: 6 * scale,
                       height: 6 * scale,
-                      decoration: const BoxDecoration(
-                        color: Color(0xFF1B9748),
+                      decoration: BoxDecoration(
+                        color: statusColor,
                         shape: BoxShape.circle,
                       ),
                     ),
                     SizedBox(width: 8 * scale),
                     Text(
-                      '활성화 중',
+                      statusLabel,
                       style: TextStyle(
                         fontFamily: 'LGSmartUI',
                         fontWeight: FontWeight.w600,
                         fontSize: 10 * scale,
-                        color: const Color(0xFF1B9748),
+                        color: statusColor,
                       ),
                     ),
                   ],
@@ -168,7 +226,7 @@ class _WalkStatusCard extends StatelessWidget {
                 ),
               ),
               Text(
-                '00:28:45',
+                elapsedText,
                 style: TextStyle(
                   fontFamily: 'LGSmartUI',
                   fontWeight: FontWeight.w600,
@@ -286,46 +344,52 @@ class _LiveCameraCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 272 * scale,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10 * scale),
-        border: Border.all(color: const Color(0xFFD4D4D4)),
-      ),
-      clipBehavior: Clip.antiAlias,
-      child: Stack(
-        fit: StackFit.expand,
-        children: [
-          const LiveCameraView(),
-          Positioned(
-            right: 12 * scale,
-            bottom: 12 * scale,
-            child: Row(
-              children: [
-                _CameraOverlayButton(
-                  scale: scale,
-                  onTap: onSoundTap,
-                  child: Icon(
-                    soundOn ? Icons.volume_up_rounded : Icons.volume_off_rounded,
-                    size: 18 * scale,
-                    color: Colors.white,
-                  ),
-                ),
-                SizedBox(width: 8 * scale),
-                _CameraOverlayButton(
-                  scale: scale,
-                  onTap: onFullscreenTap,
-                  child: SvgPicture.asset(
-                    'asset/walk_camera_fullscreen.svg',
-                    width: 18 * scale,
-                    height: 18 * scale,
-                  ),
-                ),
-              ],
-            ),
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        return Container(
+          height: constraints.maxHeight,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10 * scale),
+            border: Border.all(color: const Color(0xFFD4D4D4)),
           ),
-        ],
-      ),
+          clipBehavior: Clip.antiAlias,
+          child: Stack(
+            fit: StackFit.expand,
+            children: [
+              const LiveCameraView(),
+              Positioned(
+                right: 12 * scale,
+                bottom: 12 * scale,
+                child: Row(
+                  children: [
+                    _CameraOverlayButton(
+                      scale: scale,
+                      onTap: onSoundTap,
+                      child: Icon(
+                        soundOn
+                            ? Icons.volume_up_rounded
+                            : Icons.volume_off_rounded,
+                        size: 18 * scale,
+                        color: Colors.white,
+                      ),
+                    ),
+                    SizedBox(width: 8 * scale),
+                    _CameraOverlayButton(
+                      scale: scale,
+                      onTap: onFullscreenTap,
+                      child: SvgPicture.asset(
+                        'asset/walk/walk_camera_fullscreen.svg',
+                        width: 18 * scale,
+                        height: 18 * scale,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 }
@@ -350,7 +414,7 @@ class _CameraOverlayButton extends StatelessWidget {
         width: 36 * scale,
         height: 36 * scale,
         decoration: BoxDecoration(
-          color: Colors.black.withOpacity(0.45),
+          color: Colors.black.withValues(alpha: 0.45),
           shape: BoxShape.circle,
         ),
         alignment: Alignment.center,
@@ -445,7 +509,7 @@ class _CurrentStatusCard extends StatelessWidget {
                 child: _StatusMetric(
                   scale: scale,
                   icon: Image.asset(
-                    'asset/walk_distance_icon.png',
+                    'asset/walk/walk_distance_icon.png',
                     width: 36 * scale,
                     height: 36 * scale,
                     errorBuilder: (_, __, ___) => Container(
@@ -547,7 +611,7 @@ class _CurrentStatusCard extends StatelessWidget {
                 child: _StatusMetric(
                   scale: scale,
                   icon: Image.asset(
-                    'asset/walk_status_shield.png',
+                    'asset/walk/walk_status_shield.png',
                     width: 36 * scale,
                     height: 36 * scale,
                     errorBuilder: (_, __, ___) => Icon(

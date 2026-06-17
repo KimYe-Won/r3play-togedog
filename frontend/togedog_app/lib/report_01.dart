@@ -227,7 +227,7 @@ class _StatusCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 Image.asset(
-                  'asset/report_safety.png',
+                  'asset/report/report_safety.png',
                   width: 24 * scale,
                   height: 24 * scale,
                   errorBuilder: (_, __, ___) => Icon(
@@ -268,7 +268,7 @@ class _StatusCard extends StatelessWidget {
             width: 166 * scale,
             height: 154 * scale,
             child: Image.asset(
-              'asset/report_status_pet.png',
+              'asset/report/report_status_pet.png',
               fit: BoxFit.cover,
               alignment: Alignment.centerLeft,
               errorBuilder: (_, __, ___) => Image.asset(
@@ -340,7 +340,7 @@ class _HealthSummaryCard extends StatelessWidget {
                   value: RichText(
                     textAlign: TextAlign.center,
                     text: TextSpan(
-                      style: TextStyle(fontFamily: 'LGSmartUI'),
+                      style: const TextStyle(fontFamily: 'LGSmartUI'),
                       children: [
                         TextSpan(
                           text: '98',
@@ -371,7 +371,7 @@ class _HealthSummaryCard extends StatelessWidget {
                 child: _HealthMetric(
                   scale: scale,
                   icon: Image.asset(
-                    'asset/report_sleep_icon.png',
+                    'asset/report/report_sleep_icon.png',
                     width: 36 * scale,
                     height: 36 * scale,
                     errorBuilder: (_, __, ___) => Icon(
@@ -384,7 +384,7 @@ class _HealthSummaryCard extends StatelessWidget {
                   value: RichText(
                     textAlign: TextAlign.center,
                     text: TextSpan(
-                      style: TextStyle(fontFamily: 'LGSmartUI'),
+                      style: const TextStyle(fontFamily: 'LGSmartUI'),
                       children: [
                         TextSpan(
                           text: '8',
@@ -449,7 +449,7 @@ class _HealthSummaryCard extends StatelessWidget {
                   value: RichText(
                     textAlign: TextAlign.center,
                     text: TextSpan(
-                      style: TextStyle(fontFamily: 'LGSmartUI'),
+                      style: const TextStyle(fontFamily: 'LGSmartUI'),
                       children: [
                         TextSpan(
                           text: '6,245',
@@ -480,7 +480,7 @@ class _HealthSummaryCard extends StatelessWidget {
                 child: _HealthMetric(
                   scale: scale,
                   icon: Image.asset(
-                    'asset/report_meal_icon.png',
+                    'asset/report/report_meal_icon.png',
                     width: 36 * scale,
                     height: 36 * scale,
                     errorBuilder: (_, __, ___) => Icon(
@@ -676,7 +676,7 @@ class _AiAnalysisCard extends StatelessWidget {
             width: 121 * scale,
             height: 97 * scale,
             child: Image.asset(
-              'asset/report_ai_dog.png',
+              'asset/report/report_ai_dog.png',
               fit: BoxFit.contain,
               errorBuilder: (_, __, ___) => const SizedBox.shrink(),
             ),
@@ -780,7 +780,7 @@ class _DangerRecordCard extends StatelessWidget {
                   ClipRRect(
                     borderRadius: BorderRadius.circular(6 * scale),
                     child: Image.asset(
-                      'asset/report_danger_map.png',
+                      'asset/report/report_danger_map.png',
                       width: 72 * scale,
                       height: 47 * scale,
                       fit: BoxFit.cover,

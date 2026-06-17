@@ -89,7 +89,7 @@ class MainOnboarding10Screen extends StatelessWidget {
                 width: iconWidth * scale,
                 height: iconHeight * scale,
                 child: SvgPicture.asset(
-                  'asset/onboarding_camera_icon.svg',
+                  'asset/onboarding/onboarding_camera_icon.svg',
                   fit: BoxFit.contain,
                   alignment: Alignment.center,
                 ),

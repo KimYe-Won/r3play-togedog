@@ -280,7 +280,7 @@ class _ModalCloseIcon extends StatelessWidget {
     return SizedBox(
       width: size,
       height: size,
-      child: CustomPaint(
+      child: const CustomPaint(
         painter: _ModalCloseIconPainter(
           color: WearableConnectionTheme.subtitleGray,
           strokeWidth: 2,
