@@ -80,7 +80,7 @@ class _AudioAlertBannerState extends State<AudioAlertBanner>
         color: Colors.transparent,
         child: Container(
           width: double.infinity,
-          color: _bgColor(alert.priority).withOpacity(0.92),
+          color: _bgColor(alert.priority).withValues(alpha: 0.92),
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
           child: SafeArea(
             bottom: false,

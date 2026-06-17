@@ -53,21 +53,12 @@ class AudioService {
 
   final _recorder = AudioRecorder();
   Interpreter? _interpreter;
-  List<String>? _labels;
   bool _running = false;
   final Map<String, DateTime> _lastAlertMap = {};
 
   Future<void> init() async {
     final options = InterpreterOptions()..useNnApiForAndroid = false;
     _interpreter = await Interpreter.fromAsset(_modelPath, options: options);
-    _labels = await _loadLabels();
-  }
-
-  Future<List<String>> _loadLabels() async {
-    // YAMNet 클래스 이름 순서 (인덱스 0~520)
-    // 실제 배포 시 yamnet_class_map.csv를 assets에 포함하는 게 정확하지만
-    // 여기서는 관심 클래스 매칭을 위한 최소 목록만 사용
-    return [];
   }
 
   Future<void> start() async {
@@ -187,7 +178,7 @@ class AudioService {
   }
 
   Future<void> _vibrate(int ms) async {
-    if (await Vibration.hasVibrator() ?? false) {
+    if ((await Vibration.hasVibrator()) == true) {
       Vibration.vibrate(duration: ms);
     }
   }
