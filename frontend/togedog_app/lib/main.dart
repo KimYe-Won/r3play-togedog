@@ -4,12 +4,14 @@ import 'package:flutter/services.dart';
 import 'guidance_mode_store.dart';
 import 'main_onboarding_00.dart';
 import 'pet_profile_store.dart';
+import 'wearable_connection_store.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Future.wait([
     PetProfileStore.instance.load(),
     GuidanceModeStore.instance.load(),
+    WearableConnectionStore.instance.load(),
   ]);
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(

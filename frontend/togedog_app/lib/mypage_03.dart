@@ -7,6 +7,7 @@ import 'app_shell.dart';
 import 'onboarding_wearable_shared.dart';
 import 'pet_profile_store.dart';
 import 'togedog_accessibility.dart';
+import 'wearable_connection_store.dart';
 
 /// Figma 730:6833 고정 좌표 (402×874)
 class _Mypage03Layout {
@@ -74,6 +75,65 @@ class Mypage03Screen extends StatefulWidget {
 class _Mypage03ScreenState extends State<Mypage03Screen> {
   int _pageIndex = 0;
   double _dragPx = 0;
+  bool _isConnecting = false;
+  WearableHarnessId? _pendingConnectId;
+
+  @override
+  void initState() {
+    super.initState();
+    _pageIndex =
+        WearableConnectionStore.instance.connectedId == WearableHarnessId.star
+            ? 1
+            : 0;
+  }
+
+  WearableConnectionStatus _statusFor(WearableHarnessId id) {
+    final store = WearableConnectionStore.instance;
+    if (_isConnecting && _pendingConnectId != null) {
+      return _pendingConnectId == id
+          ? WearableConnectionStatus.connecting
+          : WearableConnectionStatus.available;
+    }
+    return store.statusFor(id);
+  }
+
+  List<_WearableDeviceData> _buildDevices(String petName) {
+    return [
+      _WearableDeviceData(
+        id: WearableHarnessId.kong,
+        name: '$petName 하네스',
+        status: _statusFor(WearableHarnessId.kong),
+        productAsset: _MypageWearableAssets.product,
+        productTitle: 'TogeDog Harness',
+      ),
+      _WearableDeviceData(
+        id: WearableHarnessId.star,
+        name: '별이 하네스',
+        status: _statusFor(WearableHarnessId.star),
+        productAsset: _MypageWearableAssets.product,
+        productTitle: 'TogeDog Harness',
+      ),
+    ];
+  }
+
+  Future<void> _onConnect(WearableHarnessId id) async {
+    if (_isConnecting) return;
+    final store = WearableConnectionStore.instance;
+    if (store.connectedId == id) return;
+
+    setState(() {
+      _isConnecting = true;
+      _pendingConnectId = id;
+    });
+    await Future<void>.delayed(const Duration(milliseconds: 1200));
+    await store.setConnected(id);
+    if (!mounted) return;
+    setState(() {
+      _isConnecting = false;
+      _pendingConnectId = null;
+      _pageIndex = id == WearableHarnessId.star ? 1 : 0;
+    });
+  }
 
   void _onHorizontalDragUpdate(
     DragUpdateDetails details,
@@ -110,20 +170,7 @@ class _Mypage03ScreenState extends State<Mypage03Screen> {
     final scaler = _Mypage03Scaler(context);
     final s = scaler.scale;
     final petName = PetProfileStore.instance.displayPetName;
-    final devices = [
-      _WearableDeviceData(
-        name: '$petName 하네스',
-        status: WearableConnectionStatus.connecting,
-        productAsset: _MypageWearableAssets.product,
-        productTitle: 'TogeDog Harness',
-      ),
-      const _WearableDeviceData(
-        name: '별이 하네스',
-        status: WearableConnectionStatus.available,
-        productAsset: _MypageWearableAssets.product,
-        productTitle: 'TogeDog Harness',
-      ),
-    ];
+    final devices = _buildDevices(petName);
 
     final stridePx = _Mypage03Layout.cardPageStride * s;
     final carouselHeight =
@@ -249,8 +296,15 @@ class _Mypage03ScreenState extends State<Mypage03Screen> {
                               status: devices[i].status,
                               connectMode: _connectButtonMode(
                                 devices[i].status,
-                                devices,
+                                isConnecting: _isConnecting,
                               ),
+                              onConnect: _connectButtonMode(
+                                        devices[i].status,
+                                        isConnecting: _isConnecting,
+                                      ) ==
+                                      WearableConnectButtonMode.available
+                                  ? () => _onConnect(devices[i].id)
+                                  : null,
                             ),
                           ),
                         ],
@@ -332,16 +386,13 @@ class _Mypage03ScreenState extends State<Mypage03Screen> {
 }
 
 WearableConnectButtonMode _connectButtonMode(
-  WearableConnectionStatus status,
-  List<_WearableDeviceData> devices,
-) {
-  final anyConnecting = devices.any(
-    (device) => device.status == WearableConnectionStatus.connecting,
-  );
+  WearableConnectionStatus status, {
+  bool isConnecting = false,
+}) {
   if (status == WearableConnectionStatus.connecting) {
     return WearableConnectButtonMode.connecting;
   }
-  if (anyConnecting) {
+  if (isConnecting) {
     return WearableConnectButtonMode.disabled;
   }
   return WearableConnectButtonMode.available;
@@ -349,12 +400,14 @@ WearableConnectButtonMode _connectButtonMode(
 
 class _WearableDeviceData {
   const _WearableDeviceData({
+    required this.id,
     required this.name,
     required this.status,
     required this.productAsset,
     required this.productTitle,
   });
 
+  final WearableHarnessId id;
   final String name;
   final WearableConnectionStatus status;
   final String productAsset;
@@ -451,12 +504,14 @@ class _DeviceCard extends StatelessWidget {
     required this.name,
     required this.status,
     required this.connectMode,
+    this.onConnect,
   });
 
   final double scale;
   final String name;
   final WearableConnectionStatus status;
   final WearableConnectButtonMode connectMode;
+  final VoidCallback? onConnect;
 
   @override
   Widget build(BuildContext context) {
@@ -507,23 +562,11 @@ class _DeviceCard extends StatelessWidget {
               ],
             ),
           ),
-          Container(
-            height: 27 * scale,
-            padding: EdgeInsets.symmetric(horizontal: 12 * scale),
-            decoration: BoxDecoration(
-              color: _connectButtonBackground(connectMode),
-              borderRadius: BorderRadius.circular(14 * scale),
-            ),
-            alignment: Alignment.center,
-            child: Text(
-              '연결',
-              style: TextStyle(
-                fontFamily: 'LGSmartUI',
-                fontWeight: FontWeight.w600,
-                fontSize: 12 * scale,
-                color: _connectButtonTextColor(connectMode),
-              ),
-            ),
+          _MypageConnectButton(
+            scale: scale,
+            mode: connectMode,
+            deviceName: name,
+            onPressed: onConnect,
           ),
         ],
       ),
@@ -531,14 +574,24 @@ class _DeviceCard extends StatelessWidget {
   }
 }
 
-Color _connectButtonBackground(WearableConnectButtonMode mode) {
+Color _connectButtonBackground(
+  WearableConnectButtonMode mode, {
+  bool pressed = false,
+  bool hovered = false,
+}) {
   const base = WearableConnectionTheme.brandPurple;
   switch (mode) {
     case WearableConnectButtonMode.connecting:
-      return Color.lerp(base, Colors.white, 0.08)!;
+      return WearableConnectionTheme.disabledButtonBackground;
     case WearableConnectButtonMode.disabled:
       return WearableConnectionTheme.disabledButtonBackground;
     case WearableConnectButtonMode.available:
+      if (pressed) {
+        return Color.lerp(base, Colors.black, 0.16)!;
+      }
+      if (hovered) {
+        return Color.lerp(base, Colors.white, 0.08)!;
+      }
       return base;
   }
 }
@@ -546,9 +599,94 @@ Color _connectButtonBackground(WearableConnectButtonMode mode) {
 Color _connectButtonTextColor(WearableConnectButtonMode mode) {
   switch (mode) {
     case WearableConnectButtonMode.disabled:
+    case WearableConnectButtonMode.connecting:
       return WearableConnectionTheme.disabledButtonText;
     case WearableConnectButtonMode.available:
-    case WearableConnectButtonMode.connecting:
       return Colors.white;
+  }
+}
+
+class _MypageConnectButton extends StatefulWidget {
+  const _MypageConnectButton({
+    required this.scale,
+    required this.mode,
+    required this.deviceName,
+    this.onPressed,
+  });
+
+  final double scale;
+  final WearableConnectButtonMode mode;
+  final String deviceName;
+  final VoidCallback? onPressed;
+
+  @override
+  State<_MypageConnectButton> createState() => _MypageConnectButtonState();
+}
+
+class _MypageConnectButtonState extends State<_MypageConnectButton> {
+  bool _isPressed = false;
+  bool _isHovered = false;
+
+  bool get _isInteractive =>
+      widget.mode == WearableConnectButtonMode.available &&
+      widget.onPressed != null;
+
+  @override
+  Widget build(BuildContext context) {
+    final scale = widget.scale;
+
+    return MouseRegion(
+      cursor:
+          _isInteractive ? SystemMouseCursors.click : SystemMouseCursors.basic,
+      onEnter: _isInteractive ? (_) => setState(() => _isHovered = true) : null,
+      onExit: _isInteractive
+          ? (_) => setState(() {
+                _isHovered = false;
+                _isPressed = false;
+              })
+          : null,
+      child: TogedogA11y.button(
+        label: '연결',
+        hint: widget.mode == WearableConnectButtonMode.connecting
+            ? '${widget.deviceName} 연결 중'
+            : widget.mode == WearableConnectButtonMode.disabled
+                ? '연결 불가'
+                : '${widget.deviceName} 연결',
+        enabled: _isInteractive,
+        child: GestureDetector(
+          onTapDown:
+              _isInteractive ? (_) => setState(() => _isPressed = true) : null,
+          onTapUp:
+              _isInteractive ? (_) => setState(() => _isPressed = false) : null,
+          onTapCancel:
+              _isInteractive ? () => setState(() => _isPressed = false) : null,
+          onTap: widget.onPressed,
+          behavior: HitTestBehavior.opaque,
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 120),
+            height: 27 * scale,
+            padding: EdgeInsets.symmetric(horizontal: 12 * scale),
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              color: _connectButtonBackground(
+                widget.mode,
+                pressed: _isPressed,
+                hovered: _isHovered,
+              ),
+              borderRadius: BorderRadius.circular(14 * scale),
+            ),
+            child: Text(
+              '연결',
+              style: TextStyle(
+                fontFamily: 'LGSmartUI',
+                fontWeight: FontWeight.w600,
+                fontSize: 12 * scale,
+                color: _connectButtonTextColor(widget.mode),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
   }
 }
