@@ -5,6 +5,7 @@ import 'main_onboarding_14.dart';
 import 'onboarding_transitions.dart';
 import 'onboarding_wearable_shared.dart';
 import 'togedog_accessibility.dart';
+import 'wearable_connection_store.dart';
 
 /// Figma: 디바이스 연결 (node 488:359)
 class MainOnboarding13Screen extends StatefulWidget {
@@ -73,6 +74,9 @@ class _MainOnboarding13ScreenState extends State<MainOnboarding13Screen>
     await Future<void>.delayed(const Duration(milliseconds: 1200));
     if (!mounted) return;
 
+    await WearableConnectionStore.instance.setConnected(id);
+
+    if (!mounted) return;
     Navigator.of(context).pushReplacement(
       OnboardingFadeRoute<void>(
         builder: (_) => MainOnboarding14Screen(connectedHarnessId: id),
