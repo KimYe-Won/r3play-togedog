@@ -5,6 +5,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'main_onboarding_12.dart';
 import 'onboarding_transitions.dart';
 import 'pet_profile_store.dart';
+import 'togedog_accessibility.dart';
 
 /// Figma: 반려견 프로필 등록 (node 557:11970) / 견종 펼침 (node 488:357)
 class MainOnboarding11Screen extends StatefulWidget {
@@ -171,7 +172,9 @@ class _MainOnboarding11ScreenState extends State<MainOnboarding11Screen> {
     final scale = MediaQuery.sizeOf(context).width / MainOnboarding11Screen.designWidth;
     final topPadding = MediaQuery.paddingOf(context).top;
 
-    return Scaffold(
+    return TogedogA11y.screen(
+      name: '반려견 프로필 등록',
+      child: Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
         top: false,
@@ -200,6 +203,7 @@ class _MainOnboarding11ScreenState extends State<MainOnboarding11Screen> {
           ),
         ),
       ),
+    ),
     );
   }
 }
@@ -248,16 +252,20 @@ class _ProfileHeroSection extends StatelessWidget {
           Positioned(
             left: MainOnboarding11Screen.horizontalInset * scale,
             top: backTop,
-            child: GestureDetector(
-              onTap: () => Navigator.of(context).pop(),
-              behavior: HitTestBehavior.opaque,
-              child: Padding(
-                padding: EdgeInsets.all(4 * scale),
-                child: SvgPicture.asset(
-                  MainOnboarding11Screen.backButtonAsset,
-                  width: MainOnboarding11Screen.backSize * scale,
-                  height: MainOnboarding11Screen.backSize * scale,
-                  fit: BoxFit.contain,
+            child: TogedogA11y.button(
+              label: '뒤로',
+              hint: '이전 화면으로',
+              child: GestureDetector(
+                onTap: () => Navigator.of(context).pop(),
+                behavior: HitTestBehavior.opaque,
+                child: Padding(
+                  padding: EdgeInsets.all(4 * scale),
+                  child: SvgPicture.asset(
+                    MainOnboarding11Screen.backButtonAsset,
+                    width: MainOnboarding11Screen.backSize * scale,
+                    height: MainOnboarding11Screen.backSize * scale,
+                    fit: BoxFit.contain,
+                  ),
                 ),
               ),
             ),
@@ -305,9 +313,11 @@ class _ProfileHeroSection extends StatelessWidget {
                     MainOnboarding11Screen.pawsTopRatio -
                     MainOnboarding11Screen.pawsBottomRatio) *
                 scale,
-            child: SvgPicture.asset(
-              MainOnboarding11Screen.pawsDecorationAsset,
-              fit: BoxFit.fill,
+            child: TogedogA11y.decorative(
+              SvgPicture.asset(
+                MainOnboarding11Screen.pawsDecorationAsset,
+                fit: BoxFit.fill,
+              ),
             ),
           ),
           Positioned(
@@ -315,13 +325,15 @@ class _ProfileHeroSection extends StatelessWidget {
             right: 0,
             top: dogTop,
             child: Center(
-              child: SizedBox(
-                width: dogWidth,
-                height: dogHeight,
-                child: Image.asset(
-                  MainOnboarding11Screen.dogImageAsset,
-                  fit: BoxFit.cover,
-                  alignment: Alignment.center,
+              child: TogedogA11y.decorative(
+                SizedBox(
+                  width: dogWidth,
+                  height: dogHeight,
+                  child: Image.asset(
+                    MainOnboarding11Screen.dogImageAsset,
+                    fit: BoxFit.cover,
+                    alignment: Alignment.center,
+                  ),
                 ),
               ),
             ),
@@ -508,8 +520,12 @@ class _ProfileTextField extends StatelessWidget {
         SizedBox(height: MainOnboarding11Screen.labelInputGap * scale),
         _ProfileInputBox(
           scale: scale,
-          child: TextField(
-            controller: controller,
+          child: TogedogA11y.textField(
+            label: label,
+            value: controller.text,
+            hint: hintText,
+            child: TextField(
+              controller: controller,
             style: TextStyle(
               fontFamily: 'LGSmartUI',
               fontWeight: FontWeight.w400,
@@ -531,6 +547,7 @@ class _ProfileTextField extends StatelessWidget {
               contentPadding: EdgeInsets.zero,
             ),
           ),
+        ),
         ),
       ],
     );
@@ -559,6 +576,10 @@ class _AgeField extends StatelessWidget {
               width: 168 * scale,
               child: _ProfileInputBox(
                 scale: scale,
+                child: TogedogA11y.textField(
+                label: '나이',
+                value: controller.text,
+                hint: '나이',
                 child: TextField(
                   controller: controller,
                   keyboardType: TextInputType.number,
@@ -584,6 +605,7 @@ class _AgeField extends StatelessWidget {
                   ),
                 ),
               ),
+            ),
             ),
             SizedBox(width: 16 * scale),
             Text(
@@ -625,10 +647,13 @@ class _BreedSelector extends StatelessWidget {
       children: [
         _RequiredFieldLabel(scale: scale, label: '견종'),
         SizedBox(height: MainOnboarding11Screen.labelInputGap * scale),
-        GestureDetector(
-          onTap: onToggle,
-          behavior: HitTestBehavior.opaque,
-          child: Row(
+        TogedogA11y.button(
+          label: '견종 선택',
+          hint: selectedBreed ?? '견종을 입력해주세요',
+          child: GestureDetector(
+            onTap: onToggle,
+            behavior: HitTestBehavior.opaque,
+            child: Row(
             children: [
               Expanded(
                 child: _ProfileInputBox(
@@ -651,6 +676,7 @@ class _BreedSelector extends StatelessWidget {
               _ChevronButton(scale: scale, isExpanded: isExpanded),
             ],
           ),
+        ),
         ),
         AnimatedSize(
           duration: const Duration(milliseconds: 250),
@@ -719,13 +745,16 @@ class _BreedDropdownList extends StatelessWidget {
             final breed = MainOnboarding11Screen.dogBreeds[index];
             final isSelected = breed == selectedBreed;
 
-            return Material(
-              color: isSelected
-                  ? MainOnboarding11Screen.breedSelectedBackground
-                  : Colors.white,
-              child: InkWell(
-                onTap: () => onBreedSelected(breed),
-                child: Padding(
+            return TogedogA11y.selectable(
+              label: breed,
+              selected: isSelected,
+              child: Material(
+                color: isSelected
+                    ? MainOnboarding11Screen.breedSelectedBackground
+                    : Colors.white,
+                child: InkWell(
+                  onTap: () => onBreedSelected(breed),
+                  child: Padding(
                   padding: EdgeInsets.symmetric(
                     horizontal: 14 * scale,
                     vertical: 10 * scale,
@@ -754,6 +783,7 @@ class _BreedDropdownList extends StatelessWidget {
                   ),
                 ),
               ),
+            ),
             );
           },
         ),
@@ -856,43 +886,47 @@ class _PrimaryActionButtonState extends State<_PrimaryActionButton> {
     final scale = widget.scale;
     final enabled = widget.enabled;
 
-    return MouseRegion(
-      cursor: enabled ? SystemMouseCursors.click : SystemMouseCursors.basic,
-      onEnter: (_) {
-        if (enabled) setState(() => _isHovered = true);
-      },
-      onExit: (_) => setState(() {
-        _isHovered = false;
-        _isPressed = false;
-      }),
-      child: GestureDetector(
-        onTapDown: (_) {
-          if (enabled) setState(() => _isPressed = true);
+    return TogedogA11y.button(
+      label: widget.label,
+      enabled: enabled,
+      child: MouseRegion(
+        cursor: enabled ? SystemMouseCursors.click : SystemMouseCursors.basic,
+        onEnter: (_) {
+          if (enabled) setState(() => _isHovered = true);
         },
-        onTapUp: (_) => setState(() => _isPressed = false),
-        onTapCancel: () => setState(() => _isPressed = false),
-        onTap: enabled ? widget.onPressed : null,
-        behavior: HitTestBehavior.opaque,
-        child: AnimatedContainer(
-          duration: const Duration(milliseconds: 120),
-          height: MainOnboarding11Screen.buttonHeight * scale,
-          alignment: Alignment.center,
-          decoration: BoxDecoration(
-            color: _buttonColor,
-            borderRadius: BorderRadius.circular(
-              MainOnboarding11Screen.buttonRadius * scale,
+        onExit: (_) => setState(() {
+          _isHovered = false;
+          _isPressed = false;
+        }),
+        child: GestureDetector(
+          onTapDown: (_) {
+            if (enabled) setState(() => _isPressed = true);
+          },
+          onTapUp: (_) => setState(() => _isPressed = false),
+          onTapCancel: () => setState(() => _isPressed = false),
+          onTap: enabled ? widget.onPressed : null,
+          behavior: HitTestBehavior.opaque,
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 120),
+            height: MainOnboarding11Screen.buttonHeight * scale,
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              color: _buttonColor,
+              borderRadius: BorderRadius.circular(
+                MainOnboarding11Screen.buttonRadius * scale,
+              ),
             ),
-          ),
-          child: Text(
-            widget.label,
-            style: TextStyle(
-              fontFamily: 'LGSmartUI',
-              fontWeight: FontWeight.w700,
-              fontSize: 16 * scale,
-              height: 1,
-              color: enabled
-                  ? Colors.white
-                  : MainOnboarding11Screen.disabledButtonText,
+            child: Text(
+              widget.label,
+              style: TextStyle(
+                fontFamily: 'LGSmartUI',
+                fontWeight: FontWeight.w700,
+                fontSize: 16 * scale,
+                height: 1,
+                color: enabled
+                    ? Colors.white
+                    : MainOnboarding11Screen.disabledButtonText,
+              ),
             ),
           ),
         ),
@@ -939,20 +973,22 @@ class _SecondaryActionButtonState extends State<_SecondaryActionButton> {
   Widget build(BuildContext context) {
     final scale = widget.scale;
 
-    return MouseRegion(
-      cursor: SystemMouseCursors.click,
-      onEnter: (_) => setState(() => _isHovered = true),
-      onExit: (_) => setState(() {
-        _isHovered = false;
-        _isPressed = false;
-      }),
-      child: GestureDetector(
-        onTapDown: (_) => setState(() => _isPressed = true),
-        onTapUp: (_) => setState(() => _isPressed = false),
-        onTapCancel: () => setState(() => _isPressed = false),
-        onTap: widget.onPressed,
-        behavior: HitTestBehavior.opaque,
-        child: AnimatedContainer(
+    return TogedogA11y.button(
+      label: widget.label,
+      child: MouseRegion(
+        cursor: SystemMouseCursors.click,
+        onEnter: (_) => setState(() => _isHovered = true),
+        onExit: (_) => setState(() {
+          _isHovered = false;
+          _isPressed = false;
+        }),
+        child: GestureDetector(
+          onTapDown: (_) => setState(() => _isPressed = true),
+          onTapUp: (_) => setState(() => _isPressed = false),
+          onTapCancel: () => setState(() => _isPressed = false),
+          onTap: widget.onPressed,
+          behavior: HitTestBehavior.opaque,
+          child: AnimatedContainer(
           duration: const Duration(milliseconds: 120),
           height: MainOnboarding11Screen.buttonHeight * scale,
           alignment: Alignment.center,
@@ -981,6 +1017,7 @@ class _SecondaryActionButtonState extends State<_SecondaryActionButton> {
           ),
         ),
       ),
+    ),
     );
   }
 }

@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 
 import 'main_onboarding_01.dart';
+import 'togedog_accessibility.dart';
 
 /// Figma: 시작화면 splash (node 488:339)
 class SplashScreen extends StatefulWidget {
@@ -75,18 +76,23 @@ class _SplashScreenState extends State<SplashScreen>
     final logoSize = MediaQuery.sizeOf(context).width *
         (SplashScreen.logoWidth / SplashScreen.designWidth);
 
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: Center(
-        child: FadeTransition(
-          opacity: Tween<double>(begin: 1, end: 0).animate(_fadeOutAnimation),
-          child: SizedBox(
-            width: logoSize,
-            height:
-                logoSize * (SplashScreen.logoHeight / SplashScreen.logoWidth),
-            child: Image.asset(
-              'asset/splash/splash_logo.png',
-              fit: BoxFit.contain,
+    return TogedogA11y.screen(
+      name: '시작 화면',
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        body: Center(
+          child: FadeTransition(
+            opacity: Tween<double>(begin: 1, end: 0).animate(_fadeOutAnimation),
+            child: TogedogA11y.decorative(
+              SizedBox(
+                width: logoSize,
+                height:
+                    logoSize * (SplashScreen.logoHeight / SplashScreen.logoWidth),
+                child: Image.asset(
+                  'asset/splash/splash_logo.png',
+                  fit: BoxFit.contain,
+                ),
+              ),
             ),
           ),
         ),

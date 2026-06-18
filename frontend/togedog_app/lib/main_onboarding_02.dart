@@ -1,6 +1,8 @@
 // 띵큐 -> 투게독 전환 화면
 import 'package:flutter/material.dart';
 
+import 'togedog_accessibility.dart';
+
 /// Figma: 온보딩 띵큐 앱 전환 모달 (node 542:5924)
 enum OnboardingApp { thinq, togedog }
 
@@ -61,7 +63,9 @@ class _MainOnboarding02ScreenState extends State<MainOnboarding02Screen> {
     final scale =
         MediaQuery.sizeOf(context).width / MainOnboarding02Screen.designWidth;
 
-    return Material(
+    return TogedogA11y.screen(
+      name: '앱 전환',
+      child: Material(
       color: Colors.transparent,
       child: SizedBox.expand(
         child: Stack(
@@ -97,6 +101,7 @@ class _MainOnboarding02ScreenState extends State<MainOnboarding02Screen> {
           ],
         ),
       ),
+    ),
     );
   }
 }
@@ -265,13 +270,17 @@ class _AppOptionCardState extends State<_AppOptionCard> {
   Widget build(BuildContext context) {
     final scale = widget.scale;
 
-    return MouseRegion(
-      cursor: SystemMouseCursors.click,
-      onEnter: (_) => setState(() => _isHovered = true),
-      onExit: (_) => setState(() => _isHovered = false),
-      child: GestureDetector(
-        onTap: widget.onTap,
-        child: AnimatedContainer(
+    return TogedogA11y.selectable(
+      label: widget.title,
+      description: widget.subtitle,
+      selected: widget.isSelected,
+      child: MouseRegion(
+        cursor: SystemMouseCursors.click,
+        onEnter: (_) => setState(() => _isHovered = true),
+        onExit: (_) => setState(() => _isHovered = false),
+        child: GestureDetector(
+          onTap: widget.onTap,
+          child: AnimatedContainer(
           duration: const Duration(milliseconds: 150),
           height: 211 * scale,
           clipBehavior: Clip.antiAlias,
@@ -402,6 +411,7 @@ class _AppOptionCardState extends State<_AppOptionCard> {
           ),
         ),
       ),
+    ),
     );
   }
 }
@@ -502,20 +512,23 @@ class _HomeTitleButtonState extends State<HomeTitleButton> {
     final titleColor = isExpanded ? _expandedColor : _collapsedTitleColor;
     final chevronColor = isExpanded ? _expandedColor : _collapsedChevronColor;
 
-    return MouseRegion(
-      cursor: SystemMouseCursors.click,
-      onEnter: (_) => setState(() => _isHovered = true),
-      onExit: (_) => setState(() {
-        _isHovered = false;
-        _isPressed = false;
-      }),
-      child: GestureDetector(
-        onTapDown: (_) => setState(() => _isPressed = true),
-        onTapUp: (_) => setState(() => _isPressed = false),
-        onTapCancel: () => setState(() => _isPressed = false),
-        onTap: widget.onPressed,
-        behavior: HitTestBehavior.opaque,
-        child: AnimatedContainer(
+    return TogedogA11y.button(
+      label: widget.title,
+      hint: '앱 전환',
+      child: MouseRegion(
+        cursor: SystemMouseCursors.click,
+        onEnter: (_) => setState(() => _isHovered = true),
+        onExit: (_) => setState(() {
+          _isHovered = false;
+          _isPressed = false;
+        }),
+        child: GestureDetector(
+          onTapDown: (_) => setState(() => _isPressed = true),
+          onTapUp: (_) => setState(() => _isPressed = false),
+          onTapCancel: () => setState(() => _isPressed = false),
+          onTap: widget.onPressed,
+          behavior: HitTestBehavior.opaque,
+          child: AnimatedContainer(
           duration: const Duration(milliseconds: 120),
           decoration: BoxDecoration(
             color: _isPressed
@@ -567,6 +580,7 @@ class _HomeTitleButtonState extends State<HomeTitleButton> {
           ),
         ),
       ),
+    ),
     );
   }
 }

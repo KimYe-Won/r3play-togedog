@@ -1,12 +1,12 @@
 // TogeDog 산책모드 탭 화면 — Figma node 1080:1391
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import 'app_shell.dart';
 import 'live_camera_view.dart';
 import 'walk_02.dart';
+import 'walk_session.dart';
+import 'togedog_accessibility.dart';
 
 /// 하단 네비게이션 산책모드 탭
 class Walk01Screen extends StatefulWidget {
@@ -20,49 +20,14 @@ class _Walk01ScreenState extends State<Walk01Screen> {
   static const Color _activeGreen = Color(0xFF1B9748);
   static const Color _inactiveRed = Color(0xFFE53935);
 
+  final WalkSession _session = WalkSession.instance;
   bool _soundOn = true;
-  bool _walkActive = false;
-  Duration _walkElapsed = Duration.zero;
-  Timer? _walkTimer;
-
-  @override
-  void dispose() {
-    _walkTimer?.cancel();
-    super.dispose();
-  }
 
   void _openRealtimeView() {
+    if (!_session.active) return;
     Navigator.of(context).push(
       MaterialPageRoute<void>(builder: (_) => const Walk02Screen()),
     );
-  }
-
-  void _startWalk() {
-    if (_walkActive) return;
-    _walkTimer?.cancel();
-    setState(() {
-      _walkActive = true;
-      _walkElapsed = Duration.zero;
-    });
-    _walkTimer = Timer.periodic(const Duration(seconds: 1), (_) {
-      if (!mounted) return;
-      setState(() => _walkElapsed += const Duration(seconds: 1));
-    });
-  }
-
-  void _stopWalk() {
-    _walkTimer?.cancel();
-    setState(() {
-      _walkActive = false;
-      _walkElapsed = Duration.zero;
-    });
-  }
-
-  String _formatWalkDuration(Duration duration) {
-    final hours = duration.inHours.toString().padLeft(2, '0');
-    final minutes = (duration.inMinutes % 60).toString().padLeft(2, '0');
-    final seconds = (duration.inSeconds % 60).toString().padLeft(2, '0');
-    return '$hours:$minutes:$seconds';
   }
 
   @override
@@ -70,79 +35,100 @@ class _Walk01ScreenState extends State<Walk01Screen> {
     final scale = MediaQuery.sizeOf(context).width / kTogedogDesignWidth;
     final bottomInset = MediaQuery.paddingOf(context).bottom;
 
-    return Scaffold(
-      backgroundColor: const Color(0xFFF8F5FF),
-      body: SafeArea(
-        bottom: false,
-        child: Column(
-          children: [
-            Expanded(
-              child: Padding(
-                padding: EdgeInsets.fromLTRB(
-                  20 * scale,
-                  8 * scale,
-                  20 * scale,
-                  16 * scale,
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    AppScreenHeader(scale: scale, title: '산책 모드'),
-                    SizedBox(height: 20 * scale),
-                    _WalkStatusCard(
-                      scale: scale,
-                      statusColor:
-                          _walkActive ? _activeGreen : _inactiveRed,
-                      statusLabel: _walkActive ? '활성화 중' : '비활성화',
-                      elapsedText: _formatWalkDuration(_walkElapsed),
+    return ListenableBuilder(
+      listenable: _session,
+      builder: (context, _) {
+        final walkActive = _session.active;
+
+        return TogedogA11y.screen(
+          name: '산책 모드',
+          child: Scaffold(
+          backgroundColor: const Color(0xFFF8F5FF),
+          body: SafeArea(
+            bottom: false,
+            child: Column(
+              children: [
+                Expanded(
+                  child: Padding(
+                    padding: EdgeInsets.fromLTRB(
+                      20 * scale,
+                      8 * scale,
+                      20 * scale,
+                      16 * scale,
                     ),
-                    SizedBox(height: 25 * scale),
-                    _LiveFeedHeader(scale: scale),
-                    SizedBox(height: 8 * scale),
-                    Expanded(
-                      child: _LiveCameraCard(
-                        scale: scale,
-                        soundOn: _soundOn,
-                        onSoundTap: () => setState(() => _soundOn = !_soundOn),
-                        onFullscreenTap: _openRealtimeView,
-                      ),
-                    ),
-                    SizedBox(height: 13 * scale),
-                    _CurrentStatusCard(scale: scale),
-                    SizedBox(height: 15 * scale),
-                    Row(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
+                        AppScreenHeader(scale: scale, title: '산책 모드'),
+                        SizedBox(height: 20 * scale),
+                        _WalkStatusCard(
+                          scale: scale,
+                          statusColor:
+                              walkActive ? _activeGreen : _inactiveRed,
+                          statusLabel: walkActive ? '활성화 중' : '비활성화',
+                          elapsedText: _session.formattedElapsed,
+                        ),
+                        SizedBox(height: 25 * scale),
+                        _LiveFeedHeader(scale: scale, walkActive: walkActive),
+                        SizedBox(height: 8 * scale),
                         Expanded(
-                          child: _WalkActionButton(
+                          child: _LiveCameraCard(
                             scale: scale,
-                            label: '[시작]',
-                            filled: true,
-                            onTap: _startWalk,
+                            cameraEnabled: walkActive,
+                            soundOn: _soundOn,
+                            onSoundTap: () {
+                              if (!walkActive) return;
+                              setState(() => _soundOn = !_soundOn);
+                            },
+                            onFullscreenTap: _openRealtimeView,
                           ),
                         ),
-                        SizedBox(width: 13 * scale),
-                        Expanded(
-                          child: _WalkActionButton(
-                            scale: scale,
-                            label: '[종료]',
-                            filled: false,
-                            onTap: _stopWalk,
-                          ),
+                        SizedBox(height: 13 * scale),
+                        _CurrentStatusCard(
+                          scale: scale,
+                          heartRate: _session.heartRate,
+                          distanceKm: _session.distanceKm,
+                          activitySteps: _session.activitySteps,
+                          safetyStatus: _session.safetyStatus,
+                          formatSteps: _session.formatSteps,
+                        ),
+                        SizedBox(height: 15 * scale),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: _WalkActionButton(
+                                scale: scale,
+                                label: '[시작]',
+                                filled: true,
+                                onTap: _session.startWalk,
+                              ),
+                            ),
+                            SizedBox(width: 13 * scale),
+                            Expanded(
+                              child: _WalkActionButton(
+                                scale: scale,
+                                label: '[종료]',
+                                filled: false,
+                                onTap: _session.stopWalk,
+                              ),
+                            ),
+                          ],
                         ),
                       ],
                     ),
-                  ],
+                  ),
                 ),
-              ),
+                AppBottomNav(
+                  scale: scale,
+                  bottomInset: bottomInset,
+                  activeTab: AppTab.walk,
+                ),
+              ],
             ),
-            AppBottomNav(
-              scale: scale,
-              bottomInset: bottomInset,
-              activeTab: AppTab.walk,
-            ),
-          ],
+          ),
         ),
-      ),
+        );
+      },
     );
   }
 }
@@ -163,19 +149,19 @@ class _WalkStatusCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 64 * scale,
-      padding: EdgeInsets.symmetric(horizontal: 13 * scale, vertical: 14 * scale),
+      constraints: BoxConstraints(minHeight: 64 * scale),
+      padding: EdgeInsets.symmetric(horizontal: 13 * scale, vertical: 12 * scale),
       decoration: BoxDecoration(
-        color: Colors.white,
         borderRadius: BorderRadius.circular(10 * scale),
         border: Border.all(color: const Color(0xFFD4D4D4)),
       ),
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
                   '산책하기',
@@ -183,10 +169,11 @@ class _WalkStatusCard extends StatelessWidget {
                     fontFamily: 'LGSmartUI',
                     fontWeight: FontWeight.w600,
                     fontSize: 14 * scale,
+                    height: 1.2,
                     color: const Color(0xFF1A1A1A),
                   ),
                 ),
-                SizedBox(height: 6 * scale),
+                SizedBox(height: 4 * scale),
                 Row(
                   children: [
                     Container(
@@ -204,6 +191,7 @@ class _WalkStatusCard extends StatelessWidget {
                         fontFamily: 'LGSmartUI',
                         fontWeight: FontWeight.w600,
                         fontSize: 10 * scale,
+                        height: 1.2,
                         color: statusColor,
                       ),
                     ),
@@ -214,7 +202,7 @@ class _WalkStatusCard extends StatelessWidget {
           ),
           Column(
             crossAxisAlignment: CrossAxisAlignment.end,
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
             children: [
               Text(
                 '산책 시간',
@@ -222,6 +210,7 @@ class _WalkStatusCard extends StatelessWidget {
                   fontFamily: 'LGSmartUI',
                   fontWeight: FontWeight.w600,
                   fontSize: 10 * scale,
+                  height: 1.2,
                   color: const Color(0xFF6A6A6A),
                 ),
               ),
@@ -231,6 +220,7 @@ class _WalkStatusCard extends StatelessWidget {
                   fontFamily: 'LGSmartUI',
                   fontWeight: FontWeight.w600,
                   fontSize: 18 * scale,
+                  height: 1.1,
                   color: const Color(0xFF8756E7),
                 ),
               ),
@@ -243,9 +233,10 @@ class _WalkStatusCard extends StatelessWidget {
 }
 
 class _LiveFeedHeader extends StatelessWidget {
-  const _LiveFeedHeader({required this.scale});
+  const _LiveFeedHeader({required this.scale, required this.walkActive});
 
   final double scale;
+  final bool walkActive;
 
   @override
   Widget build(BuildContext context) {
@@ -259,8 +250,10 @@ class _LiveFeedHeader extends StatelessWidget {
               Container(
                 width: 8 * scale,
                 height: 8 * scale,
-                decoration: const BoxDecoration(
-                  color: Color(0xFF8756E7),
+                decoration: BoxDecoration(
+                  color: walkActive
+                      ? const Color(0xFF8756E7)
+                      : const Color(0xFFA5A5A5),
                   shape: BoxShape.circle,
                 ),
               ),
@@ -278,10 +271,12 @@ class _LiveFeedHeader extends StatelessWidget {
           ),
           Row(
             children: [
-              _SignalBars(scale: scale),
-              SizedBox(width: 4 * scale),
+              if (walkActive) ...[
+                _SignalBars(scale: scale),
+                SizedBox(width: 4 * scale),
+              ],
               Text(
-                '실시간 전송 중',
+                walkActive ? '실시간 전송 중' : '대기 중',
                 style: TextStyle(
                   fontFamily: 'LGSmartUI',
                   fontWeight: FontWeight.w400,
@@ -332,12 +327,14 @@ class _SignalBars extends StatelessWidget {
 class _LiveCameraCard extends StatelessWidget {
   const _LiveCameraCard({
     required this.scale,
+    required this.cameraEnabled,
     required this.soundOn,
     required this.onSoundTap,
     required this.onFullscreenTap,
   });
 
   final double scale;
+  final bool cameraEnabled;
   final bool soundOn;
   final VoidCallback onSoundTap;
   final VoidCallback onFullscreenTap;
@@ -356,7 +353,7 @@ class _LiveCameraCard extends StatelessWidget {
           child: Stack(
             fit: StackFit.expand,
             children: [
-              const LiveCameraView(),
+              LiveCameraView(enabled: cameraEnabled),
               Positioned(
                 right: 12 * scale,
                 bottom: 12 * scale,
@@ -364,6 +361,7 @@ class _LiveCameraCard extends StatelessWidget {
                   children: [
                     _CameraOverlayButton(
                       scale: scale,
+                      enabled: cameraEnabled,
                       onTap: onSoundTap,
                       child: Icon(
                         soundOn
@@ -376,11 +374,18 @@ class _LiveCameraCard extends StatelessWidget {
                     SizedBox(width: 8 * scale),
                     _CameraOverlayButton(
                       scale: scale,
+                      enabled: cameraEnabled,
                       onTap: onFullscreenTap,
                       child: SvgPicture.asset(
                         'asset/walk/walk_camera_fullscreen.svg',
                         width: 18 * scale,
                         height: 18 * scale,
+                        colorFilter: cameraEnabled
+                            ? null
+                            : const ColorFilter.mode(
+                                Colors.white54,
+                                BlendMode.srcIn,
+                              ),
                       ),
                     ),
                   ],
@@ -399,35 +404,52 @@ class _CameraOverlayButton extends StatelessWidget {
     required this.scale,
     required this.onTap,
     required this.child,
+    this.enabled = true,
   });
 
   final double scale;
   final VoidCallback onTap;
   final Widget child;
+  final bool enabled;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: onTap,
+      onTap: enabled ? onTap : null,
       behavior: HitTestBehavior.opaque,
-      child: Container(
-        width: 36 * scale,
-        height: 36 * scale,
-        decoration: BoxDecoration(
-          color: Colors.black.withValues(alpha: 0.45),
-          shape: BoxShape.circle,
+      child: Opacity(
+        opacity: enabled ? 1 : 0.35,
+        child: Container(
+          width: 36 * scale,
+          height: 36 * scale,
+          decoration: BoxDecoration(
+            color: Colors.black.withValues(alpha: enabled ? 0.45 : 0.25),
+            shape: BoxShape.circle,
+          ),
+          alignment: Alignment.center,
+          child: child,
         ),
-        alignment: Alignment.center,
-        child: child,
       ),
     );
   }
 }
 
 class _CurrentStatusCard extends StatelessWidget {
-  const _CurrentStatusCard({required this.scale});
+  const _CurrentStatusCard({
+    required this.scale,
+    required this.heartRate,
+    required this.distanceKm,
+    required this.activitySteps,
+    required this.safetyStatus,
+    required this.formatSteps,
+  });
 
   final double scale;
+  final int heartRate;
+  final double distanceKm;
+  final int activitySteps;
+  final String safetyStatus;
+  final String Function(int steps) formatSteps;
 
   @override
   Widget build(BuildContext context) {
@@ -481,7 +503,7 @@ class _CurrentStatusCard extends StatelessWidget {
                       style: const TextStyle(fontFamily: 'LGSmartUI'),
                       children: [
                         TextSpan(
-                          text: '98',
+                          text: '$heartRate',
                           style: TextStyle(
                             fontWeight: FontWeight.w600,
                             fontSize: 16 * scale,
@@ -533,7 +555,7 @@ class _CurrentStatusCard extends StatelessWidget {
                       style: const TextStyle(fontFamily: 'LGSmartUI'),
                       children: [
                         TextSpan(
-                          text: '1.2',
+                          text: distanceKm.toStringAsFixed(1),
                           style: TextStyle(
                             fontWeight: FontWeight.w600,
                             fontSize: 16 * scale,
@@ -583,7 +605,7 @@ class _CurrentStatusCard extends StatelessWidget {
                       style: const TextStyle(fontFamily: 'LGSmartUI'),
                       children: [
                         TextSpan(
-                          text: '6,245',
+                          text: formatSteps(activitySteps),
                           style: TextStyle(
                             fontWeight: FontWeight.w600,
                             fontSize: 16 * scale,
@@ -622,7 +644,7 @@ class _CurrentStatusCard extends StatelessWidget {
                   ),
                   label: '상태',
                   value: Text(
-                    '안전',
+                    safetyStatus,
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontFamily: 'LGSmartUI',
@@ -714,7 +736,7 @@ class _StatusMetric extends StatelessWidget {
   }
 }
 
-class _WalkActionButton extends StatelessWidget {
+class _WalkActionButton extends StatefulWidget {
   const _WalkActionButton({
     required this.scale,
     required this.label,
@@ -728,29 +750,60 @@ class _WalkActionButton extends StatelessWidget {
   final VoidCallback onTap;
 
   @override
+  State<_WalkActionButton> createState() => _WalkActionButtonState();
+}
+
+class _WalkActionButtonState extends State<_WalkActionButton> {
+  bool _pressed = false;
+
+  Color get _backgroundColor {
+    if (widget.filled) {
+      const base = Color(0xFF8756E7);
+      if (_pressed) return Color.lerp(base, Colors.black, 0.16)!;
+      return base;
+    }
+    if (_pressed) return const Color(0xFFF0F0F0);
+    return Colors.white;
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        height: 50 * scale,
-        alignment: Alignment.center,
-        decoration: BoxDecoration(
-          color: filled ? const Color(0xFF8756E7) : Colors.white,
-          borderRadius: BorderRadius.circular(10 * scale),
-          border: filled
-              ? null
-              : Border.all(color: const Color(0xFFA7ADBB)),
-        ),
-        child: Text(
-          label,
-          style: TextStyle(
-            fontFamily: 'LGSmartUI',
-            fontWeight: FontWeight.w600,
-            fontSize: 15 * scale,
-            color: filled ? Colors.white : const Color(0xFF1A1A1A),
+    final actionLabel = widget.label.replaceAll('[', '').replaceAll(']', '');
+    return TogedogA11y.button(
+      label: actionLabel,
+      child: GestureDetector(
+        onTapDown: (_) => setState(() => _pressed = true),
+        onTapUp: (_) => setState(() => _pressed = false),
+        onTapCancel: () => setState(() => _pressed = false),
+        onTap: widget.onTap,
+        behavior: HitTestBehavior.opaque,
+        child: AnimatedScale(
+        scale: _pressed ? 0.97 : 1,
+        duration: const Duration(milliseconds: 100),
+        curve: Curves.easeOut,
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 100),
+          height: 50 * widget.scale,
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+            color: _backgroundColor,
+            borderRadius: BorderRadius.circular(10 * widget.scale),
+            border: widget.filled
+                ? null
+                : Border.all(color: const Color(0xFFA7ADBB)),
+          ),
+          child: Text(
+            widget.label,
+            style: TextStyle(
+              fontFamily: 'LGSmartUI',
+              fontWeight: FontWeight.w600,
+              fontSize: 15 * widget.scale,
+              color: widget.filled ? Colors.white : const Color(0xFF1A1A1A),
+            ),
           ),
         ),
       ),
+    ),
     );
   }
 }

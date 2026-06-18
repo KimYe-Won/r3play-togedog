@@ -7,6 +7,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'main_onboarding_05.dart';
 import 'main_onboarding_08.dart';
 import 'onboarding_transitions.dart';
+import 'togedog_accessibility.dart';
 
 /// Figma: 위치 동의 (node 817:3215) — 모달 Frame 756 (546:6285)
 enum LocationPrecision { precise, approximate }
@@ -117,8 +118,10 @@ class _MainOnboarding07ScreenState extends State<MainOnboarding07Screen> {
       return modal;
     }
 
-    return Scaffold(
-      body: Stack(
+    return TogedogA11y.screen(
+      name: '위치 접근 허용',
+      child: Scaffold(
+        body: Stack(
         fit: StackFit.expand,
         children: [
           IgnorePointer(
@@ -131,6 +134,7 @@ class _MainOnboarding07ScreenState extends State<MainOnboarding07Screen> {
           modal,
         ],
       ),
+    ),
     );
   }
 
@@ -455,10 +459,13 @@ class _LocationMapOption extends StatelessWidget {
     final borderWidth =
         MainOnboarding07Screen.mapSelectionBorderWidth * scale;
 
-    return GestureDetector(
-      onTap: onTap,
-      behavior: HitTestBehavior.opaque,
-      child: SizedBox(
+    return TogedogA11y.selectable(
+      label: label,
+      selected: isSelected,
+      child: GestureDetector(
+        onTap: onTap,
+        behavior: HitTestBehavior.opaque,
+        child: SizedBox(
         width: columnWidth,
         height: MainOnboarding07Screen.mapsSectionHeight * scale,
         child: Column(
@@ -530,6 +537,7 @@ class _LocationMapOption extends StatelessWidget {
           ],
         ),
       ),
+    ),
     );
   }
 }
@@ -603,20 +611,22 @@ class _PermissionTextButtonState extends State<_PermissionTextButton> {
   Widget build(BuildContext context) {
     final scale = widget.scale;
 
-    return MouseRegion(
-      cursor: SystemMouseCursors.click,
-      onEnter: (_) => setState(() => _isHovered = true),
-      onExit: (_) => setState(() {
-        _isHovered = false;
-        _isPressed = false;
-      }),
-      child: GestureDetector(
-        onTapDown: (_) => setState(() => _isPressed = true),
-        onTapUp: (_) => setState(() => _isPressed = false),
-        onTapCancel: () => setState(() => _isPressed = false),
-        onTap: widget.onTap,
-        behavior: HitTestBehavior.opaque,
-        child: AnimatedOpacity(
+    return TogedogA11y.button(
+      label: widget.label,
+      child: MouseRegion(
+        cursor: SystemMouseCursors.click,
+        onEnter: (_) => setState(() => _isHovered = true),
+        onExit: (_) => setState(() {
+          _isHovered = false;
+          _isPressed = false;
+        }),
+        child: GestureDetector(
+          onTapDown: (_) => setState(() => _isPressed = true),
+          onTapUp: (_) => setState(() => _isPressed = false),
+          onTapCancel: () => setState(() => _isPressed = false),
+          onTap: widget.onTap,
+          behavior: HitTestBehavior.opaque,
+          child: AnimatedOpacity(
           duration: const Duration(milliseconds: 120),
           opacity: _isPressed
               ? 0.55
@@ -638,6 +648,7 @@ class _PermissionTextButtonState extends State<_PermissionTextButton> {
           ),
         ),
       ),
+    ),
     );
   }
 }

@@ -7,6 +7,7 @@ import 'package:gif/gif.dart';
 import 'home_01.dart';
 import 'main_onboarding_04.dart';
 import 'pet_profile_store.dart';
+import 'togedog_accessibility.dart';
 
 /// Figma: TogeDog 전환 모달 (node 557:9467)
 class MainOnboarding03Screen extends StatefulWidget {
@@ -85,7 +86,9 @@ class _MainOnboarding03ScreenState extends State<MainOnboarding03Screen>
     final scale =
         MediaQuery.sizeOf(context).width / MainOnboarding03Screen.designWidth;
 
-    return Material(
+    return TogedogA11y.screen(
+      name: 'TogeDog 전환',
+      child: Material(
       color: Colors.transparent,
       child: Center(
         child: Container(
@@ -113,10 +116,12 @@ class _MainOnboarding03ScreenState extends State<MainOnboarding03Screen>
               SizedBox(
                 width: MainOnboarding03Screen.gifWidth * scale,
                 height: 160 * scale,
-                child: Gif(
-                  image: const AssetImage(MainOnboarding03Screen.gifAsset),
-                  autostart: Autostart.loop,
-                  fit: BoxFit.contain,
+                child: TogedogA11y.decorative(
+                  Gif(
+                    image: const AssetImage(MainOnboarding03Screen.gifAsset),
+                    autostart: Autostart.loop,
+                    fit: BoxFit.contain,
+                  ),
                 ),
               ),
               SizedBox(height: 20 * scale),
@@ -148,6 +153,7 @@ class _MainOnboarding03ScreenState extends State<MainOnboarding03Screen>
           ),
         ),
       ),
+    ),
     );
   }
 }

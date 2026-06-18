@@ -1,0 +1,29 @@
+<svg viewBox="0 0 169 169" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Group 778">
+<circle id="Ellipse 66" cx="84.5" cy="84.5" r="84.5" fill="#8756E7" fill-opacity="0.1"/>
+<circle id="Ellipse 65" cx="84.5" cy="84.5" r="70.25" fill="#8756E7" fill-opacity="0.1" stroke="#8756E7" stroke-width="0.5"/>
+<path id="Ellipse 64" d="M145 83C145 116.137 118.137 143 85 143C51.8629 143 25 116.137 25 83C25 49.8629 51.8629 23 85 23C118.137 23 145 49.8629 145 83ZM28.0567 83C28.0567 114.449 53.5511 139.943 85 139.943C116.449 139.943 141.943 114.449 141.943 83C141.943 51.5511 116.449 26.0567 85 26.0567C53.5511 26.0567 28.0567 51.5511 28.0567 83Z" fill="url(#vibrationRingGradient)"/>
+<g id="Ellipse 67" filter="url(#vibrationRingGlow)">
+<path d="M145 83C145 116.137 118.137 143 85 143C51.8629 143 25 116.137 25 83C25 49.8629 51.8629 23 85 23C118.137 23 145 49.8629 145 83ZM28.0567 83C28.0567 114.449 53.5511 139.943 85 139.943C116.449 139.943 141.943 114.449 141.943 83C141.943 51.5511 116.449 26.0567 85 26.0567C53.5511 26.0567 28.0567 51.5511 28.0567 83Z" fill="url(#vibrationRingGradientGlow)"/>
+</g>
+</g>
+<defs>
+<filter id="vibrationRingGlow" x="16.6" y="14.6" width="136.8" height="136.8" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+<feGaussianBlur stdDeviation="4.2" result="effect1_foregroundBlur"/>
+</filter>
+<linearGradient id="vibrationRingGradient" x1="85" y1="23" x2="85" y2="143" gradientUnits="userSpaceOnUse">
+<stop stop-color="#AFA8F8"/>
+<stop offset="0.269231" stop-color="#5D88F5"/>
+<stop offset="0.485577" stop-color="#649FF3"/>
+<stop offset="0.769231" stop-color="#C040F7"/>
+</linearGradient>
+<linearGradient id="vibrationRingGradientGlow" x1="85" y1="23" x2="85" y2="143" gradientUnits="userSpaceOnUse">
+<stop stop-color="#AFA8F8"/>
+<stop offset="0.269231" stop-color="#5D88F5"/>
+<stop offset="0.485577" stop-color="#649FF3"/>
+<stop offset="0.769231" stop-color="#C040F7"/>
+</linearGradient>
+</defs>
+</svg>

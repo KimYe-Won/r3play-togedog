@@ -3,6 +3,8 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
+import 'togedog_accessibility.dart';
+
 enum WearableHarnessId { kong, star }
 
 enum WearableConnectionStatus { available, connecting }
@@ -283,13 +285,15 @@ class WearableConnectionCanvas extends StatelessWidget {
               child: Transform.scale(
                 scale: productScale,
                 alignment: Alignment.center,
-                child: Image.asset(
-                  WearableConnectionTheme.productImageAsset,
-                  width: productRenderWidth,
-                  height: productRenderHeight,
-                  fit: BoxFit.contain,
-                  alignment: Alignment.center,
-                  filterQuality: FilterQuality.high,
+                child: TogedogA11y.decorative(
+                  Image.asset(
+                    WearableConnectionTheme.productImageAsset,
+                    width: productRenderWidth,
+                    height: productRenderHeight,
+                    fit: BoxFit.contain,
+                    alignment: Alignment.center,
+                    filterQuality: FilterQuality.high,
+                  ),
                 ),
               ),
             ),
@@ -335,16 +339,20 @@ class WearableConnectionCanvas extends StatelessWidget {
             top: y(WearableConnectionTheme.backTop),
             child: Opacity(
               opacity: entrance.header.clamp(0, 1),
-              child: GestureDetector(
-                onTap: () => Navigator.of(context).pop(),
-                behavior: HitTestBehavior.opaque,
-                child: Padding(
-                  padding: EdgeInsets.all(4 * scale),
-                  child: SvgPicture.asset(
-                    WearableConnectionTheme.backButtonAsset,
-                    width: WearableConnectionTheme.backSize * scale,
-                    height: WearableConnectionTheme.backSize * scale,
-                    fit: BoxFit.contain,
+              child: TogedogA11y.button(
+                label: '뒤로',
+                hint: '이전 화면으로',
+                child: GestureDetector(
+                  onTap: () => Navigator.of(context).pop(),
+                  behavior: HitTestBehavior.opaque,
+                  child: Padding(
+                    padding: EdgeInsets.all(4 * scale),
+                    child: SvgPicture.asset(
+                      WearableConnectionTheme.backButtonAsset,
+                      width: WearableConnectionTheme.backSize * scale,
+                      height: WearableConnectionTheme.backSize * scale,
+                      fit: BoxFit.contain,
+                    ),
                   ),
                 ),
               ),
@@ -434,33 +442,37 @@ class WearableConnectionCanvas extends StatelessWidget {
                 (1 - entrance.help) * 40 * scale,
             child: Opacity(
               opacity: entrance.help.clamp(0, 1),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    '기기가 보이지 않나요?',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontFamily: 'LGSmartUI',
-                      fontWeight: FontWeight.w400,
-                      fontSize: 15 * scale,
-                      height: 1.2,
-                      color: WearableConnectionTheme.helpGray,
+              child: TogedogA11y.link(
+                label: '도움 받기',
+                hint: '기기가 보이지 않을 때 도움 받기',
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      '기기가 보이지 않나요?',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontFamily: 'LGSmartUI',
+                        fontWeight: FontWeight.w400,
+                        fontSize: 15 * scale,
+                        height: 1.2,
+                        color: WearableConnectionTheme.helpGray,
+                      ),
                     ),
-                  ),
-                  SizedBox(height: 6 * scale),
-                  Text(
-                    '도움 받기',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontFamily: 'LGSmartUI',
-                      fontWeight: FontWeight.w700,
-                      fontSize: 15 * scale,
-                      height: 1.2,
-                      color: WearableConnectionTheme.brandPurpleAlt,
+                    SizedBox(height: 6 * scale),
+                    Text(
+                      '도움 받기',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontFamily: 'LGSmartUI',
+                        fontWeight: FontWeight.w700,
+                        fontSize: 15 * scale,
+                        height: 1.2,
+                        color: WearableConnectionTheme.brandPurpleAlt,
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),
@@ -609,16 +621,24 @@ class _ConnectButtonState extends State<_ConnectButton> {
                 _isPressed = false;
               })
           : null,
-      child: GestureDetector(
-        onTapDown:
-            _isInteractive ? (_) => setState(() => _isPressed = true) : null,
-        onTapUp:
-            _isInteractive ? (_) => setState(() => _isPressed = false) : null,
-        onTapCancel:
-            _isInteractive ? () => setState(() => _isPressed = false) : null,
-        onTap: widget.onPressed,
-        behavior: HitTestBehavior.opaque,
-        child: AnimatedContainer(
+      child: TogedogA11y.button(
+        label: '연결',
+        hint: widget.mode == WearableConnectButtonMode.connecting
+            ? '연결 중'
+            : widget.mode == WearableConnectButtonMode.disabled
+                ? '연결 불가'
+                : null,
+        enabled: _isInteractive,
+        child: GestureDetector(
+          onTapDown:
+              _isInteractive ? (_) => setState(() => _isPressed = true) : null,
+          onTapUp:
+              _isInteractive ? (_) => setState(() => _isPressed = false) : null,
+          onTapCancel:
+              _isInteractive ? () => setState(() => _isPressed = false) : null,
+          onTap: widget.onPressed,
+          behavior: HitTestBehavior.opaque,
+          child: AnimatedContainer(
           duration: const Duration(milliseconds: 120),
           width: 54 * scale,
           height: 26.526 * scale,
@@ -639,6 +659,7 @@ class _ConnectButtonState extends State<_ConnectButton> {
           ),
         ),
       ),
+    ),
     );
   }
 
@@ -874,11 +895,13 @@ class _InsetAsset extends StatelessWidget {
       top: top,
       width: width,
       height: height,
-      child: Transform.rotate(
-        angle: rotation,
-        child: SvgPicture.asset(
-          asset,
-          fit: BoxFit.contain,
+      child: TogedogA11y.decorative(
+        Transform.rotate(
+          angle: rotation,
+          child: SvgPicture.asset(
+            asset,
+            fit: BoxFit.contain,
+          ),
         ),
       ),
     );

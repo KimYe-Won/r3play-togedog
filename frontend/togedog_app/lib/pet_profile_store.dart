@@ -7,6 +7,10 @@ class PetProfileStore {
   static final PetProfileStore instance = PetProfileStore._();
 
   static const String _onboardingCompletedKey = 'onboarding_completed';
+  static const String _guardianNameKey = 'profile_guardian_name';
+  static const String _petNameKey = 'profile_pet_name';
+  static const String _breedKey = 'profile_breed';
+  static const String _ageKey = 'profile_age';
 
   static const String defaultGuardianName = '보호자';
   static const String defaultPetName = '반려견';
@@ -24,6 +28,19 @@ class PetProfileStore {
   Future<void> load() async {
     final prefs = await SharedPreferences.getInstance();
     onboardingCompleted = prefs.getBool(_onboardingCompletedKey) ?? false;
+    guardianName = prefs.getString(_guardianNameKey) ?? '';
+    petName = prefs.getString(_petNameKey) ?? '';
+    breed = prefs.getString(_breedKey) ?? '';
+    age = prefs.getString(_ageKey) ?? '';
+  }
+
+  void _persistProfile() {
+    SharedPreferences.getInstance().then((prefs) async {
+      await prefs.setString(_guardianNameKey, guardianName);
+      await prefs.setString(_petNameKey, petName);
+      await prefs.setString(_breedKey, breed);
+      await prefs.setString(_ageKey, age);
+    });
   }
 
   void markOnboardingCompleted() {
@@ -43,6 +60,7 @@ class PetProfileStore {
     this.petName = petName.trim();
     this.breed = breed.trim();
     this.age = age.trim();
+    _persistProfile();
   }
 
   /// 11화면 '나중에' 선택 시 홈 기본 표시값
@@ -51,6 +69,7 @@ class PetProfileStore {
     petName = defaultPetName;
     breed = defaultBreed;
     age = defaultAgeLabel;
+    _persistProfile();
   }
 
   String get displayGuardianName =>

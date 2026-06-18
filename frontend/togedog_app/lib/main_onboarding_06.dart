@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'main_onboarding_05.dart';
 import 'main_onboarding_modal_flow.dart';
 import 'onboarding_transitions.dart';
+import 'togedog_accessibility.dart';
 
 /// Figma: 약관 동의 — 동의 전 (784:1612) / 동의 후 (784:1666)
 class MainOnboarding06Screen extends StatefulWidget {
@@ -77,7 +78,9 @@ class _MainOnboarding06ScreenState extends State<MainOnboarding06Screen> {
     final scale =
         MediaQuery.sizeOf(context).width / MainOnboarding06Screen.designWidth;
 
-    return Material(
+    return TogedogA11y.screen(
+      name: '약관 동의',
+      child: Material(
       color: Colors.transparent,
       child: Align(
         alignment: Alignment.bottomCenter,
@@ -176,6 +179,7 @@ class _MainOnboarding06ScreenState extends State<MainOnboarding06Screen> {
           ),
         ),
       ),
+    ),
     );
   }
 }
@@ -205,10 +209,13 @@ class _AgreementRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onToggle,
-      behavior: HitTestBehavior.opaque,
-      child: Row(
+    return TogedogA11y.checkbox(
+      label: label,
+      checked: isChecked,
+      child: GestureDetector(
+        onTap: onToggle,
+        behavior: HitTestBehavior.opaque,
+        child: Row(
         children: [
           _AgreementCheckbox(
             scale: scale,
@@ -237,6 +244,7 @@ class _AgreementRow extends StatelessWidget {
           ],
         ],
       ),
+    ),
     );
   }
 }
@@ -355,8 +363,11 @@ class _AgreeButtonState extends State<_AgreeButton> {
     final scale = widget.scale;
     final enabled = widget.enabled;
 
-    return MouseRegion(
-      cursor: enabled ? SystemMouseCursors.click : SystemMouseCursors.basic,
+    return TogedogA11y.button(
+      label: '동의',
+      enabled: enabled,
+      child: MouseRegion(
+        cursor: enabled ? SystemMouseCursors.click : SystemMouseCursors.basic,
       onEnter: (_) {
         if (enabled) setState(() => _isHovered = true);
       },
@@ -396,6 +407,7 @@ class _AgreeButtonState extends State<_AgreeButton> {
           ),
         ),
       ),
+    ),
     );
   }
 

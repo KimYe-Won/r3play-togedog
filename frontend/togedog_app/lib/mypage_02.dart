@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import 'app_shell.dart';
 import 'pet_profile_store.dart';
+import 'togedog_accessibility.dart';
 
 class Mypage02Screen extends StatefulWidget {
   const Mypage02Screen({super.key});
@@ -35,7 +36,9 @@ class _Mypage02ScreenState extends State<Mypage02Screen> {
     final petDetailLine = _petDetailLine(profile);
     final notesLength = _notesController.text.length;
 
-    return Scaffold(
+    return TogedogA11y.screen(
+      name: '내 정보 수정',
+      child: Scaffold(
       backgroundColor: const Color(0xFFF8F5FF),
       body: SafeArea(
         child: Column(
@@ -45,15 +48,19 @@ class _Mypage02ScreenState extends State<Mypage02Screen> {
               padding: EdgeInsets.fromLTRB(26 * scale, 8 * scale, 26 * scale, 0),
               child: Row(
                 children: [
-                  GestureDetector(
-                    onTap: () => Navigator.of(context).pop(),
-                    behavior: HitTestBehavior.opaque,
-                    child: Padding(
-                      padding: EdgeInsets.only(right: 9 * scale),
-                      child: Icon(
-                        Icons.arrow_back_ios_new,
-                        size: 18 * scale,
-                        color: const Color(0xFF111111),
+                  TogedogA11y.button(
+                    label: '뒤로',
+                    hint: '이전 화면으로',
+                    child: GestureDetector(
+                      onTap: () => Navigator.of(context).pop(),
+                      behavior: HitTestBehavior.opaque,
+                      child: Padding(
+                        padding: EdgeInsets.only(right: 9 * scale),
+                        child: Icon(
+                          Icons.arrow_back_ios_new,
+                          size: 18 * scale,
+                          color: const Color(0xFF111111),
+                        ),
                       ),
                     ),
                   ),
@@ -144,30 +151,67 @@ class _Mypage02ScreenState extends State<Mypage02Screen> {
                           Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              _AvatarWithCamera(
-                                scale: scale,
-                                imageAsset: TogedogAssets.petPhoto,
-                                fallbackAsset: TogedogAssets.petPhotoFallback,
-                              ),
-                              SizedBox(width: 16 * scale),
                               Expanded(
-                                child: Column(
+                                flex: 2,
+                                child: Row(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    _NameRow(scale: scale, name: petName),
-                                    SizedBox(height: 6 * scale),
+                                    _AvatarWithCamera(
+                                      scale: scale,
+                                      imageAsset: 'asset/mypage/mypage_profile_pet.png',
+                                      fallbackAsset: TogedogAssets.petPhotoFallback,
+                                    ),
+                                    SizedBox(width: 16 * scale),
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          _NameRow(scale: scale, name: petName),
+                                          SizedBox(height: 6 * scale),
+                                          Text(
+                                            petDetailLine,
+                                            style: TextStyle(
+                                              fontFamily: 'LGSmartUI',
+                                              fontWeight: FontWeight.w600,
+                                              fontSize: 14 * scale,
+                                              color: const Color(0xFF828282),
+                                            ),
+                                          ),
+                                          SizedBox(height: 4 * scale),
+                                          Text(
+                                            '4.2kg',
+                                            style: TextStyle(
+                                              fontFamily: 'LGSmartUI',
+                                              fontWeight: FontWeight.w600,
+                                              fontSize: 14 * scale,
+                                              color: const Color(0xFF1A1A1A),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Expanded(
+                                flex: 1,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
                                     Text(
-                                      petDetailLine,
+                                      '접종 횟수',
+                                      textAlign: TextAlign.center,
                                       style: TextStyle(
                                         fontFamily: 'LGSmartUI',
                                         fontWeight: FontWeight.w600,
-                                        fontSize: 14 * scale,
+                                        fontSize: 12 * scale,
                                         color: const Color(0xFF828282),
                                       ),
                                     ),
-                                    SizedBox(height: 4 * scale),
+                                    SizedBox(height: 6 * scale),
                                     Text(
-                                      '4.2kg',
+                                      '3회',
+                                      textAlign: TextAlign.center,
                                       style: TextStyle(
                                         fontFamily: 'LGSmartUI',
                                         fontWeight: FontWeight.w600,
@@ -177,30 +221,6 @@ class _Mypage02ScreenState extends State<Mypage02Screen> {
                                     ),
                                   ],
                                 ),
-                              ),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.end,
-                                children: [
-                                  Text(
-                                    '접종 횟수',
-                                    style: TextStyle(
-                                      fontFamily: 'LGSmartUI',
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 12 * scale,
-                                      color: const Color(0xFF828282),
-                                    ),
-                                  ),
-                                  SizedBox(height: 4 * scale),
-                                  Text(
-                                    '3회',
-                                    style: TextStyle(
-                                      fontFamily: 'LGSmartUI',
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 14 * scale,
-                                      color: const Color(0xFF1A1A1A),
-                                    ),
-                                  ),
-                                ],
                               ),
                             ],
                           ),
@@ -260,8 +280,12 @@ class _Mypage02ScreenState extends State<Mypage02Screen> {
                       ),
                       child: Stack(
                         children: [
-                          TextField(
-                            controller: _notesController,
+                          TogedogA11y.textField(
+                            label: '특이사항',
+                            value: _notesController.text,
+                            hint: '알레르기, 건강 상태 등 특이사항을 입력해주세요',
+                            child: TextField(
+                              controller: _notesController,
                             maxLines: 3,
                             maxLength: 200,
                             onChanged: (_) => setState(() {}),
@@ -283,6 +307,7 @@ class _Mypage02ScreenState extends State<Mypage02Screen> {
                               fontSize: 12 * scale,
                               color: const Color(0xFF1A1A1A),
                             ),
+                          ),
                           ),
                           Positioned(
                             right: 0,
@@ -349,6 +374,7 @@ class _Mypage02ScreenState extends State<Mypage02Screen> {
           ],
         ),
       ),
+    ),
     );
   }
 
@@ -517,6 +543,7 @@ class _InfoField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Text(
           label,
