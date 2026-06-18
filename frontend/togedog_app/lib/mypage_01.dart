@@ -2,10 +2,64 @@
 import 'package:flutter/material.dart';
 
 import 'app_shell.dart';
+import 'main_onboarding_05.dart';
+import 'mypage_02.dart';
+import 'mypage_03.dart';
 import 'pet_profile_store.dart';
+import 'togedog_accessibility.dart';
+
+/// Figma 488:202 프로필 영역
+class _MypageAssets {
+  static const profileUser = 'asset/mypage/mypage_profile_user.png';
+  static const profilePet = 'asset/mypage/mypage_profile_pet.png';
+  static const editAvatar = 'asset/mypage/mypage_edit_avatar.svg';
+  static const editName = 'asset/mypage/mypage_edit_name.svg';
+  static const petRing = 'asset/mypage/mypage_pet_ring.svg';
+  static const profileDashedLine = 'asset/mypage/mypage_profile_dashed_line.svg';
+}
+
+/// Figma 760:6962 / 760:7089 / 760:7094
+const double _kProfileInsetLeft = 7;
+const double _kProfileAvatarSize = 78;
+const double _kProfileUserPhotoSize = 99.273;
+const double _kProfileUserPhotoLeft = -10.13;
+const double _kProfileUserPhotoTop = -1.01;
+const double _kProfileEditBadgeSize = 28;
+const double _kProfileEditBadgeLeft = 50;
+const double _kProfileEditBadgeTop = 50;
+const double _kProfileNameGap = 22;
+const double _kProfilePetRight = 9;
+const double _kProfilePetRingSize = 68;
+const double _kProfilePetRingLeft = 4;
+const double _kProfilePetRingTop = -3;
+const double _kProfilePetPhotoSize = 65.833;
+const double _kProfilePetPhotoLeft = 6.5;
+const double _kProfileDashedLineLeft = 207;
+const double _kProfileDashedLineTop = 37;
+const double _kProfileDashedLineWidth = 61;
 
 class Mypage01Screen extends StatelessWidget {
   const Mypage01Screen({super.key});
+
+  void _openEditProfile(BuildContext context) {
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(builder: (_) => const Mypage02Screen()),
+    );
+  }
+
+  void _openDisabilitySelection(BuildContext context) {
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (_) => const MainOnboarding05Screen(fromMypage: true),
+      ),
+    );
+  }
+
+  void _openWearableManagement(BuildContext context) {
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(builder: (_) => const Mypage03Screen()),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +69,9 @@ class Mypage01Screen extends StatelessWidget {
     final displayName = '${profile.displayPetName}아빠';
     final petName = profile.displayPetName;
 
-    return Scaffold(
+    return TogedogA11y.screen(
+      name: '마이페이지',
+      child: Scaffold(
       backgroundColor: const Color(0xFFF0F1F5),
       body: SafeArea(
         bottom: false,
@@ -38,6 +94,7 @@ class Mypage01Screen extends StatelessWidget {
                       scale: scale,
                       displayName: displayName,
                       petName: petName,
+                      onEditProfile: () => _openEditProfile(context),
                     ),
                     SizedBox(height: 16 * scale),
                     _MembershipRow(scale: scale),
@@ -46,31 +103,51 @@ class Mypage01Screen extends StatelessWidget {
                     SizedBox(height: 8 * scale),
                     _SettingsCard(
                       scale: scale,
-                      items: const ['장애유형 선택'],
+                      items: [
+                        _SettingsItem(
+                          title: '장애유형 선택',
+                          onTap: () => _openDisabilitySelection(context),
+                        ),
+                      ],
                     ),
                     SizedBox(height: 20 * scale),
                     _SectionHeader(scale: scale, title: '알림 방식 설정'),
                     SizedBox(height: 8 * scale),
                     _SettingsCard(
                       scale: scale,
-                      items: const ['음성 (TTS)', '진동', '텍스트'],
+                      items: const [
+                        _SettingsItem(title: '음성 (TTS)'),
+                        _SettingsItem(title: '진동'),
+                        _SettingsItem(title: '텍스트'),
+                      ],
                     ),
                     SizedBox(height: 20 * scale),
                     _SectionHeader(scale: scale, title: '인터페이스 설정'),
                     SizedBox(height: 8 * scale),
                     _SettingsCard(
                       scale: scale,
-                      items: const ['글자크기', '음성속도', '진동강도'],
+                      items: const [
+                        _SettingsItem(title: '글자크기'),
+                        _SettingsItem(title: '음성속도'),
+                        _SettingsItem(title: '진동강도'),
+                      ],
                     ),
                     SizedBox(height: 20 * scale),
                     _SectionHeader(scale: scale, title: '기기 및 서비스 관리'),
                     SizedBox(height: 8 * scale),
                     _SettingsCard(
                       scale: scale,
-                      items: const [
-                        '웨어러블 디바이스 관리',
-                        '카메라 및 센서 정상 작동 여부 진단',
-                        '배터리 잔량 확인 및 소모품 교체 주기 알림 설정',
+                      items: [
+                        _SettingsItem(
+                          title: '웨어러블 디바이스 관리',
+                          onTap: () => _openWearableManagement(context),
+                        ),
+                        const _SettingsItem(
+                          title: '카메라 및 센서 정상 작동 여부 진단',
+                        ),
+                        const _SettingsItem(
+                          title: '배터리 잔량 확인 및 소모품 교체 주기 알림 설정',
+                        ),
                       ],
                     ),
                   ],
@@ -86,8 +163,16 @@ class Mypage01Screen extends StatelessWidget {
           ],
         ),
       ),
+    ),
     );
   }
+}
+
+class _SettingsItem {
+  const _SettingsItem({required this.title, this.onTap});
+
+  final String title;
+  final VoidCallback? onTap;
 }
 
 class _SectionHeader extends StatelessWidget {
@@ -115,87 +200,105 @@ class _ProfileSection extends StatelessWidget {
     required this.scale,
     required this.displayName,
     required this.petName,
+    required this.onEditProfile,
   });
 
   final double scale;
   final String displayName;
   final String petName;
+  final VoidCallback onEditProfile;
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 90 * scale,
-      child: Stack(
-        children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _UserAvatar(scale: scale),
-              SizedBox(width: 22 * scale),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Text(
-                        displayName,
-                        style: TextStyle(
-                          fontFamily: 'LGSmartUI',
-                          fontWeight: FontWeight.w700,
-                          fontSize: 20 * scale,
-                          color: const Color(0xFF111111),
-                        ),
-                      ),
-                      SizedBox(width: 9 * scale),
-                      Image.asset(
-                        'asset/mypage/mypage_edit_name.png',
-                        width: 15 * scale,
-                        height: 15 * scale,
-                        errorBuilder: (_, __, ___) => Icon(
-                          Icons.edit,
-                          size: 14 * scale,
-                          color: const Color(0xFF6A6A6A),
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 12 * scale),
-                  Container(
-                    height: 31 * scale,
-                    padding: EdgeInsets.symmetric(horizontal: 20 * scale),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(32.5 * scale),
-                    ),
-                    alignment: Alignment.center,
-                    child: Text(
-                      '내 정보 수정',
-                      style: TextStyle(
-                        fontFamily: 'LGSmartUI',
-                        fontWeight: FontWeight.w600,
-                        fontSize: 12 * scale,
-                        color: const Color(0xFF8756E7),
+    return Padding(
+      padding: EdgeInsets.only(left: _kProfileInsetLeft * scale),
+      child: SizedBox(
+        height: 90 * scale,
+        child: Stack(
+          clipBehavior: Clip.none,
+          children: [
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _UserAvatar(scale: scale),
+                SizedBox(width: _kProfileNameGap * scale),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    TogedogA11y.button(
+                      label: displayName,
+                      hint: '내 정보 수정',
+                      child: GestureDetector(
+                        onTap: onEditProfile,
+                        behavior: HitTestBehavior.opaque,
+                        child: Row(
+                        children: [
+                          Text(
+                            displayName,
+                            style: TextStyle(
+                              fontFamily: 'LGSmartUI',
+                              fontWeight: FontWeight.w700,
+                              fontSize: 20 * scale,
+                              color: const Color(0xFF111111),
+                            ),
+                          ),
+                          SizedBox(width: 9 * scale),
+                          TogedogAssets.svg(
+                            _MypageAssets.editName,
+                            width: 14.716 * scale,
+                            height: 14.72 * scale,
+                          ),
+                        ],
                       ),
                     ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-          Positioned(
-            right: 0,
-            top: 0,
-            child: _PetAvatar(scale: scale, petName: petName),
-          ),
-          Positioned(
-            left: 100 * scale,
-            top: 37 * scale,
-            child: CustomPaint(
-              size: Size(170 * scale, 2),
-              painter: _DashedLinePainter(color: const Color(0xFF8756E7)),
+                    ),
+                    SizedBox(height: 12 * scale),
+                    TogedogA11y.button(
+                      label: '내 정보 수정',
+                      child: GestureDetector(
+                        onTap: onEditProfile,
+                        behavior: HitTestBehavior.opaque,
+                        child: Container(
+                        height: 31 * scale,
+                        padding: EdgeInsets.symmetric(horizontal: 20 * scale),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(32.5 * scale),
+                        ),
+                        alignment: Alignment.center,
+                        child: Text(
+                          '내 정보 수정',
+                          style: TextStyle(
+                            fontFamily: 'LGSmartUI',
+                            fontWeight: FontWeight.w600,
+                            fontSize: 12 * scale,
+                            color: const Color(0xFF8756E7),
+                          ),
+                        ),
+                      ),
+                    ),
+                    ),
+                  ],
+                ),
+              ],
             ),
-          ),
-        ],
+            Positioned(
+              right: _kProfilePetRight * scale,
+              top: 0,
+              child: _PetAvatar(scale: scale, petName: petName),
+            ),
+            Positioned(
+              left: _kProfileDashedLineLeft * scale,
+              top: _kProfileDashedLineTop * scale,
+              child: TogedogAssets.svg(
+                _MypageAssets.profileDashedLine,
+                width: _kProfileDashedLineWidth * scale,
+                height: 1 * scale,
+                fit: BoxFit.fill,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -208,42 +311,42 @@ class _UserAvatar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final s = scale;
     return SizedBox(
-      width: 78 * scale,
-      height: 78 * scale,
+      width: _kProfileAvatarSize * s,
+      height: _kProfileAvatarSize * s,
       child: Stack(
         clipBehavior: Clip.none,
         children: [
           ClipOval(
-            child: Image.asset(
-              'asset/mypage/mypage_profile_user.png',
-              width: 78 * scale,
-              height: 78 * scale,
-              fit: BoxFit.cover,
-              errorBuilder: (_, __, ___) => Container(
-                width: 78 * scale,
-                height: 78 * scale,
-                color: const Color(0xFFE8E8EC),
-                child: Icon(Icons.person, size: 40 * scale),
+            child: SizedBox(
+              width: _kProfileAvatarSize * s,
+              height: _kProfileAvatarSize * s,
+              child: Stack(
+                clipBehavior: Clip.hardEdge,
+                children: [
+                  Positioned(
+                    left: _kProfileUserPhotoLeft * s,
+                    top: _kProfileUserPhotoTop * s,
+                    width: _kProfileUserPhotoSize * s,
+                    height: _kProfileUserPhotoSize * s,
+                    child: Image.asset(
+                      _MypageAssets.profileUser,
+                      fit: BoxFit.cover,
+                      alignment: Alignment.topCenter,
+                    ),
+                  ),
+                ],
               ),
             ),
           ),
           Positioned(
-            right: 0,
-            bottom: 0,
-            child: Image.asset(
-              'asset/mypage/mypage_edit_avatar.png',
-              width: 28 * scale,
-              height: 28 * scale,
-              errorBuilder: (_, __, ___) => Container(
-                width: 28 * scale,
-                height: 28 * scale,
-                decoration: const BoxDecoration(
-                  color: Colors.white,
-                  shape: BoxShape.circle,
-                ),
-                child: Icon(Icons.edit, size: 14 * scale),
-              ),
+            left: _kProfileEditBadgeLeft * s,
+            top: _kProfileEditBadgeTop * s,
+            child: TogedogAssets.svg(
+              _MypageAssets.editAvatar,
+              width: _kProfileEditBadgeSize * s,
+              height: _kProfileEditBadgeSize * s,
             ),
           ),
         ],
@@ -260,44 +363,51 @@ class _PetAvatar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final s = scale;
+    final photoSize = _kProfilePetPhotoSize * s;
     return SizedBox(
-      width: 78 * scale,
-      height: 90 * scale,
+      width: _kProfileAvatarSize * s,
+      height: 90 * s,
       child: Stack(
-        alignment: Alignment.topCenter,
+        clipBehavior: Clip.none,
         children: [
-          Image.asset(
-            'asset/mypage/mypage_pet_ring.png',
-            width: 68 * scale,
-            height: 68 * scale,
-            errorBuilder: (_, __, ___) => const SizedBox.shrink(),
+          Positioned(
+            left: _kProfilePetRingLeft * s,
+            top: _kProfilePetRingTop * s,
+            child: TogedogAssets.svg(
+              _MypageAssets.petRing,
+              width: _kProfilePetRingSize * s,
+              height: _kProfilePetRingSize * s,
+            ),
           ),
           Positioned(
-            top: 3 * scale,
+            left: _kProfilePetPhotoLeft * s,
+            top: 0,
+            width: photoSize,
+            height: photoSize,
             child: ClipOval(
               child: Image.asset(
-                TogedogAssets.petPhoto,
-                width: 65 * scale,
-                height: 65 * scale,
+                _MypageAssets.profilePet,
+                width: photoSize,
+                height: photoSize,
                 fit: BoxFit.cover,
-                errorBuilder: (_, __, ___) => Image.asset(
-                  TogedogAssets.petPhotoFallback,
-                  width: 65 * scale,
-                  height: 65 * scale,
-                  fit: BoxFit.cover,
-                ),
+                alignment: Alignment.center,
               ),
             ),
           ),
           Positioned(
-            bottom: 0,
+            left: 0,
+            right: 0,
+            top: 71 * s,
             child: Text(
               petName,
+              textAlign: TextAlign.center,
               style: TextStyle(
                 fontFamily: 'LGSmartUI',
                 fontWeight: FontWeight.w600,
-                fontSize: 10 * scale,
+                fontSize: 10 * s,
                 color: const Color(0xFF1A1A1A),
+                height: 25 / 10,
               ),
             ),
           ),
@@ -305,34 +415,6 @@ class _PetAvatar extends StatelessWidget {
       ),
     );
   }
-}
-
-class _DashedLinePainter extends CustomPainter {
-  _DashedLinePainter({required this.color});
-
-  final Color color;
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final paint = Paint()
-      ..color = color
-      ..strokeWidth = 1.5
-      ..style = PaintingStyle.stroke;
-    const dashWidth = 6.0;
-    const dashSpace = 4.0;
-    double startX = 0;
-    while (startX < size.width) {
-      canvas.drawLine(
-        Offset(startX, size.height / 2),
-        Offset(startX + dashWidth, size.height / 2),
-        paint,
-      );
-      startX += dashWidth + dashSpace;
-    }
-  }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
 
 class _MembershipRow extends StatelessWidget {
@@ -380,7 +462,7 @@ class _SettingsCard extends StatelessWidget {
   const _SettingsCard({required this.scale, required this.items});
 
   final double scale;
-  final List<String> items;
+  final List<_SettingsItem> items;
 
   @override
   Widget build(BuildContext context) {
@@ -395,7 +477,8 @@ class _SettingsCard extends StatelessWidget {
           for (var i = 0; i < items.length; i++)
             SettingsListTile(
               scale: scale,
-              title: items[i],
+              title: items[i].title,
+              onTap: items[i].onTap,
               showDivider: i < items.length - 1,
             ),
         ],

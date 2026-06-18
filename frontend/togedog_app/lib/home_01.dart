@@ -10,7 +10,10 @@ import 'main_onboarding_03.dart';
 import 'main_onboarding_02.dart';
 import 'mypage_02.dart';
 import 'pet_profile_store.dart';
+import 'report_shared.dart';
 import 'walk_02.dart';
+import 'walk_session.dart';
+import 'togedog_accessibility.dart';
 
 /// Figma: 홈화면 (node 625:7472)
 class Home01Screen extends StatefulWidget {
@@ -110,6 +113,7 @@ class _Home01ScreenState extends State<Home01Screen>
   }
 
   void _openWalkMode() {
+    WalkSession.instance.startWalk();
     Navigator.of(context).push(
       MaterialPageRoute<void>(builder: (_) => const Walk02Screen()),
     );
@@ -161,23 +165,28 @@ class _Home01ScreenState extends State<Home01Screen>
     final bottomInset = MediaQuery.paddingOf(context).bottom;
     final guardian = _profile.displayGuardianName;
     final petName = _profile.displayPetName;
+    final walkDays = monthlyReportDataFor(_displayedMonth).walkDays;
 
-    return Scaffold(
+    return TogedogA11y.screen(
+      name: '홈',
+      child: Scaffold(
       backgroundColor: Colors.white,
       body: Stack(
         fit: StackFit.expand,
         children: [
           Positioned.fill(
-            child: Image.asset(
-              _HomeAssets.background,
-              fit: BoxFit.cover,
-              alignment: Alignment.topCenter,
-              filterQuality: FilterQuality.high,
-              errorBuilder: (_, __, ___) => Image.asset(
-                _HomeAssets.backgroundFallback,
+            child: TogedogA11y.decorative(
+              Image.asset(
+                _HomeAssets.background,
                 fit: BoxFit.cover,
                 alignment: Alignment.topCenter,
                 filterQuality: FilterQuality.high,
+                errorBuilder: (_, __, ___) => Image.asset(
+                  _HomeAssets.backgroundFallback,
+                  fit: BoxFit.cover,
+                  alignment: Alignment.topCenter,
+                  filterQuality: FilterQuality.high,
+                ),
               ),
             ),
           ),
@@ -223,6 +232,7 @@ class _Home01ScreenState extends State<Home01Screen>
                         _HomeCalendar(
                           scale: scale,
                           displayedMonth: _displayedMonth,
+                          walkDays: walkDays,
                           selectedDate: _selectedDate,
                           onDateSelected: (date) =>
                               setState(() => _selectedDate = date),
@@ -244,6 +254,7 @@ class _Home01ScreenState extends State<Home01Screen>
           ),
         ],
       ),
+    ),
     );
   }
 }
@@ -285,15 +296,19 @@ class _HomeScreenHeader extends StatelessWidget {
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                GestureDetector(
-                  onTap: () => openNotifications(context),
-                  behavior: HitTestBehavior.opaque,
-                  child: Padding(
-                    padding: EdgeInsets.only(top: 2 * scale),
-                    child: TogedogAssets.svg(
-                      TogedogAssets.bell,
-                      width: 21 * scale,
-                      height: 21 * scale,
+                TogedogA11y.button(
+                  label: '알림',
+                  hint: '알림 목록 열기',
+                  child: GestureDetector(
+                    onTap: () => openNotifications(context),
+                    behavior: HitTestBehavior.opaque,
+                    child: Padding(
+                      padding: EdgeInsets.only(top: 2 * scale),
+                      child: TogedogAssets.svg(
+                        TogedogAssets.bell,
+                        width: 21 * scale,
+                        height: 21 * scale,
+                      ),
                     ),
                   ),
                 ),
@@ -394,10 +409,13 @@ class _PetStatusCard extends StatelessWidget {
                             mainAxisSize: MainAxisSize.min,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              GestureDetector(
-                                onTap: onPetTap,
-                                behavior: HitTestBehavior.opaque,
-                                child: Row(
+                              TogedogA11y.button(
+                                label: '$petName 프로필',
+                                hint: '반려견 프로필 보기',
+                                child: GestureDetector(
+                                  onTap: onPetTap,
+                                  behavior: HitTestBehavior.opaque,
+                                  child: Row(
                                   children: [
                                     Flexible(
                                       child: Text(
@@ -420,6 +438,7 @@ class _PetStatusCard extends StatelessWidget {
                                     ),
                                   ],
                                 ),
+                              ),
                               ),
                               SizedBox(height: 6 * scale),
                               Text(
@@ -720,9 +739,12 @@ class _WalkModeCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: SizedBox(
+    return TogedogA11y.button(
+      label: '산책 모드',
+      hint: '$petName와 산책 시작',
+      child: GestureDetector(
+        onTap: onTap,
+        child: SizedBox(
         height: 115 * scale,
         child: Stack(
           clipBehavior: Clip.none,
@@ -792,6 +814,7 @@ class _WalkModeCard extends StatelessWidget {
           ],
         ),
       ),
+    ),
     );
   }
 }
@@ -800,6 +823,7 @@ class _HomeCalendar extends StatelessWidget {
   const _HomeCalendar({
     required this.scale,
     required this.displayedMonth,
+    required this.walkDays,
     required this.selectedDate,
     required this.onDateSelected,
     required this.onPrevMonth,
@@ -808,6 +832,7 @@ class _HomeCalendar extends StatelessWidget {
 
   final double scale;
   final DateTime displayedMonth;
+  final Set<int> walkDays;
   final DateTime? selectedDate;
   final ValueChanged<DateTime> onDateSelected;
   final VoidCallback onPrevMonth;
@@ -856,6 +881,7 @@ class _HomeCalendar extends StatelessWidget {
               scale: scale,
               week: cells.sublist(row * 7, row * 7 + 7),
               displayedMonth: displayedMonth,
+              walkDays: walkDays,
               selectedDate: selectedDate,
               onDateSelected: onDateSelected,
             ),
@@ -896,6 +922,7 @@ class _CalendarDateRow extends StatelessWidget {
     required this.scale,
     required this.week,
     required this.displayedMonth,
+    required this.walkDays,
     required this.selectedDate,
     required this.onDateSelected,
   });
@@ -903,27 +930,32 @@ class _CalendarDateRow extends StatelessWidget {
   final double scale;
   final List<_CalendarDay> week;
   final DateTime displayedMonth;
+  final Set<int> walkDays;
   final DateTime? selectedDate;
   final ValueChanged<DateTime> onDateSelected;
 
-  bool _inDemoRange(_CalendarDay cell) {
-    return displayedMonth.month == 6 &&
-        cell.inMonth &&
-        cell.day >= 6 &&
-        cell.day <= 12;
+  bool _isWalkDay(_CalendarDay cell) {
+    return cell.inMonth && walkDays.contains(cell.day);
+  }
+
+  List<(int start, int end)> _walkRangesInWeek() {
+    final ranges = <(int, int)>[];
+    int? start;
+    for (var i = 0; i < week.length; i++) {
+      if (_isWalkDay(week[i])) {
+        start ??= i;
+      } else if (start != null) {
+        ranges.add((start, i - 1));
+        start = null;
+      }
+    }
+    if (start != null) ranges.add((start, week.length - 1));
+    return ranges;
   }
 
   @override
   Widget build(BuildContext context) {
-    int? rangeStart;
-    int? rangeEnd;
-    for (var i = 0; i < week.length; i++) {
-      if (_inDemoRange(week[i])) {
-        rangeStart ??= i;
-        rangeEnd = i;
-      }
-    }
-
+    final ranges = _walkRangesInWeek();
     final cellSize = 40 * scale;
 
     return Padding(
@@ -933,10 +965,10 @@ class _CalendarDateRow extends StatelessWidget {
         height: cellSize,
         child: Stack(
           children: [
-            if (rangeStart != null && rangeEnd != null)
+            for (final range in ranges)
               Positioned(
-                left: rangeStart * cellSize,
-                width: (rangeEnd - rangeStart + 1) * cellSize,
+                left: range.$1 * cellSize,
+                width: (range.$2 - range.$1 + 1) * cellSize,
                 top: 0,
                 height: cellSize,
                 child: DecoratedBox(
@@ -957,7 +989,7 @@ class _CalendarDateRow extends StatelessWidget {
                     day: week[i],
                     displayedMonth: displayedMonth,
                     selectedDate: selectedDate,
-                    inRange: _inDemoRange(week[i]),
+                    isWalkDay: _isWalkDay(week[i]),
                     onTap: week[i].inMonth
                         ? () => onDateSelected(
                               DateTime(
@@ -1038,7 +1070,7 @@ class _CalendarDayCell extends StatelessWidget {
     required this.day,
     required this.displayedMonth,
     required this.selectedDate,
-    required this.inRange,
+    required this.isWalkDay,
     this.onTap,
   });
 
@@ -1046,7 +1078,7 @@ class _CalendarDayCell extends StatelessWidget {
   final _CalendarDay day;
   final DateTime displayedMonth;
   final DateTime? selectedDate;
-  final bool inRange;
+  final bool isWalkDay;
   final VoidCallback? onTap;
 
   @override
@@ -1068,7 +1100,7 @@ class _CalendarDayCell extends StatelessWidget {
       bg = const Color(0xFF8756E7);
       textColor = Colors.white;
       fontWeight = FontWeight.w600;
-    } else if (inRange) {
+    } else if (isWalkDay) {
       textColor = const Color(0xFF8756E7);
     } else if (isMutedSpot) {
       bg = const Color(0xFFF5F5F5);

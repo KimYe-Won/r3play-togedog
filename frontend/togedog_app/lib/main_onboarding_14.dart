@@ -7,6 +7,7 @@ import 'home_01.dart';
 import 'onboarding_transitions.dart';
 import 'onboarding_wearable_shared.dart';
 import 'pet_profile_store.dart';
+import 'togedog_accessibility.dart';
 /// Figma: 디바이스 연결 완료 (node 582:12748)
 class MainOnboarding14Screen extends StatefulWidget {
   const MainOnboarding14Screen({
@@ -104,7 +105,9 @@ class _MainOnboarding14ScreenState extends State<MainOnboarding14Screen>
   Widget build(BuildContext context) {
     final scaler = WearableCanvasScaler(context);
 
-    return Scaffold(
+    return TogedogA11y.screen(
+      name: '웨어러블 연결 완료',
+      child: Scaffold(
       backgroundColor: Colors.white,
       body: Stack(
         fit: StackFit.expand,
@@ -167,6 +170,7 @@ class _MainOnboarding14ScreenState extends State<MainOnboarding14Screen>
             ),
         ],
       ),
+    ),
     );
   }
 }
@@ -226,12 +230,16 @@ class _WearableConnectionCompleteModal extends StatelessWidget {
                     Positioned(
                       right: 0,
                       top: 2.5 * scale,
-                      child: GestureDetector(
-                        onTap: onClose,
-                        behavior: HitTestBehavior.opaque,
-                        child: Padding(
-                          padding: EdgeInsets.all(4 * scale),
-                          child: _ModalCloseIcon(size: 14 * scale),
+                      child: TogedogA11y.button(
+                        label: '닫기',
+                        hint: '연결 완료 안내 닫기',
+                        child: GestureDetector(
+                          onTap: onClose,
+                          behavior: HitTestBehavior.opaque,
+                          child: Padding(
+                            padding: EdgeInsets.all(4 * scale),
+                            child: _ModalCloseIcon(size: 14 * scale),
+                          ),
                         ),
                       ),
                     ),

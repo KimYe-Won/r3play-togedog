@@ -2,7 +2,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
+import 'guidance_mode_store.dart';
 import 'main_onboarding_06.dart';
+import 'togedog_accessibility.dart';
 
 /// Figma: 안내방식 선택 화면 (node 488:351)
 enum GuidanceMode { sound, vibration, text }
@@ -12,10 +14,13 @@ class MainOnboarding05Screen extends StatefulWidget {
     super.key,
     this.initialSelectedMode,
     this.interactive = true,
+    this.fromMypage = false,
   });
 
   final GuidanceMode? initialSelectedMode;
   final bool interactive;
+  /// 마이페이지 → 장애유형 선택 경로일 때 확인 후 마이페이지로 복귀
+  final bool fromMypage;
 
   static const double designWidth = 402;
   static const double horizontalInset = 19;
@@ -53,10 +58,16 @@ class _MainOnboarding05ScreenState extends State<MainOnboarding05Screen> {
   @override
   void initState() {
     super.initState();
-    _selectedMode = widget.initialSelectedMode ?? GuidanceMode.sound;
+    _selectedMode = widget.initialSelectedMode ??
+        GuidanceModeStore.instance.selectedMode;
   }
 
   void _goToNextScreen() {
+    GuidanceModeStore.instance.setMode(_selectedMode);
+    if (widget.fromMypage) {
+      Navigator.of(context).pop();
+      return;
+    }
     openOnboarding06(context, guidanceMode: _selectedMode);
   }
 
@@ -71,9 +82,11 @@ class _MainOnboarding05ScreenState extends State<MainOnboarding05Screen> {
             MediaQuery.paddingOf(context).top)
         .clamp(8.0, double.infinity);
 
-    return IgnorePointer(
-      ignoring: !widget.interactive,
-      child: Scaffold(
+    return TogedogA11y.screen(
+      name: '안내 방식 선택',
+      child: IgnorePointer(
+        ignoring: !widget.interactive,
+        child: Scaffold(
         backgroundColor: Colors.white,
         body: SafeArea(
           child: Padding(
@@ -108,6 +121,7 @@ class _MainOnboarding05ScreenState extends State<MainOnboarding05Screen> {
                 _NextButton(
                   scale: scale,
                   height: buttonHeight,
+                  label: widget.fromMypage ? '확인' : '다음',
                   onPressed: widget.interactive ? _goToNextScreen : null,
                 ),
                 SizedBox(height: bottomInset),
@@ -116,6 +130,7 @@ class _MainOnboarding05ScreenState extends State<MainOnboarding05Screen> {
           ),
         ),
       ),
+    ),
     );
   }
 }
@@ -254,11 +269,15 @@ class _GuidanceOptionCardState extends State<_GuidanceOptionCard> {
     final scale = widget.scale;
     final isSelected = widget.isSelected;
 
-    return MouseRegion(
-      cursor: SystemMouseCursors.click,
-      onEnter: (_) => setState(() => _isHovered = true),
-      onExit: (_) => setState(() => _isHovered = false),
-      child: GestureDetector(
+    return TogedogA11y.selectable(
+      label: widget.data.title,
+      description: widget.data.description,
+      selected: isSelected,
+      child: MouseRegion(
+        cursor: SystemMouseCursors.click,
+        onEnter: (_) => setState(() => _isHovered = true),
+        onExit: (_) => setState(() => _isHovered = false),
+        child: GestureDetector(
         onTap: widget.onTap,
         behavior: HitTestBehavior.opaque,
         child: AnimatedContainer(
@@ -329,6 +348,7 @@ class _GuidanceOptionCardState extends State<_GuidanceOptionCard> {
           ),
         ),
       ),
+    ),
     );
   }
 }
@@ -392,11 +412,13 @@ class _NextButton extends StatefulWidget {
   const _NextButton({
     required this.scale,
     required this.height,
+    required this.label,
     required this.onPressed,
   });
 
   final double scale;
   final double height;
+  final String label;
   final VoidCallback? onPressed;
 
   @override
@@ -412,8 +434,11 @@ class _NextButtonState extends State<_NextButton> {
     final scale = widget.scale;
     final enabled = widget.onPressed != null;
 
-    return MouseRegion(
-      cursor: enabled ? SystemMouseCursors.click : SystemMouseCursors.basic,
+    return TogedogA11y.button(
+      label: widget.label,
+      enabled: enabled,
+      child: MouseRegion(
+        cursor: enabled ? SystemMouseCursors.click : SystemMouseCursors.basic,
       onEnter: (_) {
         if (enabled) setState(() => _isHovered = true);
       },
@@ -441,7 +466,7 @@ class _NextButtonState extends State<_NextButton> {
             ),
           ),
           child: Text(
-            '다음',
+            widget.label,
             style: TextStyle(
               fontFamily: 'LGSmartUI',
               fontWeight: FontWeight.w700,
@@ -452,6 +477,7 @@ class _NextButtonState extends State<_NextButton> {
           ),
         ),
       ),
+    ),
     );
   }
 

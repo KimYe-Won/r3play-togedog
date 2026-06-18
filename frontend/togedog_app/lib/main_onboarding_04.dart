@@ -4,6 +4,7 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import 'main_onboarding_05.dart';
+import 'togedog_accessibility.dart';
 
 /// Figma: 온보딩 투게독 (node 488:346)
 class MainOnboarding04Screen extends StatefulWidget {
@@ -76,7 +77,9 @@ class _MainOnboarding04ScreenState extends State<MainOnboarding04Screen>
     final bottomInset = MainOnboarding04Screen.bottomInset * scale;
     final buttonHeight = MainOnboarding04Screen.buttonHeight * scale;
 
-    return Scaffold(
+    return TogedogA11y.screen(
+      name: '투게독 웰컴',
+      child: Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
         child: Padding(
@@ -110,11 +113,13 @@ class _MainOnboarding04ScreenState extends State<MainOnboarding04Screen>
                           SizedBox(
                             width: logoWidth,
                             height: logoHeight,
-                            child: SvgPicture.asset(
-                              MainOnboarding04Screen.wordmarkAsset,
-                              width: logoWidth,
-                              height: logoHeight,
-                              fit: BoxFit.contain,
+                            child: TogedogA11y.decorative(
+                              SvgPicture.asset(
+                                MainOnboarding04Screen.wordmarkAsset,
+                                width: logoWidth,
+                                height: logoHeight,
+                                fit: BoxFit.contain,
+                              ),
                             ),
                           ),
                           SizedBox(
@@ -147,6 +152,7 @@ class _MainOnboarding04ScreenState extends State<MainOnboarding04Screen>
           ),
         ),
       ),
+    ),
     );
   }
 }
@@ -174,14 +180,16 @@ class _StartButtonState extends State<_StartButton> {
   Widget build(BuildContext context) {
     final scale = widget.scale;
 
-    return MouseRegion(
-      cursor: SystemMouseCursors.click,
-      onEnter: (_) => setState(() => _isHovered = true),
-      onExit: (_) => setState(() {
-        _isHovered = false;
-        _isPressed = false;
-      }),
-      child: GestureDetector(
+    return TogedogA11y.button(
+      label: '시작하기',
+      child: MouseRegion(
+        cursor: SystemMouseCursors.click,
+        onEnter: (_) => setState(() => _isHovered = true),
+        onExit: (_) => setState(() {
+          _isHovered = false;
+          _isPressed = false;
+        }),
+        child: GestureDetector(
         onTapDown: (_) => setState(() => _isPressed = true),
         onTapUp: (_) => setState(() => _isPressed = false),
         onTapCancel: () => setState(() => _isPressed = false),
@@ -210,6 +218,7 @@ class _StartButtonState extends State<_StartButton> {
           ),
         ),
       ),
+    ),
     );
   }
 

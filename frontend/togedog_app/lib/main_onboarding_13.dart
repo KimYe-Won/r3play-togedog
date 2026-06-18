@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'main_onboarding_14.dart';
 import 'onboarding_transitions.dart';
 import 'onboarding_wearable_shared.dart';
+import 'togedog_accessibility.dart';
 
 /// Figma: 디바이스 연결 (node 488:359)
 class MainOnboarding13Screen extends StatefulWidget {
@@ -83,7 +84,9 @@ class _MainOnboarding13ScreenState extends State<MainOnboarding13Screen>
   Widget build(BuildContext context) {
     final scaler = WearableCanvasScaler(context);
 
-    return Scaffold(
+    return TogedogA11y.screen(
+      name: '웨어러블 연결',
+      child: Scaffold(
       backgroundColor: Colors.white,
       body: Stack(
         fit: StackFit.expand,
@@ -120,6 +123,7 @@ class _MainOnboarding13ScreenState extends State<MainOnboarding13Screen>
           ),
         ],
       ),
+    ),
     );
   }
 }

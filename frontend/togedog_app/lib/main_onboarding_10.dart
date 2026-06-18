@@ -7,6 +7,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'main_onboarding_05.dart';
 import 'main_onboarding_11.dart';
 import 'onboarding_transitions.dart';
+import 'togedog_accessibility.dart';
 
 /// Figma: 카메라 동의 (node 817:3636) — 모달 Frame (817:3675)
 enum CameraPermissionChoice { allow, deny }
@@ -121,8 +122,10 @@ class MainOnboarding10Screen extends StatelessWidget {
       return modal;
     }
 
-    return Scaffold(
-      body: Stack(
+    return TogedogA11y.screen(
+      name: '카메라 허용',
+      child: Scaffold(
+        body: Stack(
         fit: StackFit.expand,
         children: [
           IgnorePointer(
@@ -135,6 +138,7 @@ class MainOnboarding10Screen extends StatelessWidget {
           modal,
         ],
       ),
+    ),
     );
   }
 }
@@ -235,36 +239,39 @@ class _CameraPermissionButtonState extends State<_CameraPermissionButton> {
   Widget build(BuildContext context) {
     final scale = widget.scale;
 
-    return MouseRegion(
-      cursor: SystemMouseCursors.click,
-      onEnter: (_) => setState(() => _isHovered = true),
-      onExit: (_) => setState(() {
-        _isHovered = false;
-        _isPressed = false;
-      }),
-      child: GestureDetector(
-        onTapDown: (_) => setState(() => _isPressed = true),
-        onTapUp: (_) => setState(() => _isPressed = false),
-        onTapCancel: () => setState(() => _isPressed = false),
-        onTap: widget.onTap,
-        behavior: HitTestBehavior.opaque,
-        child: AnimatedOpacity(
-          duration: const Duration(milliseconds: 120),
-          opacity: _isPressed
-              ? 0.55
-              : _isHovered
-                  ? 0.75
-                  : 1,
-          child: Text(
-            widget.label,
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              fontFamily: 'LGSmartUI',
-              fontWeight: FontWeight.w700,
-              fontSize: MainOnboarding10Screen.permissionButtonFontSize * scale,
-              height: 1.2,
-              color: MainOnboarding10Screen.textBlack,
-              letterSpacing: 0.036 * scale,
+    return TogedogA11y.button(
+      label: widget.label,
+      child: MouseRegion(
+        cursor: SystemMouseCursors.click,
+        onEnter: (_) => setState(() => _isHovered = true),
+        onExit: (_) => setState(() {
+          _isHovered = false;
+          _isPressed = false;
+        }),
+        child: GestureDetector(
+          onTapDown: (_) => setState(() => _isPressed = true),
+          onTapUp: (_) => setState(() => _isPressed = false),
+          onTapCancel: () => setState(() => _isPressed = false),
+          onTap: widget.onTap,
+          behavior: HitTestBehavior.opaque,
+          child: AnimatedOpacity(
+            duration: const Duration(milliseconds: 120),
+            opacity: _isPressed
+                ? 0.55
+                : _isHovered
+                    ? 0.75
+                    : 1,
+            child: Text(
+              widget.label,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontFamily: 'LGSmartUI',
+                fontWeight: FontWeight.w700,
+                fontSize: MainOnboarding10Screen.permissionButtonFontSize * scale,
+                height: 1.2,
+                color: MainOnboarding10Screen.textBlack,
+                letterSpacing: 0.036 * scale,
+              ),
             ),
           ),
         ),

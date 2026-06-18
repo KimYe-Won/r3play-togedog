@@ -8,6 +8,7 @@ import 'main_onboarding_09.dart';
 import 'main_onboarding_10.dart';
 import 'main_onboarding_11.dart';
 import 'onboarding_transitions.dart';
+import 'togedog_accessibility.dart';
 
 enum _OnboardingModalStep { terms, location, notification, nearby, camera }
 
@@ -54,8 +55,10 @@ class _MainOnboardingModalFlowScreenState
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Stack(
+    return TogedogA11y.screen(
+      name: '약관 및 권한 동의',
+      child: Scaffold(
+        body: Stack(
         fit: StackFit.expand,
         children: [
           IgnorePointer(
@@ -84,6 +87,7 @@ class _MainOnboardingModalFlowScreenState
           ),
         ],
       ),
+    ),
     );
   }
 

@@ -9,6 +9,7 @@ import 'home_01.dart';
 import 'main_onboarding_13.dart';
 import 'onboarding_transitions.dart';
 import 'pet_profile_store.dart';
+import 'togedog_accessibility.dart';
 
 /// Figma: 디바이스 검색 (node 766:8339)
 class MainOnboarding12Screen extends StatefulWidget {
@@ -173,7 +174,9 @@ class _MainOnboarding12ScreenState extends State<MainOnboarding12Screen>
     final canvasLeft = (screenWidth - canvasWidth) / 2;
     final canvasTop = topPadding + (availableHeight - canvasHeight) / 2;
 
-    return Scaffold(
+    return TogedogA11y.screen(
+      name: '디바이스 검색',
+      child: Scaffold(
       backgroundColor: Colors.white,
       body: Stack(
         fit: StackFit.expand,
@@ -206,6 +209,7 @@ class _MainOnboarding12ScreenState extends State<MainOnboarding12Screen>
           ),
         ],
       ),
+    ),
     );
   }
 }
@@ -299,16 +303,20 @@ class _DesignCanvas extends StatelessWidget {
               Positioned(
                 left: MainOnboarding12Screen.horizontalInset * scale,
                 top: y(MainOnboarding12Screen.backTop),
-                child: GestureDetector(
-                  onTap: () => Navigator.of(context).pop(),
-                  behavior: HitTestBehavior.opaque,
-                  child: Padding(
-                    padding: EdgeInsets.all(4 * scale),
-                    child: SvgPicture.asset(
-                      MainOnboarding12Screen.backButtonAsset,
-                      width: MainOnboarding12Screen.backSize * scale,
-                      height: MainOnboarding12Screen.backSize * scale,
-                      fit: BoxFit.contain,
+                child: TogedogA11y.button(
+                  label: '뒤로',
+                  hint: '이전 화면으로',
+                  child: GestureDetector(
+                    onTap: () => Navigator.of(context).pop(),
+                    behavior: HitTestBehavior.opaque,
+                    child: Padding(
+                      padding: EdgeInsets.all(4 * scale),
+                      child: SvgPicture.asset(
+                        MainOnboarding12Screen.backButtonAsset,
+                        width: MainOnboarding12Screen.backSize * scale,
+                        height: MainOnboarding12Screen.backSize * scale,
+                        fit: BoxFit.contain,
+                      ),
                     ),
                   ),
                 ),
@@ -758,20 +766,22 @@ class _CancelButtonState extends State<_CancelButton> {
   Widget build(BuildContext context) {
     final scale = widget.scale;
 
-    return MouseRegion(
-      cursor: SystemMouseCursors.click,
-      onEnter: (_) => setState(() => _isHovered = true),
-      onExit: (_) => setState(() {
-        _isHovered = false;
-        _isPressed = false;
-      }),
-      child: GestureDetector(
-        onTapDown: (_) => setState(() => _isPressed = true),
-        onTapUp: (_) => setState(() => _isPressed = false),
-        onTapCancel: () => setState(() => _isPressed = false),
-        onTap: widget.onPressed,
-        behavior: HitTestBehavior.opaque,
-        child: AnimatedContainer(
+    return TogedogA11y.button(
+      label: '취소',
+      child: MouseRegion(
+        cursor: SystemMouseCursors.click,
+        onEnter: (_) => setState(() => _isHovered = true),
+        onExit: (_) => setState(() {
+          _isHovered = false;
+          _isPressed = false;
+        }),
+        child: GestureDetector(
+          onTapDown: (_) => setState(() => _isPressed = true),
+          onTapUp: (_) => setState(() => _isPressed = false),
+          onTapCancel: () => setState(() => _isPressed = false),
+          onTap: widget.onPressed,
+          behavior: HitTestBehavior.opaque,
+          child: AnimatedContainer(
           duration: const Duration(milliseconds: 120),
           width: double.infinity,
           height: MainOnboarding12Screen.buttonHeight * scale,
@@ -794,6 +804,7 @@ class _CancelButtonState extends State<_CancelButton> {
           ),
         ),
       ),
+    ),
     );
   }
 

@@ -3,6 +3,10 @@ import 'package:flutter/material.dart';
 
 import 'app_shell.dart';
 import 'pet_profile_store.dart';
+import 'report_02.dart';
+import 'report_03.dart';
+import 'report_shared.dart';
+import 'togedog_accessibility.dart';
 
 class Report01Screen extends StatefulWidget {
   const Report01Screen({super.key});
@@ -28,46 +32,36 @@ class _Report01ScreenState extends State<Report01Screen> {
     final bottomInset = MediaQuery.paddingOf(context).bottom;
     final petName = _profile.displayPetName;
 
-    return Scaffold(
-      backgroundColor: const Color(0xFFF8F5FF),
-      body: Stack(
-        fit: StackFit.expand,
-        children: [
-          Positioned.fill(
-            child: Image.asset(
-              TogedogAssets.background,
-              fit: BoxFit.cover,
-              alignment: Alignment.topCenter,
-              errorBuilder: (_, __, ___) => Image.asset(
-                TogedogAssets.backgroundFallback,
-                fit: BoxFit.cover,
-                alignment: Alignment.topCenter,
-              ),
-            ),
-          ),
-          SafeArea(
-            bottom: false,
-            child: Column(
-              children: [
-                Expanded(
-                  child: SingleChildScrollView(
-                    padding: EdgeInsets.fromLTRB(
-                      22 * scale,
-                      8 * scale,
-                      22 * scale,
-                      16 * scale,
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        AppScreenHeader(scale: scale, title: '리포트'),
-                        SizedBox(height: 20 * scale),
-                        _ReportTabBar(
-                          scale: scale,
-                          selected: _selectedTab,
-                          onChanged: (i) => setState(() => _selectedTab = i),
-                        ),
-                        SizedBox(height: 12 * scale),
+    return DefaultTextStyle(
+      style: reportFont(scale, size: 12),
+      child: TogedogA11y.screen(
+        name: '리포트',
+        child: Scaffold(
+        backgroundColor: kReportScreenBackground,
+        body: SafeArea(
+          bottom: false,
+          child: Column(
+            children: [
+              Expanded(
+                child: SingleChildScrollView(
+                  padding: EdgeInsets.fromLTRB(
+                    23 * scale,
+                    8 * scale,
+                    23 * scale,
+                    16 * scale,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      AppScreenHeader(scale: scale, title: '리포트'),
+                      SizedBox(height: 20 * scale),
+                      ReportTabBar(
+                        scale: scale,
+                        selected: _selectedTab,
+                        onChanged: (i) => setState(() => _selectedTab = i),
+                      ),
+                      SizedBox(height: 11 * scale),
+                      if (_selectedTab == 0) ...[
                         _StatusCard(
                           scale: scale,
                           dateLabel: _todayDateLabel(),
@@ -79,95 +73,24 @@ class _Report01ScreenState extends State<Report01Screen> {
                         _AiAnalysisCard(scale: scale),
                         SizedBox(height: 10 * scale),
                         _DangerRecordCard(scale: scale),
-                      ],
-                    ),
-                  ),
-                ),
-                AppBottomNav(
-                  scale: scale,
-                  bottomInset: bottomInset,
-                  activeTab: AppTab.report,
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _ReportTabBar extends StatelessWidget {
-  const _ReportTabBar({
-    required this.scale,
-    required this.selected,
-    required this.onChanged,
-  });
-
-  final double scale;
-  final int selected;
-  final ValueChanged<int> onChanged;
-
-  static const _labels = ['오늘의 리포트', '주간 리포트', '월간 리포트'];
-
-  @override
-  Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final tabWidth = constraints.maxWidth / _labels.length;
-        final indicatorWidth = 97 * scale;
-        final indicatorLeft =
-            4 * scale + selected * tabWidth + (tabWidth - indicatorWidth) / 2;
-
-        return Container(
-          height: 37 * scale,
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(10 * scale),
-          ),
-          child: Stack(
-            children: [
-              AnimatedPositioned(
-                duration: const Duration(milliseconds: 200),
-                curve: Curves.easeOutCubic,
-                left: indicatorLeft.clamp(4 * scale, constraints.maxWidth - indicatorWidth - 4 * scale),
-                top: 4 * scale,
-                child: Container(
-                  width: indicatorWidth,
-                  height: 29 * scale,
-                  decoration: BoxDecoration(
-                    color: const Color(0xFF8756E7),
-                    borderRadius: BorderRadius.circular(10 * scale),
+                      ]                       else if (_selectedTab == 1)
+                        Report02Body(scale: scale, petName: petName)
+                      else
+                        Report03Body(scale: scale),
+                    ],
                   ),
                 ),
               ),
-              Row(
-                children: List.generate(_labels.length, (i) {
-                  return Expanded(
-                    child: GestureDetector(
-                      onTap: () => onChanged(i),
-                      behavior: HitTestBehavior.opaque,
-                      child: Center(
-                        child: Text(
-                          _labels[i],
-                          style: TextStyle(
-                            fontFamily: 'LGSmartUI',
-                            fontWeight: FontWeight.w600,
-                            fontSize: 11 * scale,
-                            color: selected == i
-                                ? Colors.white
-                                : const Color(0xFF6A6A6A),
-                          ),
-                        ),
-                      ),
-                    ),
-                  );
-                }),
+              AppBottomNav(
+                scale: scale,
+                bottomInset: bottomInset,
+                activeTab: AppTab.report,
               ),
             ],
           ),
-        );
-      },
+        ),
+      ),
+    ),
     );
   }
 }
@@ -195,54 +118,47 @@ class _StatusCard extends StatelessWidget {
       child: Stack(
         children: [
           Positioned(
-            left: 13 * scale,
+            left: kReportCardContentLeft * scale,
             top: 20 * scale,
             child: Text(
               dateLabel,
-              style: TextStyle(
-                fontFamily: 'LGSmartUI',
-                fontWeight: FontWeight.w600,
-                fontSize: 11 * scale,
+              style: reportFont(
+                scale,
+                size: 11,
                 color: const Color(0xFF8756E7),
               ),
             ),
           ),
           Positioned(
-            left: 13 * scale,
+            left: kReportCardContentLeft * scale,
             top: 41 * scale,
             child: Text(
               '오늘의 $petName 상태',
-              style: TextStyle(
-                fontFamily: 'LGSmartUI',
-                fontWeight: FontWeight.w700,
-                fontSize: 18 * scale,
+              style: reportFont(
+                scale,
+                size: 18,
+                weight: FontWeight.w700,
                 color: const Color(0xFF111111),
               ),
             ),
           ),
           Positioned(
-            left: 10 * scale,
+            left: kReportCardContentLeft * scale,
             top: 79 * scale,
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                Image.asset(
-                  'asset/report/report_safety.png',
+                TogedogAssets.svg(
+                  ReportAssets.safety,
                   width: 24 * scale,
                   height: 24 * scale,
-                  errorBuilder: (_, __, ___) => Icon(
-                    Icons.verified_user,
-                    size: 24 * scale,
-                    color: const Color(0xFF1CA24E),
-                  ),
                 ),
                 SizedBox(width: 6 * scale),
                 Text(
                   '안정',
-                  style: TextStyle(
-                    fontFamily: 'LGSmartUI',
-                    fontWeight: FontWeight.w600,
-                    fontSize: 20 * scale,
+                  style: reportFont(
+                    scale,
+                    size: 20,
                     color: const Color(0xFF1CA24E),
                   ),
                 ),
@@ -250,33 +166,34 @@ class _StatusCard extends StatelessWidget {
             ),
           ),
           Positioned(
-            left: 10 * scale,
+            left: kReportCardContentLeft * scale,
             top: 110 * scale,
             child: Text(
               '특별한 이상 징후가 없어요.',
-              style: TextStyle(
-                fontFamily: 'LGSmartUI',
-                fontWeight: FontWeight.w600,
-                fontSize: 12 * scale,
+              style: reportFont(
+                scale,
+                size: 12,
                 color: const Color(0xFF6A6A6A),
               ),
             ),
           ),
           Positioned(
-            right: 0,
+            left: kDailyStatusPetLeft * scale,
             top: 1 * scale,
-            width: 166 * scale,
-            height: 154 * scale,
+            width: kDailyStatusPetWidth * scale,
+            height: kDailyStatusPetHeight * scale,
             child: Image.asset(
-              'asset/report/report_status_pet.png',
+              ReportAssets.statusPet,
               fit: BoxFit.cover,
-              alignment: Alignment.centerLeft,
+              alignment: Alignment.bottomCenter,
               errorBuilder: (_, __, ___) => Image.asset(
                 TogedogAssets.petPhoto,
                 fit: BoxFit.cover,
+                alignment: Alignment.bottomCenter,
                 errorBuilder: (_, __, ___) => Image.asset(
                   TogedogAssets.petPhotoFallback,
                   fit: BoxFit.cover,
+                  alignment: Alignment.bottomCenter,
                 ),
               ),
             ),
@@ -306,13 +223,8 @@ class _HealthSummaryCard extends StatelessWidget {
           Padding(
             padding: EdgeInsets.only(left: 4 * scale),
             child: Text(
-              '  오늘의 건강 요약',
-              style: TextStyle(
-                fontFamily: 'LGSmartUI',
-                fontWeight: FontWeight.w600,
-                fontSize: 12 * scale,
-                color: const Color(0xFF1A1A1A),
-              ),
+              '오늘의 건강 요약',
+              style: reportFont(scale, size: 12),
             ),
           ),
           SizedBox(height: 9 * scale),
@@ -321,40 +233,26 @@ class _HealthSummaryCard extends StatelessWidget {
               Expanded(
                 child: _HealthMetric(
                   scale: scale,
-                  icon: Stack(
-                    alignment: Alignment.center,
-                    children: [
-                      TogedogAssets.svg(
-                        TogedogAssets.heartCircle,
-                        width: 36 * scale,
-                        height: 36 * scale,
-                      ),
-                      TogedogAssets.svg(
-                        TogedogAssets.heartIcon,
-                        width: 16 * scale,
-                        height: 16 * scale,
-                      ),
-                    ],
+                  icon: TogedogAssets.svg(
+                    ReportAssets.heartMetric,
+                    width: 36 * scale,
+                    height: 36 * scale,
                   ),
                   label: '심박수',
                   value: RichText(
                     textAlign: TextAlign.center,
                     text: TextSpan(
-                      style: const TextStyle(fontFamily: 'LGSmartUI'),
+                      style: reportFont(scale, size: 16),
                       children: [
                         TextSpan(
                           text: '98',
-                          style: TextStyle(
-                            fontWeight: FontWeight.w600,
-                            fontSize: 16 * scale,
-                            color: const Color(0xFF1A1A1A),
-                          ),
+                          style: reportFont(scale, size: 16),
                         ),
                         TextSpan(
                           text: ' bpm',
-                          style: TextStyle(
-                            fontWeight: FontWeight.w600,
-                            fontSize: 10 * scale,
+                          style: reportFont(
+                            scale,
+                            size: 10,
                             color: const Color(0xFF828282),
                           ),
                         ),
@@ -370,51 +268,38 @@ class _HealthSummaryCard extends StatelessWidget {
               Expanded(
                 child: _HealthMetric(
                   scale: scale,
-                  icon: Image.asset(
-                    'asset/report/report_sleep_icon.png',
+                  icon: TogedogAssets.svg(
+                    ReportAssets.sleepMetric,
                     width: 36 * scale,
                     height: 36 * scale,
-                    errorBuilder: (_, __, ___) => Icon(
-                      Icons.bedtime_outlined,
-                      size: 28 * scale,
-                      color: const Color(0xFF5684E7),
-                    ),
                   ),
                   label: '수면',
                   value: RichText(
                     textAlign: TextAlign.center,
                     text: TextSpan(
-                      style: const TextStyle(fontFamily: 'LGSmartUI'),
+                      style: reportFont(scale, size: 16),
                       children: [
                         TextSpan(
                           text: '8',
-                          style: TextStyle(
-                            fontWeight: FontWeight.w600,
-                            fontSize: 16 * scale,
-                            color: const Color(0xFF1A1A1A),
-                          ),
+                          style: reportFont(scale, size: 16),
                         ),
                         TextSpan(
                           text: '시간',
-                          style: TextStyle(
-                            fontWeight: FontWeight.w600,
-                            fontSize: 10 * scale,
+                          style: reportFont(
+                            scale,
+                            size: 10,
                             color: const Color(0xFF828282),
                           ),
                         ),
                         TextSpan(
                           text: '20',
-                          style: TextStyle(
-                            fontWeight: FontWeight.w600,
-                            fontSize: 16 * scale,
-                            color: const Color(0xFF1A1A1A),
-                          ),
+                          style: reportFont(scale, size: 16),
                         ),
                         TextSpan(
                           text: '분',
-                          style: TextStyle(
-                            fontWeight: FontWeight.w600,
-                            fontSize: 10 * scale,
+                          style: reportFont(
+                            scale,
+                            size: 10,
                             color: const Color(0xFF828282),
                           ),
                         ),
@@ -430,40 +315,26 @@ class _HealthSummaryCard extends StatelessWidget {
               Expanded(
                 child: _HealthMetric(
                   scale: scale,
-                  icon: Stack(
-                    alignment: Alignment.center,
-                    children: [
-                      TogedogAssets.svg(
-                        TogedogAssets.activityCircle,
-                        width: 36 * scale,
-                        height: 36 * scale,
-                      ),
-                      TogedogAssets.svg(
-                        TogedogAssets.activityIcon,
-                        width: 16 * scale,
-                        height: 16 * scale,
-                      ),
-                    ],
+                  icon: TogedogAssets.svg(
+                    ReportAssets.activityMetric,
+                    width: 36 * scale,
+                    height: 36 * scale,
                   ),
                   label: '활동량',
                   value: RichText(
                     textAlign: TextAlign.center,
                     text: TextSpan(
-                      style: const TextStyle(fontFamily: 'LGSmartUI'),
+                      style: reportFont(scale, size: 16),
                       children: [
                         TextSpan(
                           text: '6,245',
-                          style: TextStyle(
-                            fontWeight: FontWeight.w600,
-                            fontSize: 16 * scale,
-                            color: const Color(0xFF1A1A1A),
-                          ),
+                          style: reportFont(scale, size: 16),
                         ),
                         TextSpan(
                           text: '걸음',
-                          style: TextStyle(
-                            fontWeight: FontWeight.w600,
-                            fontSize: 10 * scale,
+                          style: reportFont(
+                            scale,
+                            size: 10,
                             color: const Color(0xFF828282),
                           ),
                         ),
@@ -479,26 +350,16 @@ class _HealthSummaryCard extends StatelessWidget {
               Expanded(
                 child: _HealthMetric(
                   scale: scale,
-                  icon: Image.asset(
-                    'asset/report/report_meal_icon.png',
+                  icon: TogedogAssets.svg(
+                    ReportAssets.mealMetric,
                     width: 36 * scale,
                     height: 36 * scale,
-                    errorBuilder: (_, __, ___) => Icon(
-                      Icons.restaurant,
-                      size: 28 * scale,
-                      color: const Color(0xFFFF7B00),
-                    ),
                   ),
                   label: '식사',
                   value: Text(
                     '좋음',
                     textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontFamily: 'LGSmartUI',
-                      fontWeight: FontWeight.w600,
-                      fontSize: 16 * scale,
-                      color: const Color(0xFF1A1A1A),
-                    ),
+                    style: reportFont(scale, size: 16),
                   ),
                   badge: '정상',
                   badgeBg: const Color(0xFFFEF1EB),
@@ -547,10 +408,9 @@ class _HealthMetric extends StatelessWidget {
           SizedBox(height: 8 * scale),
           Text(
             label,
-            style: TextStyle(
-              fontFamily: 'LGSmartUI',
-              fontWeight: FontWeight.w600,
-              fontSize: 10 * scale,
+            style: reportFont(
+              scale,
+              size: 10,
               color: const Color(0xFF828282),
             ),
           ),
@@ -567,10 +427,10 @@ class _HealthMetric extends StatelessWidget {
             alignment: Alignment.center,
             child: Text(
               badge,
-              style: TextStyle(
-                fontFamily: 'LGSmartUI',
-                fontWeight: FontWeight.w400,
-                fontSize: 10 * scale,
+              style: reportFont(
+                scale,
+                size: 10,
+                weight: FontWeight.w400,
                 color: badgeColor,
               ),
             ),
@@ -590,7 +450,12 @@ class _AiAnalysisCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: 186 * scale,
-      padding: EdgeInsets.fromLTRB(14 * scale, 22 * scale, 11 * scale, 11 * scale),
+      padding: EdgeInsets.fromLTRB(
+        kReportCardContentLeft * scale,
+        22 * scale,
+        11 * scale,
+        11 * scale,
+      ),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(10 * scale),
@@ -603,39 +468,32 @@ class _AiAnalysisCard extends StatelessWidget {
             children: [
               Text(
                 'AI 건강 분석',
-                style: TextStyle(
-                  fontFamily: 'LGSmartUI',
-                  fontWeight: FontWeight.w600,
-                  fontSize: 12 * scale,
-                  color: const Color(0xFF1A1A1A),
-                ),
+                style: reportFont(scale, size: 12),
               ),
               SizedBox(height: 25 * scale),
               Text(
                 '평소보다 활동량이 부족해요',
-                style: TextStyle(
-                  fontFamily: 'LGSmartUI',
-                  fontWeight: FontWeight.w600,
-                  fontSize: 20 * scale,
-                  color: const Color(0xFF1A1A1A),
-                ),
+                style: reportFont(scale, size: 20),
               ),
               SizedBox(height: 5 * scale),
               RichText(
                 text: TextSpan(
-                  style: TextStyle(
-                    fontFamily: 'LGSmartUI',
-                    fontWeight: FontWeight.w600,
-                    fontSize: 15 * scale,
+                  style: reportFont(
+                    scale,
+                    size: 15,
                     color: const Color(0xFF6A6A6A),
                   ),
-                  children: const [
-                    TextSpan(text: '오늘은 '),
+                  children: [
+                    TextSpan(text: '오늘은 ', style: reportFont(scale, size: 15, color: const Color(0xFF6A6A6A))),
                     TextSpan(
                       text: '가벼운 산책',
-                      style: TextStyle(color: Color(0xFF8756E7)),
+                      style: reportFont(
+                        scale,
+                        size: 15,
+                        color: const Color(0xFF8756E7),
+                      ),
                     ),
-                    TextSpan(text: '을 추천해요'),
+                    TextSpan(text: '을 추천해요', style: reportFont(scale, size: 15, color: const Color(0xFF6A6A6A))),
                   ],
                 ),
               ),
@@ -650,20 +508,15 @@ class _AiAnalysisCard extends StatelessWidget {
                 ),
                 child: Row(
                   children: [
-                    Icon(
-                      Icons.pets,
-                      size: 18 * scale,
-                      color: const Color(0xFF8756E7),
+                    TogedogAssets.svg(
+                      ReportAssets.walkPaw,
+                      width: 18 * scale,
+                      height: 18 * scale,
                     ),
                     SizedBox(width: 6 * scale),
                     Text(
                       '20분 산책 추천',
-                      style: TextStyle(
-                        fontFamily: 'LGSmartUI',
-                        fontWeight: FontWeight.w600,
-                        fontSize: 12 * scale,
-                        color: const Color(0xFF1A1A1A),
-                      ),
+                      style: reportFont(scale, size: 12),
                     ),
                   ],
                 ),
@@ -676,7 +529,7 @@ class _AiAnalysisCard extends StatelessWidget {
             width: 121 * scale,
             height: 97 * scale,
             child: Image.asset(
-              'asset/report/report_ai_dog.png',
+              ReportAssets.aiDog,
               fit: BoxFit.contain,
               errorBuilder: (_, __, ___) => const SizedBox.shrink(),
             ),
@@ -708,20 +561,14 @@ class _DangerRecordCard extends StatelessWidget {
             children: [
               Text(
                 '오늘의 위험 기록',
-                style: TextStyle(
-                  fontFamily: 'LGSmartUI',
-                  fontWeight: FontWeight.w600,
-                  fontSize: 12 * scale,
-                  color: const Color(0xFF1A1A1A),
-                ),
+                style: reportFont(scale, size: 12),
               ),
               const Spacer(),
               Text(
                 '전체 기록 보기',
-                style: TextStyle(
-                  fontFamily: 'LGSmartUI',
-                  fontWeight: FontWeight.w600,
-                  fontSize: 9 * scale,
+                style: reportFont(
+                  scale,
+                  size: 9,
                   color: const Color(0xFF8756E7),
                 ),
               ),
@@ -742,10 +589,10 @@ class _DangerRecordCard extends StatelessWidget {
               ),
               child: Row(
                 children: [
-                  Icon(
-                    Icons.check_circle_outline,
-                    size: 26 * scale,
-                    color: const Color(0xFF1CA24E),
+                  TogedogAssets.svg(
+                    ReportAssets.dangerCheck,
+                    width: 26 * scale,
+                    height: 26 * scale,
                   ),
                   SizedBox(width: 10 * scale),
                   Expanded(
@@ -755,10 +602,10 @@ class _DangerRecordCard extends StatelessWidget {
                       children: [
                         Text(
                           '위험 상황 1회 감지',
-                          style: TextStyle(
-                            fontFamily: 'LGSmartUI',
-                            fontWeight: FontWeight.w700,
-                            fontSize: 10 * scale,
+                          style: reportFont(
+                            scale,
+                            size: 10,
+                            weight: FontWeight.w700,
                             color: const Color(0xFF6A6A6A),
                           ),
                         ),
@@ -766,10 +613,10 @@ class _DangerRecordCard extends StatelessWidget {
                           '산책 중 깨진 유리 접근 감지 → 안전하게 회피했어요',
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                            fontFamily: 'LGSmartUI',
-                            fontWeight: FontWeight.w400,
-                            fontSize: 8 * scale,
+                          style: reportFont(
+                            scale,
+                            size: 8,
+                            weight: FontWeight.w400,
                             color: const Color(0xFF6A6A6A),
                           ),
                         ),
@@ -780,7 +627,7 @@ class _DangerRecordCard extends StatelessWidget {
                   ClipRRect(
                     borderRadius: BorderRadius.circular(6 * scale),
                     child: Image.asset(
-                      'asset/report/report_danger_map.png',
+                      ReportAssets.dangerMap,
                       width: 72 * scale,
                       height: 47 * scale,
                       fit: BoxFit.cover,
