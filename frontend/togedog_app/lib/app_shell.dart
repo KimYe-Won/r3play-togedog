@@ -9,6 +9,7 @@ import 'noti_01.dart';
 import 'report_01.dart';
 import 'togedog_accessibility.dart';
 import 'walk_01.dart';
+import 'walk_ai_manager.dart';
 import 'walk_session.dart';
 
 /// Figma 기준 화면 너비
@@ -79,6 +80,7 @@ void navigateToTab(BuildContext context, AppTab tab) {
 
 /// walk_03·walk_04 [종료] — 산책을 멈추고 walk_01로 이동합니다.
 void endWalkAndGoToWalk01(BuildContext context) {
+  WalkAiManager.instance.disconnect();
   WalkSession.instance.stopWalk();
   Navigator.of(context).pushAndRemoveUntil(
     MaterialPageRoute<void>(

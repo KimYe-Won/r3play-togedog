@@ -17,35 +17,34 @@ class AudioAlert {
 }
 
 class _SoundInfo {
-  const _SoundInfo(this.priority, this.label, this.vibrationMs);
+  const _SoundInfo(this.priority, this.label);
   final int priority;
   final String label;
-  final int vibrationMs;
 }
 
 class AudioService {
-  static const String _modelPath = 'assets/yamnet.tflite';
+  static const String _modelPath = 'asset/deep_learning/yamnet.tflite';
   static const double _minConfidence = 0.3;
   static const Duration _highCooldown = Duration(seconds: 4);
   static const Duration _cooldown = Duration(seconds: 6);
 
-  // YAMNet 521개 클래스 중 관심 클래스 → 위험도 매핑
+  // YAMNet 521개 클래스 중 관심 클래스 → 위험도 매핑 (521개 중 12개만 감지)
   static const Map<String, _SoundInfo> _soundMap = {
     // 위험
-    'Car':                      _SoundInfo(1, '차량 소리', 200),
-    'Vehicle horn, car horn, honking': _SoundInfo(1, '차량 경적', 200),
-    'Beeping, horn honking':    _SoundInfo(1, '차량 경적', 200),
-    'Siren':                    _SoundInfo(1, '사이렌', 200),
-    'Emergency vehicle':        _SoundInfo(1, '긴급차량', 200),
-    'Motorcycle':               _SoundInfo(1, '오토바이 소리', 200),
-    'Engine':                   _SoundInfo(1, '오토바이 소리', 200),
+    'Car':                             _SoundInfo(1, '차량 소리'),
+    'Vehicle horn, car horn, honking': _SoundInfo(1, '차량 경적'),
+    'Beeping, horn honking':           _SoundInfo(1, '차량 경적'),
+    'Siren':                           _SoundInfo(1, '사이렌'),
+    'Emergency vehicle':               _SoundInfo(1, '긴급차량'),
+    'Motorcycle':                      _SoundInfo(1, '오토바이 소리'),
+    'Engine':                          _SoundInfo(1, '오토바이 소리'),
     // 경고
-    'Dog':                      _SoundInfo(2, '개 짖는 소리', 150),
-    'Bark':                     _SoundInfo(2, '개 짖는 소리', 150),
-    'Yip':                      _SoundInfo(2, '개 짖는 소리', 150),
+    'Dog':                             _SoundInfo(2, '개 짖는 소리'),
+    'Bark':                            _SoundInfo(2, '개 짖는 소리'),
+    'Yip':                             _SoundInfo(2, '개 짖는 소리'),
     // 조심
-    'Bicycle bell':             _SoundInfo(3, '자전거 벨', 100),
-    'Bell':                     _SoundInfo(3, '벨 소리', 100),
+    'Bicycle bell':                    _SoundInfo(3, '자전거 벨'),
+    'Bell':                            _SoundInfo(3, '벨 소리'),
   };
 
   final _alertController = StreamController<AudioAlert>.broadcast();
@@ -150,7 +149,7 @@ class AudioService {
     if (last != null && now.difference(last) < cooldown) return;
 
     _lastAlertMap[topYamnetLabel] = now;
-    _vibrate(topSound.vibrationMs);
+    _vibrate(topSound.priority);
     _alertController.add(AudioAlert(
       priority: topSound.priority,
       label: topSound.label,
@@ -177,9 +176,24 @@ class AudioService {
     return indices[label] ?? -1;
   }
 
-  Future<void> _vibrate(int ms) async {
-    if ((await Vibration.hasVibrator()) == true) {
-      Vibration.vibrate(duration: ms);
+  Future<void> _vibrate(int priority) async {
+    if ((await Vibration.hasVibrator()) != true) return;
+    switch (priority) {
+      case 1: // 위험 — 강한 진동 1회 (800ms)
+        Vibration.vibrate(pattern: [0, 800], intensities: [0, 255]);
+        break;
+      case 2: // 경고 — 중간 진동 3회 (250ms × 3)
+        Vibration.vibrate(
+          pattern: [0, 250, 120, 250, 120, 250],
+          intensities: [0, 180, 0, 180, 0, 180],
+        );
+        break;
+      case 3: // 조심 — 약한 진동 2회 (150ms × 2)
+        Vibration.vibrate(
+          pattern: [0, 150, 100, 150],
+          intensities: [0, 120, 0, 120],
+        );
+        break;
     }
   }
 

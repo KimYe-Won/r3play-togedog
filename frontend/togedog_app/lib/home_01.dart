@@ -11,8 +11,7 @@ import 'main_onboarding_02.dart';
 import 'mypage_02.dart';
 import 'pet_profile_store.dart';
 import 'report_shared.dart';
-import 'walk_02.dart';
-import 'walk_session.dart';
+import 'walk_01.dart';
 import 'togedog_accessibility.dart';
 
 /// Figma: 홈화면 (node 625:7472)
@@ -113,9 +112,8 @@ class _Home01ScreenState extends State<Home01Screen>
   }
 
   void _openWalkMode() {
-    WalkSession.instance.startWalk();
     Navigator.of(context).push(
-      MaterialPageRoute<void>(builder: (_) => const Walk02Screen()),
+      MaterialPageRoute<void>(builder: (_) => const Walk01Screen()),
     );
   }
 

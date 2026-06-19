@@ -63,11 +63,13 @@ class _CameraScreenState extends State<CameraScreen> {
       );
     }
 
-    return Scaffold(
+    return const Scaffold(
       backgroundColor: Colors.black,
       body: LiveStreamingView(
         role: Role.sender,
+        quality: VideoQuality.fullHd1080,
         enableDetection: false,
+        enableSpeaker: false,
       ),
     );
   }

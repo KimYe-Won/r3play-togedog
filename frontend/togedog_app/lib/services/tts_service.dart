@@ -43,6 +43,8 @@ class TtsService {
   static const Duration _highCooldown = Duration(seconds: 4);
   static const Duration _cooldown = Duration(seconds: 5);
 
+  bool speechEnabled = true;
+
   // per-label cooldown tracking
   final Map<String, DateTime> _lastSpokeMap = {};
   // per-label 연속 감지 프레임 수 추적 (temporal consistency)
@@ -116,7 +118,7 @@ class TtsService {
 
     // 4. 발화 (쿨다운 이미 경쟁 단계에서 검증)
     _lastSpokeMap[topLabel] = now;
-    _tts.speak(_buildMessage(topDanger, topCenterX));
+    if (speechEnabled) _tts.speak(_buildMessage(topDanger, topCenterX));
     _vibrate(topDanger.priority);
   }
 
@@ -138,9 +140,21 @@ class TtsService {
   Future<void> _vibrate(int priority) async {
     if ((await Vibration.hasVibrator()) != true) return;
     switch (priority) {
-      case 1: Vibration.vibrate(duration: 300); break; // 위험
-      case 2: Vibration.vibrate(duration: 150); break; // 경고
-      case 3: Vibration.vibrate(duration: 80);  break; // 조심
+      case 1: // 위험 — 강한 진동 1회 (800ms)
+        Vibration.vibrate(pattern: [0, 800], intensities: [0, 255]);
+        break;
+      case 2: // 경고 — 중간 진동 3회 (250ms × 3)
+        Vibration.vibrate(
+          pattern: [0, 250, 120, 250, 120, 250],
+          intensities: [0, 180, 0, 180, 0, 180],
+        );
+        break;
+      case 3: // 조심 — 약한 진동 2회 (150ms × 2)
+        Vibration.vibrate(
+          pattern: [0, 150, 100, 150],
+          intensities: [0, 120, 0, 120],
+        );
+        break;
     }
   }
 

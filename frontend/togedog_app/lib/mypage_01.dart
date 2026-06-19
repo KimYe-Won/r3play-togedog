@@ -7,6 +7,7 @@ import 'mypage_02.dart';
 import 'mypage_03.dart';
 import 'pet_profile_store.dart';
 import 'togedog_accessibility.dart';
+import 'walk_ai_manager.dart';
 
 /// Figma 488:202 프로필 영역
 class _MypageAssets {
@@ -47,12 +48,13 @@ class Mypage01Screen extends StatelessWidget {
     );
   }
 
-  void _openDisabilitySelection(BuildContext context) {
-    Navigator.of(context).push(
+  Future<void> _openDisabilitySelection(BuildContext context) async {
+    await Navigator.of(context).push(
       MaterialPageRoute<void>(
         builder: (_) => const MainOnboarding05Screen(fromMypage: true),
       ),
     );
+    WalkAiManager.instance.onGuidanceModeChanged();
   }
 
   void _openWearableManagement(BuildContext context) {

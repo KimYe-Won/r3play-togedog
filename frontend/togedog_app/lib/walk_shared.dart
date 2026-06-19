@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-import 'live_camera_view.dart';
+import 'app_live_streaming_view.dart';
 import 'walk_session.dart';
 
 const double kWalkDesignWidth = 402;
@@ -22,14 +22,12 @@ class WalkRealtimeShell extends StatelessWidget {
     super.key,
     required this.scale,
     required this.onBack,
-    this.bindFlashlight = false,
     this.bottomOverlay,
     this.panel,
   });
 
   final double scale;
   final VoidCallback onBack;
-  final bool bindFlashlight;
   final Widget? bottomOverlay;
   final Widget? panel;
 
@@ -42,15 +40,7 @@ class WalkRealtimeShell extends StatelessWidget {
       body: Stack(
         fit: StackFit.expand,
         children: [
-          Positioned.fill(
-            child: ListenableBuilder(
-              listenable: WalkSession.instance,
-              builder: (context, _) => LiveCameraView(
-                bindFlashlight: bindFlashlight,
-                enabled: WalkSession.instance.active,
-              ),
-            ),
-          ),
+          const Positioned.fill(child: AppLiveStreamingView()),
           Positioned(
             left: 0,
             right: 0,
@@ -102,7 +92,8 @@ class WalkRealtimeShell extends StatelessWidget {
                   Positioned(
                     left: 0,
                     right: 0,
-                    bottom: kWalkGuideEndButtonBottomInset * scale + bottomInset,
+                    bottom:
+                        kWalkGuideEndButtonBottomInset * scale + bottomInset,
                     child: bottomOverlay!,
                   ),
               ],
@@ -715,7 +706,8 @@ class _WalkLoadingDotsTextState extends State<WalkLoadingDotsText> {
 }
 
 class WalkGuideEndButton extends StatelessWidget {
-  const WalkGuideEndButton({super.key, required this.scale, required this.onTap});
+  const WalkGuideEndButton(
+      {super.key, required this.scale, required this.onTap});
 
   final double scale;
   final VoidCallback onTap;

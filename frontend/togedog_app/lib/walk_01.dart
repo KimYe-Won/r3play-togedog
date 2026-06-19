@@ -3,10 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import 'app_shell.dart';
-import 'live_camera_view.dart';
+import 'app_live_streaming_view.dart';
 import 'walk_02.dart';
+import 'walk_ai_manager.dart';
+import 'walk_ip_input.dart';
 import 'walk_session.dart';
 import 'togedog_accessibility.dart';
+import 'widgets/audio_alert_banner.dart';
 
 /// 하단 네비게이션 산책모드 탭
 class Walk01Screen extends StatefulWidget {
@@ -22,6 +25,29 @@ class _Walk01ScreenState extends State<Walk01Screen> {
 
   final WalkSession _session = WalkSession.instance;
   bool _soundOn = true;
+
+  @override
+  void initState() {
+    super.initState();
+    if (!WalkAiManager.instance.isConnected) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) _startWalk();
+      });
+    }
+  }
+
+  Future<void> _startWalk() async {
+    final result = await Navigator.of(context).push<bool>(
+      MaterialPageRoute<bool>(builder: (_) => const WalkIpInputScreen()),
+    );
+    if (result != true) return;
+    setState(() => _soundOn = true);
+  }
+
+  Future<void> _stopWalk() async {
+    await WalkAiManager.instance.disconnect();
+    _session.stopWalk();
+  }
 
   void _openRealtimeView() {
     if (!_session.active) return;
@@ -44,7 +70,9 @@ class _Walk01ScreenState extends State<Walk01Screen> {
           name: '산책 모드',
           child: Scaffold(
           backgroundColor: const Color(0xFFF8F5FF),
-          body: SafeArea(
+          body: Stack(
+            children: [
+              SafeArea(
             bottom: false,
             child: Column(
               children: [
@@ -76,9 +104,11 @@ class _Walk01ScreenState extends State<Walk01Screen> {
                             scale: scale,
                             cameraEnabled: walkActive,
                             soundOn: _soundOn,
+                            liveView: const AppLiveStreamingView(),
                             onSoundTap: () {
                               if (!walkActive) return;
                               setState(() => _soundOn = !_soundOn);
+                              WalkAiManager.instance.setSpeechEnabled(_soundOn);
                             },
                             onFullscreenTap: _openRealtimeView,
                           ),
@@ -100,7 +130,7 @@ class _Walk01ScreenState extends State<Walk01Screen> {
                                 scale: scale,
                                 label: '[시작]',
                                 filled: true,
-                                onTap: _session.startWalk,
+                                onTap: _startWalk,
                               ),
                             ),
                             SizedBox(width: 13 * scale),
@@ -109,7 +139,7 @@ class _Walk01ScreenState extends State<Walk01Screen> {
                                 scale: scale,
                                 label: '[종료]',
                                 filled: false,
-                                onTap: _session.stopWalk,
+                                onTap: _stopWalk,
                               ),
                             ),
                           ],
@@ -125,6 +155,14 @@ class _Walk01ScreenState extends State<Walk01Screen> {
                 ),
               ],
             ),
+          ),
+              Positioned(
+                top: 0, left: 0, right: 0,
+                child: AudioAlertBanner(
+                  stream: WalkAiManager.instance.audioAlertStream,
+                ),
+              ),
+            ],
           ),
         ),
         );
@@ -329,6 +367,7 @@ class _LiveCameraCard extends StatelessWidget {
     required this.scale,
     required this.cameraEnabled,
     required this.soundOn,
+    required this.liveView,
     required this.onSoundTap,
     required this.onFullscreenTap,
   });
@@ -336,6 +375,7 @@ class _LiveCameraCard extends StatelessWidget {
   final double scale;
   final bool cameraEnabled;
   final bool soundOn;
+  final Widget liveView;
   final VoidCallback onSoundTap;
   final VoidCallback onFullscreenTap;
 
@@ -353,7 +393,7 @@ class _LiveCameraCard extends StatelessWidget {
           child: Stack(
             fit: StackFit.expand,
             children: [
-              LiveCameraView(enabled: cameraEnabled),
+              liveView,
               Positioned(
                 right: 12 * scale,
                 bottom: 12 * scale,

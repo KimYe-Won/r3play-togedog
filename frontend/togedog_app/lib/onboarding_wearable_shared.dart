@@ -414,7 +414,9 @@ class WearableConnectionCanvas extends StatelessWidget {
                       scale,
               width: WearableConnectionTheme.cardWidth * scale,
               height: WearableConnectionTheme.cardHeight * scale,
-              child: Opacity(
+              child: IgnorePointer(
+                ignoring: (entry.key == 0 ? entrance.card1 : entrance.card2) < 0.01,
+                child: Opacity(
                 opacity: (entry.key == 0 ? entrance.card1 : entrance.card2)
                     .clamp(0, 1),
                 child: _WearableDeviceCard(
@@ -435,6 +437,7 @@ class WearableConnectionCanvas extends StatelessWidget {
                 ),
               ),
             ),
+          ),
           Positioned(
             left: 0,
             right: 0,

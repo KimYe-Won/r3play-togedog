@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'guidance_mode_store.dart';
 import 'main_onboarding_00.dart';
 import 'pet_profile_store.dart';
+import 'walk_ai_manager.dart';
 import 'wearable_connection_store.dart';
 
 void main() async {
@@ -12,6 +13,7 @@ void main() async {
     PetProfileStore.instance.load(),
     GuidanceModeStore.instance.load(),
     WearableConnectionStore.instance.load(),
+    WalkAiManager.instance.init(),
   ]);
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(
@@ -29,9 +31,9 @@ class TogeDogApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: SplashScreen(),
+      home: const SplashScreen(),
     );
   }
 }

@@ -25,6 +25,7 @@ class WalkService {
     _connector = LiveStreamingConnector(
       onUpdate: _onConnectorUpdate,
       onError: _onConnectorError,
+      quality: VideoQuality.fullHd1080,
     );
     _analyzer = YoloAnalyzer(
       onUpdate: _onAnalyzerUpdate,
