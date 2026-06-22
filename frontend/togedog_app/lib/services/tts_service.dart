@@ -44,6 +44,7 @@ class TtsService {
   static const Duration _cooldown = Duration(seconds: 5);
 
   bool speechEnabled = true;
+  bool vibrationEnabled = true;
 
   // per-label cooldown tracking
   final Map<String, DateTime> _lastSpokeMap = {};
@@ -73,23 +74,28 @@ class TtsService {
       final info = _dangerMap[d.className];
       if (info == null) continue;
 
+      // YOLOResult.boundingBox는 픽셀 좌표, normalizedBox가 0~1. 면적·방향 판단은 정규화 좌표로 한다.
       if (info.minBboxArea != null) {
-        final area = d.boundingBox.width * d.boundingBox.height;
+        final area = d.normalizedBox.width * d.normalizedBox.height;
         if (area < info.minBboxArea!) continue;
       }
 
       detectedLabels.add(d.className);
       // 동일 라벨 다중 검출 시 마지막 검출의 중심 x 사용
       centerXByLabel[d.className] =
-          d.boundingBox.left + d.boundingBox.width / 2;
+          d.normalizedBox.left + d.normalizedBox.width / 2;
     }
 
-    // 2. 감지된 라벨은 증가, 감지 안 된 라벨은 리셋
-    for (final label in _dangerMap.keys) {
+    // 2. 감지된 라벨은 증가(minFrames에서 상한), 감지 안 된 라벨은 1씩 감소(decay).
+    //    한두 프레임 깜빡임에도 누적이 유지되고, 객체가 사라지면 곧 임계 아래로 떨어진다.
+    for (final entry in _dangerMap.entries) {
+      final label = entry.key;
+      final minFrames = entry.value.minFrames;
+      final current = _frameCount[label] ?? 0;
       if (detectedLabels.contains(label)) {
-        _frameCount[label] = (_frameCount[label] ?? 0) + 1;
+        _frameCount[label] = current + 1 > minFrames ? minFrames : current + 1;
       } else {
-        _frameCount[label] = 0;
+        _frameCount[label] = current > 0 ? current - 1 : 0;
       }
     }
 
@@ -116,10 +122,10 @@ class TtsService {
 
     if (topDanger == null || topLabel == null) return;
 
-    // 4. 발화 (쿨다운 이미 경쟁 단계에서 검증)
+    // 4. 발화/진동 (쿨다운 이미 경쟁 단계에서 검증). 채널은 안내 모드에 따라 켜고 끈다.
     _lastSpokeMap[topLabel] = now;
     if (speechEnabled) _tts.speak(_buildMessage(topDanger, topCenterX));
-    _vibrate(topDanger.priority);
+    if (vibrationEnabled) _vibrate(topDanger.priority);
   }
 
   // bbox 중심 x 좌표로 방향 prefix를 붙여 최종 메시지 생성
