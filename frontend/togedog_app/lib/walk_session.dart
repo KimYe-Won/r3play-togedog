@@ -3,6 +3,12 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 
+// 백엔드 작업
+import 'package:flutter/foundation.dart';
+
+import 'services/backend_sync_service.dart';
+
+
 /// 산책 타이머·지표를 walk_01~04가 공유합니다.
 class WalkSession extends ChangeNotifier {
   WalkSession._();
@@ -27,10 +33,17 @@ class WalkSession extends ChangeNotifier {
   Timer? _walkTimer;
   Timer? _metricsTimer;
 
-  void startWalk() {
+    Future<void> startWalk() async {
     if (active) return;
     _walkTimer?.cancel();
     _metricsTimer?.cancel();
+
+    // [백엔드 연동] POST /walks/start — walk_id 저장
+    final ok = await BackendSyncService.instance.startWalkOnBackend();
+    if (!ok) {
+      debugPrint('[백엔드 연동] 산책 시작 API 실패 — 로컬 타이머는 동작');
+    }
+
     active = true;
     elapsed = Duration.zero;
     _resetMetrics();
@@ -46,7 +59,13 @@ class WalkSession extends ChangeNotifier {
     notifyListeners();
   }
 
-  void stopWalk() {
+    Future<void> stopWalk() async {
+    // [백엔드 연동] POST /walks/{walkId}/end
+    final ok = await BackendSyncService.instance.endWalkOnBackend();
+    if (!ok) {
+      debugPrint('[백엔드 연동] 산책 종료 API 실패 — 로컬 타이머는 중지');
+    }
+
     _walkTimer?.cancel();
     _metricsTimer?.cancel();
     active = false;

@@ -9,6 +9,9 @@ import 'main_onboarding_11.dart';
 import 'onboarding_transitions.dart';
 import 'togedog_accessibility.dart';
 
+// 백엔드 작업
+import 'consent_store.dart';
+
 /// Figma: 카메라 동의 (node 817:3636) — 모달 Frame (817:3675)
 enum CameraPermissionChoice { allow, deny }
 
@@ -51,7 +54,19 @@ class MainOnboarding10Screen extends StatelessWidget {
     return math.min(widthScale, heightScale);
   }
 
-  void _onPermissionSelected(BuildContext context) {
+    Future<void> _onAllow(BuildContext context) async {
+    // [백엔드 연동] camera_consent = true
+    await ConsentStore.instance.setCameraConsent(true);
+    _goNext(context);
+  }
+
+  Future<void> _onDeny(BuildContext context) async {
+    // [백엔드 연동] camera_consent = false
+    await ConsentStore.instance.setCameraConsent(false);
+    _goNext(context);
+  }
+
+  void _goNext(BuildContext context) {
     if (onCompleted != null) {
       onCompleted!();
       return;
@@ -100,8 +115,8 @@ class MainOnboarding10Screen extends StatelessWidget {
               SizedBox(height: messageToButtonsGap * scale),
               _CameraPermissionButtons(
                 scale: scale,
-                onAllow: () => _onPermissionSelected(context),
-                onDeny: () => _onPermissionSelected(context),
+                onAllow: () => _onAllow(context),
+                onDeny: () => _onDeny(context),
               ),
             ],
           ),

@@ -1,6 +1,7 @@
 // TogeDog 산책모드 탭 화면 — Figma node 1080:1391
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:togedog/walk_session.dart';
 
 import 'app_live_streaming_view.dart';
 import 'app_shell.dart';

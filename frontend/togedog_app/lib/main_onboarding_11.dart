@@ -7,6 +7,9 @@ import 'onboarding_transitions.dart';
 import 'pet_profile_store.dart';
 import 'togedog_accessibility.dart';
 
+//백엔드 작업
+import 'services/backend_sync_service.dart';
+
 /// Figma: 반려견 프로필 등록 (node 557:11970) / 견종 펼침 (node 488:357)
 class MainOnboarding11Screen extends StatefulWidget {
   const MainOnboarding11Screen({super.key});
@@ -143,20 +146,39 @@ class _MainOnboarding11ScreenState extends State<MainOnboarding11Screen> {
     });
   }
 
-  void _registerAndGoToNextScreen() {
-    if (!_canSubmit) return;
-    PetProfileStore.instance.update(
-      guardianName: _guardianNameController.text,
-      petName: _petNameController.text,
-      breed: _selectedBreed!,
-      age: _ageController.text,
-    );
-    Navigator.of(context).push(
-      OnboardingFadeRoute<void>(
-        builder: (_) => const MainOnboarding12Screen(),
-      ),
-    );
+  Future<void> _registerAndGoToNextScreen() async {
+  if (!_canSubmit) return;
+
+  final guardianName = _guardianNameController.text.trim();
+  final petName = _petNameController.text.trim();
+  final breed = _selectedBreed!;
+  final age = _ageController.text.trim();
+
+  PetProfileStore.instance.update(
+    guardianName: guardianName,
+    petName: petName,
+    breed: breed,
+    age: age,
+  );
+
+  // [백엔드 연동] POST /members + POST /dogs
+  final ok = await BackendSyncService.instance.syncProfileFromOnboarding(
+    guardianName: guardianName,
+    petName: petName,
+    breed: breed,
+    age: age,
+  );
+  if (!ok) {
+    debugPrint('[백엔드 연동] 프로필 동기화 실패 — 로컬 저장은 완료됨');
   }
+
+  if (!mounted) return;
+  Navigator.of(context).push(
+    OnboardingFadeRoute<void>(
+      builder: (_) => const MainOnboarding12Screen(),
+    ),
+  );
+}
 
   void _skipToNextScreen() {
     PetProfileStore.instance.applySkipDefaults();
