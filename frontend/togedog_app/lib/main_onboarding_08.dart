@@ -8,6 +8,8 @@ import 'main_onboarding_05.dart';
 import 'main_onboarding_09.dart';
 import 'onboarding_transitions.dart';
 import 'togedog_accessibility.dart';
+// 백엔드 작업
+import 'consent_store.dart';
 
 /// Figma: 알람 동의 (node 817:3272) — 모달 Frame (817:3338)
 enum NotificationPermissionChoice { allow, deny }
@@ -50,7 +52,19 @@ class MainOnboarding08Screen extends StatelessWidget {
     return math.min(widthScale, heightScale);
   }
 
-  void _onPermissionSelected(BuildContext context) {
+    Future<void> _onAllow(BuildContext context) async {
+    // [백엔드 연동] notification_consent = true
+    await ConsentStore.instance.setNotificationConsent(true);
+    _goNext(context);
+  }
+
+  Future<void> _onDeny(BuildContext context) async {
+    // [백엔드 연동] notification_consent = false
+    await ConsentStore.instance.setNotificationConsent(false);
+    _goNext(context);
+  }
+
+  void _goNext(BuildContext context) {
     if (onCompleted != null) {
       onCompleted!();
       return;
@@ -88,8 +102,8 @@ class MainOnboarding08Screen extends StatelessWidget {
               SizedBox(height: sectionGap * scale),
               _NotificationPermissionButtons(
                 scale: scale,
-                onAllow: () => _onPermissionSelected(context),
-                onDeny: () => _onPermissionSelected(context),
+                onAllow: () => _onAllow(context),
+                onDeny: () => _onDeny(context),
               ),
             ],
           ),
