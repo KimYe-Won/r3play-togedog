@@ -11,12 +11,12 @@ import 'walk_ai_manager.dart';
 
 /// Figma 488:202 프로필 영역
 class _MypageAssets {
-  static const profileUser = 'asset/mypage/mypage_profile_user.png';
-  static const profilePet = 'asset/mypage/mypage_profile_pet.png';
-  static const editAvatar = 'asset/mypage/mypage_edit_avatar.svg';
-  static const editName = 'asset/mypage/mypage_edit_name.svg';
-  static const petRing = 'asset/mypage/mypage_pet_ring.svg';
-  static const profileDashedLine = 'asset/mypage/mypage_profile_dashed_line.svg';
+  static const profileUser = 'assets/mypage/mypage_profile_user.png';
+  static const profilePet = 'assets/mypage/mypage_profile_pet.png';
+  static const editAvatar = 'assets/mypage/mypage_edit_avatar.svg';
+  static const editName = 'assets/mypage/mypage_edit_name.svg';
+  static const petRing = 'assets/mypage/mypage_pet_ring.svg';
+  static const profileDashedLine = 'assets/mypage/mypage_profile_dashed_line.svg';
 }
 
 /// Figma 760:6962 / 760:7089 / 760:7094
@@ -74,98 +74,98 @@ class Mypage01Screen extends StatelessWidget {
     return TogedogA11y.screen(
       name: '마이페이지',
       child: Scaffold(
-      backgroundColor: const Color(0xFFF0F1F5),
-      body: SafeArea(
-        bottom: false,
-        child: Column(
-          children: [
-            Expanded(
-              child: SingleChildScrollView(
-                padding: EdgeInsets.fromLTRB(
-                  19 * scale,
-                  8 * scale,
-                  19 * scale,
-                  16 * scale,
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    AppScreenHeader(scale: scale, title: '마이페이지'),
-                    SizedBox(height: 24 * scale),
-                    _ProfileSection(
-                      scale: scale,
-                      displayName: displayName,
-                      petName: petName,
-                      onEditProfile: () => _openEditProfile(context),
-                    ),
-                    SizedBox(height: 16 * scale),
-                    _MembershipRow(scale: scale),
-                    SizedBox(height: 20 * scale),
-                    _SectionHeader(scale: scale, title: '접근성 설정'),
-                    SizedBox(height: 8 * scale),
-                    _SettingsCard(
-                      scale: scale,
-                      items: [
-                        _SettingsItem(
-                          title: '장애유형 선택',
-                          onTap: () => _openDisabilitySelection(context),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 20 * scale),
-                    _SectionHeader(scale: scale, title: '알림 방식 설정'),
-                    SizedBox(height: 8 * scale),
-                    _SettingsCard(
-                      scale: scale,
-                      items: const [
-                        _SettingsItem(title: '음성 (TTS)'),
-                        _SettingsItem(title: '진동'),
-                        _SettingsItem(title: '텍스트'),
-                      ],
-                    ),
-                    SizedBox(height: 20 * scale),
-                    _SectionHeader(scale: scale, title: '인터페이스 설정'),
-                    SizedBox(height: 8 * scale),
-                    _SettingsCard(
-                      scale: scale,
-                      items: const [
-                        _SettingsItem(title: '글자크기'),
-                        _SettingsItem(title: '음성속도'),
-                        _SettingsItem(title: '진동강도'),
-                      ],
-                    ),
-                    SizedBox(height: 20 * scale),
-                    _SectionHeader(scale: scale, title: '기기 및 서비스 관리'),
-                    SizedBox(height: 8 * scale),
-                    _SettingsCard(
-                      scale: scale,
-                      items: [
-                        _SettingsItem(
-                          title: '웨어러블 디바이스 관리',
-                          onTap: () => _openWearableManagement(context),
-                        ),
-                        const _SettingsItem(
-                          title: '카메라 및 센서 정상 작동 여부 진단',
-                        ),
-                        const _SettingsItem(
-                          title: '배터리 잔량 확인 및 소모품 교체 주기 알림 설정',
-                        ),
-                      ],
-                    ),
-                  ],
+        backgroundColor: const Color(0xFFF0F1F5),
+        body: SafeArea(
+          bottom: false,
+          child: Column(
+            children: [
+              Expanded(
+                child: SingleChildScrollView(
+                  padding: EdgeInsets.fromLTRB(
+                    19 * scale,
+                    8 * scale,
+                    19 * scale,
+                    16 * scale,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      AppScreenHeader(scale: scale, title: '마이페이지'),
+                      SizedBox(height: 24 * scale),
+                      _ProfileSection(
+                        scale: scale,
+                        displayName: displayName,
+                        petName: petName,
+                        onEditProfile: () => _openEditProfile(context),
+                      ),
+                      SizedBox(height: 16 * scale),
+                      _MembershipRow(scale: scale),
+                      SizedBox(height: 20 * scale),
+                      _SectionHeader(scale: scale, title: '접근성 설정'),
+                      SizedBox(height: 8 * scale),
+                      _SettingsCard(
+                        scale: scale,
+                        items: [
+                          _SettingsItem(
+                            title: '장애유형 선택',
+                            onTap: () => _openDisabilitySelection(context),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 20 * scale),
+                      _SectionHeader(scale: scale, title: '알림 방식 설정'),
+                      SizedBox(height: 8 * scale),
+                      _SettingsCard(
+                        scale: scale,
+                        items: const [
+                          _SettingsItem(title: '음성 (TTS)'),
+                          _SettingsItem(title: '진동'),
+                          _SettingsItem(title: '텍스트'),
+                        ],
+                      ),
+                      SizedBox(height: 20 * scale),
+                      _SectionHeader(scale: scale, title: '인터페이스 설정'),
+                      SizedBox(height: 8 * scale),
+                      _SettingsCard(
+                        scale: scale,
+                        items: const [
+                          _SettingsItem(title: '글자크기'),
+                          _SettingsItem(title: '음성속도'),
+                          _SettingsItem(title: '진동강도'),
+                        ],
+                      ),
+                      SizedBox(height: 20 * scale),
+                      _SectionHeader(scale: scale, title: '기기 및 서비스 관리'),
+                      SizedBox(height: 8 * scale),
+                      _SettingsCard(
+                        scale: scale,
+                        items: [
+                          _SettingsItem(
+                            title: '웨어러블 디바이스 관리',
+                            onTap: () => _openWearableManagement(context),
+                          ),
+                          const _SettingsItem(
+                            title: '카메라 및 센서 정상 작동 여부 진단',
+                          ),
+                          const _SettingsItem(
+                            title: '배터리 잔량 확인 및 소모품 교체 주기 알림 설정',
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
-            AppBottomNav(
-              scale: scale,
-              bottomInset: bottomInset,
-              activeTab: AppTab.mypage,
-              backgroundColor: const Color(0xFFF0F1F5),
-            ),
-          ],
+              AppBottomNav(
+                scale: scale,
+                bottomInset: bottomInset,
+                activeTab: AppTab.mypage,
+                backgroundColor: const Color(0xFFF0F1F5),
+              ),
+            ],
+          ),
         ),
       ),
-    ),
     );
   }
 }
@@ -234,25 +234,25 @@ class _ProfileSection extends StatelessWidget {
                         onTap: onEditProfile,
                         behavior: HitTestBehavior.opaque,
                         child: Row(
-                        children: [
-                          Text(
-                            displayName,
-                            style: TextStyle(
-                              fontFamily: 'LGSmartUI',
-                              fontWeight: FontWeight.w700,
-                              fontSize: 20 * scale,
-                              color: const Color(0xFF111111),
+                          children: [
+                            Text(
+                              displayName,
+                              style: TextStyle(
+                                fontFamily: 'LGSmartUI',
+                                fontWeight: FontWeight.w700,
+                                fontSize: 20 * scale,
+                                color: const Color(0xFF111111),
+                              ),
                             ),
-                          ),
-                          SizedBox(width: 9 * scale),
-                          TogedogAssets.svg(
-                            _MypageAssets.editName,
-                            width: 14.716 * scale,
-                            height: 14.72 * scale,
-                          ),
-                        ],
+                            SizedBox(width: 9 * scale),
+                            TogedogAssets.svg(
+                              _MypageAssets.editName,
+                              width: 14.716 * scale,
+                              height: 14.72 * scale,
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
                     ),
                     SizedBox(height: 12 * scale),
                     TogedogA11y.button(
@@ -261,24 +261,24 @@ class _ProfileSection extends StatelessWidget {
                         onTap: onEditProfile,
                         behavior: HitTestBehavior.opaque,
                         child: Container(
-                        height: 31 * scale,
-                        padding: EdgeInsets.symmetric(horizontal: 20 * scale),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(32.5 * scale),
-                        ),
-                        alignment: Alignment.center,
-                        child: Text(
-                          '내 정보 수정',
-                          style: TextStyle(
-                            fontFamily: 'LGSmartUI',
-                            fontWeight: FontWeight.w600,
-                            fontSize: 12 * scale,
-                            color: const Color(0xFF8756E7),
+                          height: 31 * scale,
+                          padding: EdgeInsets.symmetric(horizontal: 20 * scale),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(32.5 * scale),
+                          ),
+                          alignment: Alignment.center,
+                          child: Text(
+                            '내 정보 수정',
+                            style: TextStyle(
+                              fontFamily: 'LGSmartUI',
+                              fontWeight: FontWeight.w600,
+                              fontSize: 12 * scale,
+                              color: const Color(0xFF8756E7),
+                            ),
                           ),
                         ),
                       ),
-                    ),
                     ),
                   ],
                 ),

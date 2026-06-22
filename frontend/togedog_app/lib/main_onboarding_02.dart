@@ -18,8 +18,7 @@ class MainOnboarding02Screen extends StatefulWidget {
   final String title;
 
   static const double designWidth = 402;
-  static const Duration togedogSelectionHoldDuration =
-      Duration(milliseconds: 450);
+  static const Duration togedogSelectionHoldDuration = Duration(milliseconds: 450);
 
   @override
   State<MainOnboarding02Screen> createState() => _MainOnboarding02ScreenState();
@@ -60,48 +59,47 @@ class _MainOnboarding02ScreenState extends State<MainOnboarding02Screen> {
 
   @override
   Widget build(BuildContext context) {
-    final scale =
-        MediaQuery.sizeOf(context).width / MainOnboarding02Screen.designWidth;
+    final scale = MediaQuery.sizeOf(context).width / MainOnboarding02Screen.designWidth;
 
     return TogedogA11y.screen(
       name: '앱 전환',
       child: Material(
-      color: Colors.transparent,
-      child: SizedBox.expand(
-        child: Stack(
-          children: [
-            Positioned.fill(
-              child: GestureDetector(
-                onTap: _close,
-                behavior: HitTestBehavior.opaque,
-                child: ColoredBox(
-                  color: Colors.black.withValues(alpha: 0.45),
+        color: Colors.transparent,
+        child: SizedBox.expand(
+          child: Stack(
+            children: [
+              Positioned.fill(
+                child: GestureDetector(
+                  onTap: _close,
+                  behavior: HitTestBehavior.opaque,
+                  child: ColoredBox(
+                    color: Colors.black.withValues(alpha: 0.45),
+                  ),
                 ),
               ),
-            ),
-            Positioned(
-              left: 17 * scale,
-              top: 85 * scale,
-              child: OnboardingAppSwitchModal(
-                scale: scale,
-                selectedApp: _selectedApp,
-                onAppSelected: _onAppSelected,
+              Positioned(
+                left: 17 * scale,
+                top: 85 * scale,
+                child: OnboardingAppSwitchModal(
+                  scale: scale,
+                  selectedApp: _selectedApp,
+                  onAppSelected: _onAppSelected,
+                ),
               ),
-            ),
-            Positioned(
-              left: 20 * scale,
-              top: 42 * scale,
-              child: HomeTitleButton(
-                scale: scale,
-                title: widget.title,
-                isExpanded: true,
-                onPressed: _close,
+              Positioned(
+                left: 20 * scale,
+                top: 42 * scale,
+                child: HomeTitleButton(
+                  scale: scale,
+                  title: widget.title,
+                  isExpanded: true,
+                  onPressed: _close,
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
-    ),
     );
   }
 }
@@ -182,7 +180,7 @@ class OnboardingAppSwitchModal extends StatelessWidget {
                 child: _AppOptionCard(
                   scale: scale,
                   title: 'LG ThinQ',
-                  imageAsset: 'asset/onboarding/onboarding_thinq_app_switch_thinq.png',
+                  imageAsset: 'assets/onboarding/onboarding_thinq_app_switch_thinq.png',
                   backgroundColor: _thinqBackground,
                   accentColor: _thinqAccent,
                   imageTopPadding: 26 * scale,
@@ -196,7 +194,7 @@ class OnboardingAppSwitchModal extends StatelessWidget {
                 child: _AppOptionCard(
                   scale: scale,
                   title: 'LG TogeDog',
-                  imageAsset: 'asset/onboarding/onboarding_thinq_app_switch_togedog.png',
+                  imageAsset: 'assets/onboarding/onboarding_thinq_app_switch_togedog.png',
                   backgroundColor: _togedogBackground,
                   accentColor: _togedogAccent,
                   subtitle: '반려견 케어 전문 서비스',
@@ -281,137 +279,131 @@ class _AppOptionCardState extends State<_AppOptionCard> {
         child: GestureDetector(
           onTap: widget.onTap,
           child: AnimatedContainer(
-          duration: const Duration(milliseconds: 150),
-          height: 211 * scale,
-          clipBehavior: Clip.antiAlias,
-          decoration: BoxDecoration(
-            color: widget.backgroundColor,
-            borderRadius: BorderRadius.circular(10 * scale),
-            border: widget.isSelected
-                ? Border.all(
-                    color: widget.accentColor,
-                    width: 2 * scale,
+            duration: const Duration(milliseconds: 150),
+            height: 211 * scale,
+            clipBehavior: Clip.antiAlias,
+            decoration: BoxDecoration(
+              color: widget.backgroundColor,
+              borderRadius: BorderRadius.circular(10 * scale),
+              border: widget.isSelected
+                  ? Border.all(
+                      color: widget.accentColor,
+                      width: 2 * scale,
+                    )
+                  : null,
+            ),
+            foregroundDecoration: _isHovered && !widget.isSelected
+                ? BoxDecoration(
+                    borderRadius: BorderRadius.circular(10 * scale),
+                    color: Colors.black.withValues(alpha: 0.04),
                   )
                 : null,
-          ),
-          foregroundDecoration: _isHovered && !widget.isSelected
-              ? BoxDecoration(
-                  borderRadius: BorderRadius.circular(10 * scale),
-                  color: Colors.black.withValues(alpha: 0.04),
-                )
-              : null,
-          child: Stack(
-            children: [
-              Positioned(
-                left: widget.imageHorizontalPadding,
-                right: widget.imageHorizontalPadding,
-                top: widget.imageTopPadding,
-                bottom: (_AppOptionCard._footerBottomPadding +
-                        _AppOptionCard._secondaryRowHeight +
-                        _AppOptionCard._titleToSecondaryGap +
-                        _AppOptionCard._titleHeight) *
-                    scale,
-                child: widget.imageViewportWidth != null &&
-                        widget.imageViewportHeight != null
-                    ? Align(
-                        alignment: Alignment.topCenter,
-                        child: SizedBox(
-                          width: widget.imageViewportWidth! * scale,
-                          height: widget.imageViewportHeight! * scale,
-                          child: ClipRect(
-                            child: Transform.translate(
-                              offset: Offset(
-                                0,
-                                widget.imageOverflowTopOffsetFactor *
-                                    widget.imageViewportHeight! *
-                                    scale,
-                              ),
-                              child: SizedBox(
-                                width: widget.imageViewportWidth! * scale,
-                                height: widget.imageViewportHeight! *
-                                    widget.imageOverflowHeightScale *
-                                    scale,
-                                child: Image.asset(
-                                  widget.imageAsset,
-                                  fit: BoxFit.cover,
-                                  alignment: Alignment.topCenter,
+            child: Stack(
+              children: [
+                Positioned(
+                  left: widget.imageHorizontalPadding,
+                  right: widget.imageHorizontalPadding,
+                  top: widget.imageTopPadding,
+                  bottom: (_AppOptionCard._footerBottomPadding +
+                          _AppOptionCard._secondaryRowHeight +
+                          _AppOptionCard._titleToSecondaryGap +
+                          _AppOptionCard._titleHeight) *
+                      scale,
+                  child: widget.imageViewportWidth != null && widget.imageViewportHeight != null
+                      ? Align(
+                          alignment: Alignment.topCenter,
+                          child: SizedBox(
+                            width: widget.imageViewportWidth! * scale,
+                            height: widget.imageViewportHeight! * scale,
+                            child: ClipRect(
+                              child: Transform.translate(
+                                offset: Offset(
+                                  0,
+                                  widget.imageOverflowTopOffsetFactor * widget.imageViewportHeight! * scale,
+                                ),
+                                child: SizedBox(
+                                  width: widget.imageViewportWidth! * scale,
+                                  height: widget.imageViewportHeight! * widget.imageOverflowHeightScale * scale,
+                                  child: Image.asset(
+                                    widget.imageAsset,
+                                    fit: BoxFit.cover,
+                                    alignment: Alignment.topCenter,
+                                  ),
                                 ),
                               ),
                             ),
                           ),
-                        ),
-                      )
-                    : ClipRect(
-                        child: Image.asset(
-                          widget.imageAsset,
-                          fit: BoxFit.cover,
-                          width: double.infinity,
-                          height: double.infinity,
-                          alignment: Alignment.topCenter,
-                        ),
-                      ),
-              ),
-              Positioned(
-                left: 0,
-                right: 0,
-                bottom: _AppOptionCard._footerBottomPadding * scale,
-                height: _AppOptionCard._secondaryRowHeight * scale,
-                child: Center(
-                  child: widget.isSelected
-                      ? _CurrentUseBadge(
-                          scale: scale,
-                          accentColor: widget.accentColor,
                         )
-                      : widget.subtitle != null
-                          ? Transform.translate(
-                              offset: Offset(
-                                0,
-                                -_AppOptionCard._subtitleLift * scale,
-                              ),
-                              child: SizedBox(
-                                height: _AppOptionCard._secondaryRowHeight *
-                                    scale,
-                                child: Center(
-                                  child: _SecondaryLineText(
-                                    scale: scale,
-                                    text: widget.subtitle!,
-                                    color: const Color(0xFF6A6A6A),
+                      : ClipRect(
+                          child: Image.asset(
+                            widget.imageAsset,
+                            fit: BoxFit.cover,
+                            width: double.infinity,
+                            height: double.infinity,
+                            alignment: Alignment.topCenter,
+                          ),
+                        ),
+                ),
+                Positioned(
+                  left: 0,
+                  right: 0,
+                  bottom: _AppOptionCard._footerBottomPadding * scale,
+                  height: _AppOptionCard._secondaryRowHeight * scale,
+                  child: Center(
+                    child: widget.isSelected
+                        ? _CurrentUseBadge(
+                            scale: scale,
+                            accentColor: widget.accentColor,
+                          )
+                        : widget.subtitle != null
+                            ? Transform.translate(
+                                offset: Offset(
+                                  0,
+                                  -_AppOptionCard._subtitleLift * scale,
+                                ),
+                                child: SizedBox(
+                                  height: _AppOptionCard._secondaryRowHeight * scale,
+                                  child: Center(
+                                    child: _SecondaryLineText(
+                                      scale: scale,
+                                      text: widget.subtitle!,
+                                      color: const Color(0xFF6A6A6A),
+                                    ),
                                   ),
                                 ),
-                              ),
-                            )
-                          : const SizedBox.shrink(),
+                              )
+                            : const SizedBox.shrink(),
+                  ),
                 ),
-              ),
-              Positioned(
-                left: 0,
-                right: 0,
-                bottom: (_AppOptionCard._footerBottomPadding +
-                        _AppOptionCard._secondaryRowHeight +
-                        _AppOptionCard._titleToSecondaryGap) *
-                    scale,
-                height: _AppOptionCard._titleHeight * scale,
-                child: Center(
-                  child: Text(
-                    widget.title,
-                    textAlign: TextAlign.center,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                      fontFamily: 'LGSmartUI',
-                      fontWeight: FontWeight.w700,
-                      fontSize: 16 * scale,
-                      height: 1,
-                      color: const Color(0xFF111111),
+                Positioned(
+                  left: 0,
+                  right: 0,
+                  bottom: (_AppOptionCard._footerBottomPadding +
+                          _AppOptionCard._secondaryRowHeight +
+                          _AppOptionCard._titleToSecondaryGap) *
+                      scale,
+                  height: _AppOptionCard._titleHeight * scale,
+                  child: Center(
+                    child: Text(
+                      widget.title,
+                      textAlign: TextAlign.center,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        fontFamily: 'LGSmartUI',
+                        fontWeight: FontWeight.w700,
+                        fontSize: 16 * scale,
+                        height: 1,
+                        color: const Color(0xFF111111),
+                      ),
                     ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
-    ),
     );
   }
 }
@@ -529,58 +521,56 @@ class _HomeTitleButtonState extends State<HomeTitleButton> {
           onTap: widget.onPressed,
           behavior: HitTestBehavior.opaque,
           child: AnimatedContainer(
-          duration: const Duration(milliseconds: 120),
-          decoration: BoxDecoration(
-            color: _isPressed
-                ? (isExpanded ? Colors.white : const Color(0xFF111111))
-                    .withValues(alpha: isExpanded ? 0.16 : 0.12)
-                : _isHovered
-                    ? (isExpanded ? Colors.white : const Color(0xFF111111))
-                        .withValues(alpha: isExpanded ? 0.1 : 0.06)
-                    : Colors.transparent,
-            borderRadius: BorderRadius.circular(4 * scale),
-          ),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                widget.title,
-                style: TextStyle(
-                  fontFamily: 'LGSmartUI',
-                  fontWeight: FontWeight.w700,
-                  fontSize: 20 * scale,
-                  height: 23 / 20,
-                  color: titleColor,
+            duration: const Duration(milliseconds: 120),
+            decoration: BoxDecoration(
+              color: _isPressed
+                  ? (isExpanded ? Colors.white : const Color(0xFF111111)).withValues(alpha: isExpanded ? 0.16 : 0.12)
+                  : _isHovered
+                      ? (isExpanded ? Colors.white : const Color(0xFF111111)).withValues(alpha: isExpanded ? 0.1 : 0.06)
+                      : Colors.transparent,
+              borderRadius: BorderRadius.circular(4 * scale),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  widget.title,
+                  style: TextStyle(
+                    fontFamily: 'LGSmartUI',
+                    fontWeight: FontWeight.w700,
+                    fontSize: 20 * scale,
+                    height: 23 / 20,
+                    color: titleColor,
+                  ),
                 ),
-              ),
-              SizedBox(width: 9 * scale),
-              AnimatedSwitcher(
-                duration: const Duration(milliseconds: 200),
-                switchInCurve: Curves.easeOut,
-                switchOutCurve: Curves.easeIn,
-                child: isExpanded
-                    ? SizedBox(
-                        key: const ValueKey('expanded_chevron'),
-                        width: 13 * scale,
-                        height: 6 * scale,
-                        child: CustomPaint(
-                          painter: _ChevronDownPainter(color: chevronColor),
+                SizedBox(width: 9 * scale),
+                AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 200),
+                  switchInCurve: Curves.easeOut,
+                  switchOutCurve: Curves.easeIn,
+                  child: isExpanded
+                      ? SizedBox(
+                          key: const ValueKey('expanded_chevron'),
+                          width: 13 * scale,
+                          height: 6 * scale,
+                          child: CustomPaint(
+                            painter: _ChevronDownPainter(color: chevronColor),
+                          ),
+                        )
+                      : SizedBox(
+                          key: const ValueKey('collapsed_chevron'),
+                          width: 6 * scale,
+                          height: 13 * scale,
+                          child: CustomPaint(
+                            painter: _ChevronRightPainter(color: chevronColor),
+                          ),
                         ),
-                      )
-                    : SizedBox(
-                        key: const ValueKey('collapsed_chevron'),
-                        width: 6 * scale,
-                        height: 13 * scale,
-                        child: CustomPaint(
-                          painter: _ChevronRightPainter(color: chevronColor),
-                        ),
-                      ),
-              ),
-            ],
+                ),
+              ],
+            ),
           ),
         ),
       ),
-    ),
     );
   }
 }
@@ -608,8 +598,7 @@ class _ChevronRightPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(covariant _ChevronRightPainter oldDelegate) =>
-      oldDelegate.color != color;
+  bool shouldRepaint(covariant _ChevronRightPainter oldDelegate) => oldDelegate.color != color;
 }
 
 class _ChevronDownPainter extends CustomPainter {
@@ -635,8 +624,7 @@ class _ChevronDownPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(covariant _ChevronDownPainter oldDelegate) =>
-      oldDelegate.color != color;
+  bool shouldRepaint(covariant _ChevronDownPainter oldDelegate) => oldDelegate.color != color;
 }
 
 Future<OnboardingApp?> openOnboarding02(

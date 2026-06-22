@@ -145,7 +145,7 @@ class _NotificationHeader extends StatelessWidget {
           width: MainOnboarding08Screen.bellSize * scale,
           height: MainOnboarding08Screen.bellSize * scale,
           child: SvgPicture.asset(
-            'asset/onboarding/onboarding_notification_bell.svg',
+            'assets/onboarding/onboarding_notification_bell.svg',
             fit: BoxFit.contain,
             alignment: Alignment.center,
           ),

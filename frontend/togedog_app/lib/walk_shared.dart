@@ -47,7 +47,7 @@ class WalkRealtimeShell extends StatelessWidget {
             top: 0,
             height: 217 * scale,
             child: Image.asset(
-              'asset/walk/walk_top_gradient.png',
+              'assets/walk/walk_top_gradient.png',
               fit: BoxFit.fill,
               errorBuilder: (_, __, ___) => DecoratedBox(
                 decoration: BoxDecoration(
@@ -92,8 +92,7 @@ class WalkRealtimeShell extends StatelessWidget {
                   Positioned(
                     left: 0,
                     right: 0,
-                    bottom:
-                        kWalkGuideEndButtonBottomInset * scale + bottomInset,
+                    bottom: kWalkGuideEndButtonBottomInset * scale + bottomInset,
                     child: bottomOverlay!,
                   ),
               ],
@@ -336,7 +335,7 @@ class WalkThreeButtonControls extends StatelessWidget {
               top: 0,
               child: WalkControlButton(
                 scale: s,
-                buttonAsset: 'asset/walk/walk_btn_voice.svg',
+                buttonAsset: 'assets/walk/walk_btn_voice.svg',
                 label: '음성 안내',
                 onTap: onVoiceTap,
               ),
@@ -346,7 +345,7 @@ class WalkThreeButtonControls extends StatelessWidget {
               top: 0,
               child: WalkControlButton(
                 scale: s,
-                buttonAsset: 'asset/walk/walk_btn_flashlight.svg',
+                buttonAsset: 'assets/walk/walk_btn_flashlight.svg',
                 label: '손전등',
                 onTap: onFlashlightTap,
                 active: flashlightOn,
@@ -357,7 +356,7 @@ class WalkThreeButtonControls extends StatelessWidget {
               top: 0,
               child: WalkControlButton(
                 scale: s,
-                buttonAsset: 'asset/walk/walk_btn_vibration.svg',
+                buttonAsset: 'assets/walk/walk_btn_vibration.svg',
                 label: '진동 안내',
                 onTap: onVibrationTap,
               ),
@@ -387,7 +386,7 @@ class WalkSingleFlashlightControl extends StatelessWidget {
     return Center(
       child: WalkControlButton(
         scale: scale,
-        buttonAsset: 'asset/walk/walk_btn_flashlight.svg',
+        buttonAsset: 'assets/walk/walk_btn_flashlight.svg',
         label: '손전등',
         onTap: onFlashlightTap,
         active: flashlightOn,
@@ -706,8 +705,7 @@ class _WalkLoadingDotsTextState extends State<WalkLoadingDotsText> {
 }
 
 class WalkGuideEndButton extends StatelessWidget {
-  const WalkGuideEndButton(
-      {super.key, required this.scale, required this.onTap});
+  const WalkGuideEndButton({super.key, required this.scale, required this.onTap});
 
   final double scale;
   final VoidCallback onTap;

@@ -18,28 +18,28 @@ const double kTogedogDesignWidth = 402;
 enum AppTab { home, walk, report, mypage }
 
 class TogedogAssets {
-  static const background = 'asset/home/home_screen_background.png';
-  static const backgroundFallback = 'asset/home/home_screen_background.png';
-  static const bell = 'asset/home/home_bell.svg';
-  static const settings = 'asset/home/home_settings.svg';
-  static const headerChevron = 'asset/home/home_header_chevron.svg';
-  static const navHome = 'asset/home/home_nav_home.svg';
-  static const navHomeInactive = 'asset/home/home_nav_home_inactive.svg';
-  static const navWalkMode = 'asset/home/home_nav_walk_mode.svg';
-  static const navWalkModeActive = 'asset/home/home_nav_walk_mode_active.svg';
-  static const navWalkModeInactive = 'asset/home/home_nav_walk_mode_inactive.svg';
-  static const navReport = 'asset/home/home_nav_report.svg';
-  static const navReportActive = 'asset/home/home_nav_report_active.svg';
-  static const navReportInactive = 'asset/home/home_nav_report_inactive.svg';
-  static const navMypage = 'asset/home/home_nav_mypage.svg';
-  static const navMypageActive = 'asset/home/home_nav_mypage_active.svg';
-  static const navMypageInactive = 'asset/home/home_nav_mypage_inactive.svg';
-  static const petPhoto = 'asset/home/home_pet_kong.png';
-  static const petPhotoFallback = 'asset/home/home_pet_kong.png';
-  static const heartCircle = 'asset/home/home_heart_circle.svg';
-  static const heartIcon = 'asset/home/home_heart_icon.svg';
-  static const activityCircle = 'asset/home/home_activity_circle.svg';
-  static const activityIcon = 'asset/home/home_activity_icon.svg';
+  static const background = 'assets/home/home_screen_background.png';
+  static const backgroundFallback = 'assets/home/home_screen_background.png';
+  static const bell = 'assets/home/home_bell.svg';
+  static const settings = 'assets/home/home_settings.svg';
+  static const headerChevron = 'assets/home/home_header_chevron.svg';
+  static const navHome = 'assets/home/home_nav_home.svg';
+  static const navHomeInactive = 'assets/home/home_nav_home_inactive.svg';
+  static const navWalkMode = 'assets/home/home_nav_walk_mode.svg';
+  static const navWalkModeActive = 'assets/home/home_nav_walk_mode_active.svg';
+  static const navWalkModeInactive = 'assets/home/home_nav_walk_mode_inactive.svg';
+  static const navReport = 'assets/home/home_nav_report.svg';
+  static const navReportActive = 'assets/home/home_nav_report_active.svg';
+  static const navReportInactive = 'assets/home/home_nav_report_inactive.svg';
+  static const navMypage = 'assets/home/home_nav_mypage.svg';
+  static const navMypageActive = 'assets/home/home_nav_mypage_active.svg';
+  static const navMypageInactive = 'assets/home/home_nav_mypage_inactive.svg';
+  static const petPhoto = 'assets/home/home_pet_kong.png';
+  static const petPhotoFallback = 'assets/home/home_pet_kong.png';
+  static const heartCircle = 'assets/home/home_heart_circle.svg';
+  static const heartIcon = 'assets/home/home_heart_icon.svg';
+  static const activityCircle = 'assets/home/home_activity_circle.svg';
+  static const activityIcon = 'assets/home/home_activity_icon.svg';
 
   static Widget svg(
     String asset, {
@@ -53,8 +53,7 @@ class TogedogAssets {
       width: width,
       height: height,
       fit: fit,
-      colorFilter:
-          color != null ? ColorFilter.mode(color, BlendMode.srcIn) : null,
+      colorFilter: color != null ? ColorFilter.mode(color, BlendMode.srcIn) : null,
     );
   }
 }
@@ -69,9 +68,9 @@ void navigateToTab(BuildContext context, AppTab tab) {
   final route = switch (tab) {
     AppTab.home => MaterialPageRoute<void>(builder: (_) => const Home01Screen()),
     AppTab.walk => MaterialPageRoute<void>(
-      settings: const RouteSettings(name: WalkSession.walk01RouteName),
-      builder: (_) => const Walk01Screen(),
-    ),
+        settings: const RouteSettings(name: WalkSession.walk01RouteName),
+        builder: (_) => const Walk01Screen(),
+      ),
     AppTab.report => MaterialPageRoute<void>(builder: (_) => const Report01Screen()),
     AppTab.mypage => MaterialPageRoute<void>(builder: (_) => const Mypage01Screen()),
   };
@@ -235,9 +234,7 @@ class AppBottomNav extends StatelessWidget {
             scale: scale,
             label: '홈',
             active: activeTab == AppTab.home,
-            onTap: activeTab == AppTab.home
-                ? null
-                : () => navigateToTab(context, AppTab.home),
+            onTap: activeTab == AppTab.home ? null : () => navigateToTab(context, AppTab.home),
             iconAsset: TogedogAssets.navHome,
             iconWidth: 25 * scale,
             iconHeight: 22 * scale,
@@ -246,9 +243,7 @@ class AppBottomNav extends StatelessWidget {
             scale: scale,
             label: '산책모드',
             active: activeTab == AppTab.walk,
-            onTap: activeTab == AppTab.walk
-                ? null
-                : () => navigateToTab(context, AppTab.walk),
+            onTap: activeTab == AppTab.walk ? null : () => navigateToTab(context, AppTab.walk),
             iconAsset: TogedogAssets.navWalkMode,
             iconWidth: 16.5 * scale,
             iconHeight: 22 * scale,
@@ -257,9 +252,7 @@ class AppBottomNav extends StatelessWidget {
             scale: scale,
             label: '리포트',
             active: activeTab == AppTab.report,
-            onTap: activeTab == AppTab.report
-                ? null
-                : () => navigateToTab(context, AppTab.report),
+            onTap: activeTab == AppTab.report ? null : () => navigateToTab(context, AppTab.report),
             iconAsset: TogedogAssets.navReport,
             iconWidth: 21 * scale,
             iconHeight: 21 * scale,
@@ -268,9 +261,7 @@ class AppBottomNav extends StatelessWidget {
             scale: scale,
             label: '마이페이지',
             active: activeTab == AppTab.mypage,
-            onTap: activeTab == AppTab.mypage
-                ? null
-                : () => navigateToTab(context, AppTab.mypage),
+            onTap: activeTab == AppTab.mypage ? null : () => navigateToTab(context, AppTab.mypage),
             iconAsset: TogedogAssets.navMypage,
             iconWidth: 26 * scale,
             iconHeight: 26 * scale,
@@ -337,14 +328,10 @@ class _NavItem extends StatelessWidget {
 
   Widget _buildIcon() {
     final asset = switch (iconAsset) {
-      TogedogAssets.navHome =>
-        active ? TogedogAssets.navHome : TogedogAssets.navHomeInactive,
-      TogedogAssets.navWalkMode =>
-        active ? TogedogAssets.navWalkModeActive : TogedogAssets.navWalkModeInactive,
-      TogedogAssets.navReport =>
-        active ? TogedogAssets.navReportActive : TogedogAssets.navReportInactive,
-      TogedogAssets.navMypage =>
-        active ? TogedogAssets.navMypageActive : TogedogAssets.navMypageInactive,
+      TogedogAssets.navHome => active ? TogedogAssets.navHome : TogedogAssets.navHomeInactive,
+      TogedogAssets.navWalkMode => active ? TogedogAssets.navWalkModeActive : TogedogAssets.navWalkModeInactive,
+      TogedogAssets.navReport => active ? TogedogAssets.navReportActive : TogedogAssets.navReportInactive,
+      TogedogAssets.navMypage => active ? TogedogAssets.navMypageActive : TogedogAssets.navMypageInactive,
       _ => iconAsset,
     };
 
@@ -426,11 +413,7 @@ class _IsolatedNavSvgState extends State<_IsolatedNavSvg> {
 
 String _scopeSvgIds(String svg, String scope) {
   final suffix = scope.replaceAll(RegExp(r'[^a-zA-Z0-9_]'), '_');
-  final ids = RegExp(r'id="([^"]+)"')
-      .allMatches(svg)
-      .map((match) => match.group(1)!)
-      .toSet()
-      .toList();
+  final ids = RegExp(r'id="([^"]+)"').allMatches(svg).map((match) => match.group(1)!).toSet().toList();
 
   var result = svg;
   for (final id in ids) {
@@ -465,29 +448,29 @@ class SettingsListTile extends StatelessWidget {
           child: InkWell(
             onTap: onTap,
             child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 21 * scale, vertical: 14 * scale),
-            child: Row(
-              children: [
-                Expanded(
-                  child: Text(
-                    title,
-                    style: TextStyle(
-                      fontFamily: 'LGSmartUI',
-                      fontWeight: FontWeight.w600,
-                      fontSize: 13 * scale,
-                      color: const Color(0xFF1A1A1A),
+              padding: EdgeInsets.symmetric(horizontal: 21 * scale, vertical: 14 * scale),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      title,
+                      style: TextStyle(
+                        fontFamily: 'LGSmartUI',
+                        fontWeight: FontWeight.w600,
+                        fontSize: 13 * scale,
+                        color: const Color(0xFF1A1A1A),
+                      ),
                     ),
                   ),
-                ),
-                Icon(
-                  Icons.chevron_right,
-                  size: 18 * scale,
-                  color: const Color(0xFF6A6A6A),
-                ),
-              ],
+                  Icon(
+                    Icons.chevron_right,
+                    size: 18 * scale,
+                    color: const Color(0xFF6A6A6A),
+                  ),
+                ],
+              ),
             ),
           ),
-        ),
         ),
         if (showDivider)
           Divider(

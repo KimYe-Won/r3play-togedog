@@ -81,18 +81,13 @@ class _Mypage03ScreenState extends State<Mypage03Screen> {
   @override
   void initState() {
     super.initState();
-    _pageIndex =
-        WearableConnectionStore.instance.connectedId == WearableHarnessId.star
-            ? 1
-            : 0;
+    _pageIndex = WearableConnectionStore.instance.connectedId == WearableHarnessId.star ? 1 : 0;
   }
 
   WearableConnectionStatus _statusFor(WearableHarnessId id) {
     final store = WearableConnectionStore.instance;
     if (_isConnecting && _pendingConnectId != null) {
-      return _pendingConnectId == id
-          ? WearableConnectionStatus.connecting
-          : WearableConnectionStatus.available;
+      return _pendingConnectId == id ? WearableConnectionStatus.connecting : WearableConnectionStatus.available;
     }
     return store.statusFor(id);
   }
@@ -173,214 +168,207 @@ class _Mypage03ScreenState extends State<Mypage03Screen> {
     final devices = _buildDevices(petName);
 
     final stridePx = _Mypage03Layout.cardPageStride * s;
-    final carouselHeight =
-        (_Mypage03Layout.cardTop + _Mypage03Layout.cardHeight - _Mypage03Layout.heroTop) * s;
+    final carouselHeight = (_Mypage03Layout.cardTop + _Mypage03Layout.cardHeight - _Mypage03Layout.heroTop) * s;
     final cardOffsetInCarousel = (_Mypage03Layout.cardTop - _Mypage03Layout.heroTop) * s;
 
     return TogedogA11y.screen(
       name: '웨어러블 디바이스 관리',
       child: Scaffold(
-      backgroundColor: Colors.white,
-      body: Stack(
-        fit: StackFit.expand,
-        children: [
-          const DecoratedBox(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [Color(0xFFFBFBFF), Color(0xFFF0EAFF)],
-                stops: [0.19006, 0.86364],
+        backgroundColor: Colors.white,
+        body: Stack(
+          fit: StackFit.expand,
+          children: [
+            const DecoratedBox(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [Color(0xFFFBFBFF), Color(0xFFF0EAFF)],
+                  stops: [0.19006, 0.86364],
+                ),
               ),
             ),
-          ),
-          Positioned(
-            left: scaler.canvasLeft,
-            top: scaler.canvasTop,
-            width: scaler.canvasWidth,
-            height: scaler.canvasHeight,
-            child: Stack(
-              clipBehavior: Clip.none,
-              children: [
-                ..._WearableBackgroundDecor.build(s),
-                Positioned(
-                  left: 0,
-                  right: 0,
-                  top: _Mypage03Layout.titleTop * s,
-                  child: Text(
-                    '웨어러블 관리',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontFamily: 'LGSmartUI',
-                      fontWeight: FontWeight.w700,
-                      fontSize: 35 * s,
-                      color: const Color(0xFF111111),
+            Positioned(
+              left: scaler.canvasLeft,
+              top: scaler.canvasTop,
+              width: scaler.canvasWidth,
+              height: scaler.canvasHeight,
+              child: Stack(
+                clipBehavior: Clip.none,
+                children: [
+                  ..._WearableBackgroundDecor.build(s),
+                  Positioned(
+                    left: 0,
+                    right: 0,
+                    top: _Mypage03Layout.titleTop * s,
+                    child: Text(
+                      '웨어러블 관리',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontFamily: 'LGSmartUI',
+                        fontWeight: FontWeight.w700,
+                        fontSize: 35 * s,
+                        color: const Color(0xFF111111),
+                      ),
                     ),
                   ),
-                ),
-                Positioned(
-                  left: 0,
-                  right: 0,
-                  top: _Mypage03Layout.subtitleTop * s,
-                  child: Text(
-                    '반려견의 상태를 확인할 기기를 연결해주세요.',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontFamily: 'LGSmartUI',
-                      fontWeight: FontWeight.w600,
-                      fontSize: 14 * s,
-                      color: const Color(0xFF828282),
+                  Positioned(
+                    left: 0,
+                    right: 0,
+                    top: _Mypage03Layout.subtitleTop * s,
+                    child: Text(
+                      '반려견의 상태를 확인할 기기를 연결해주세요.',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontFamily: 'LGSmartUI',
+                        fontWeight: FontWeight.w600,
+                        fontSize: 14 * s,
+                        color: const Color(0xFF828282),
+                      ),
                     ),
                   ),
-                ),
-                Positioned(
-                  left: 0,
-                  top: _Mypage03Layout.heroTop * s,
-                  width: scaler.canvasWidth,
-                  height: carouselHeight,
-                  child: GestureDetector(
-                    behavior: HitTestBehavior.opaque,
-                    onHorizontalDragUpdate: (details) =>
-                        _onHorizontalDragUpdate(details, stridePx, devices.length),
-                    onHorizontalDragEnd: (details) =>
-                        _onHorizontalDragEnd(details, stridePx, devices.length),
-                    child: Stack(
-                      clipBehavior: Clip.none,
-                      children: [
-                        for (var i = 0; i < devices.length; i++) ...[
-                          Positioned(
-                            left: _Mypage03Layout.heroLeft * s +
-                                (i - _pageIndex) * stridePx +
-                                _dragPx,
-                            top: 0,
-                            width: _Mypage03Layout.heroWidth * s,
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                SizedBox(
-                                  width: _Mypage03Layout.productWidth * s,
-                                  height: _Mypage03Layout.productHeight * s,
-                                  child: Image.asset(
-                                    devices[i].productAsset,
-                                    fit: BoxFit.contain,
-                                    alignment: Alignment.bottomCenter,
-                                    errorBuilder: (_, __, ___) => Container(
-                                      color: const Color(0xFFE8E8EC),
+                  Positioned(
+                    left: 0,
+                    top: _Mypage03Layout.heroTop * s,
+                    width: scaler.canvasWidth,
+                    height: carouselHeight,
+                    child: GestureDetector(
+                      behavior: HitTestBehavior.opaque,
+                      onHorizontalDragUpdate: (details) => _onHorizontalDragUpdate(details, stridePx, devices.length),
+                      onHorizontalDragEnd: (details) => _onHorizontalDragEnd(details, stridePx, devices.length),
+                      child: Stack(
+                        clipBehavior: Clip.none,
+                        children: [
+                          for (var i = 0; i < devices.length; i++) ...[
+                            Positioned(
+                              left: _Mypage03Layout.heroLeft * s + (i - _pageIndex) * stridePx + _dragPx,
+                              top: 0,
+                              width: _Mypage03Layout.heroWidth * s,
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  SizedBox(
+                                    width: _Mypage03Layout.productWidth * s,
+                                    height: _Mypage03Layout.productHeight * s,
+                                    child: Image.asset(
+                                      devices[i].productAsset,
+                                      fit: BoxFit.contain,
+                                      alignment: Alignment.bottomCenter,
+                                      errorBuilder: (_, __, ___) => Container(
+                                        color: const Color(0xFFE8E8EC),
+                                      ),
                                     ),
                                   ),
-                                ),
-                                SizedBox(height: _Mypage03Layout.heroGap * s),
-                                Text(
-                                  devices[i].productTitle,
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    fontFamily: 'LGSmartUI',
-                                    fontWeight: FontWeight.w700,
-                                    fontSize: _Mypage03Layout.titleFontSize * s,
-                                    color: const Color(0xFF111111),
+                                  SizedBox(height: _Mypage03Layout.heroGap * s),
+                                  Text(
+                                    devices[i].productTitle,
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      fontFamily: 'LGSmartUI',
+                                      fontWeight: FontWeight.w700,
+                                      fontSize: _Mypage03Layout.titleFontSize * s,
+                                      color: const Color(0xFF111111),
+                                    ),
                                   ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          Positioned(
-                            left: _Mypage03Layout.cardLeft * s +
-                                (i - _pageIndex) * stridePx +
-                                _dragPx,
-                            top: cardOffsetInCarousel,
-                            width: _Mypage03Layout.cardWidth * s,
-                            height: _Mypage03Layout.cardHeight * s,
-                            child: _DeviceCard(
-                              scale: s,
-                              name: devices[i].name,
-                              status: devices[i].status,
-                              connectMode: _connectButtonMode(
-                                devices[i].status,
-                                isConnecting: _isConnecting,
+                                ],
                               ),
-                              onConnect: _connectButtonMode(
-                                        devices[i].status,
-                                        isConnecting: _isConnecting,
-                                      ) ==
-                                      WearableConnectButtonMode.available
-                                  ? () => _onConnect(devices[i].id)
-                                  : null,
                             ),
-                          ),
+                            Positioned(
+                              left: _Mypage03Layout.cardLeft * s + (i - _pageIndex) * stridePx + _dragPx,
+                              top: cardOffsetInCarousel,
+                              width: _Mypage03Layout.cardWidth * s,
+                              height: _Mypage03Layout.cardHeight * s,
+                              child: _DeviceCard(
+                                scale: s,
+                                name: devices[i].name,
+                                status: devices[i].status,
+                                connectMode: _connectButtonMode(
+                                  devices[i].status,
+                                  isConnecting: _isConnecting,
+                                ),
+                                onConnect: _connectButtonMode(
+                                          devices[i].status,
+                                          isConnecting: _isConnecting,
+                                        ) ==
+                                        WearableConnectButtonMode.available
+                                    ? () => _onConnect(devices[i].id)
+                                    : null,
+                              ),
+                            ),
+                          ],
                         ],
+                      ),
+                    ),
+                  ),
+                  Positioned(
+                    left: _Mypage03Layout.heroLeft * s,
+                    top: _Mypage03Layout.dotsTop * s,
+                    width: _Mypage03Layout.heroWidth * s,
+                    child: IgnorePointer(
+                      child: Center(
+                        child: _WearablePageDots(
+                          scale: s,
+                          activeIndex: _pageIndex,
+                          itemCount: devices.length,
+                        ),
+                      ),
+                    ),
+                  ),
+                  Positioned(
+                    left: _Mypage03Layout.helpLeft * s,
+                    top: _Mypage03Layout.helpTop * s,
+                    width: _Mypage03Layout.helpWidth * s,
+                    child: Column(
+                      children: [
+                        Text(
+                          '기기가 보이지 않나요?',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontFamily: 'LGSmartUI',
+                            fontWeight: FontWeight.w400,
+                            fontSize: 15 * s,
+                            color: const Color(0xFF687080),
+                          ),
+                        ),
+                        SizedBox(height: 6 * s),
+                        Text(
+                          '도움 받기',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontFamily: 'LGSmartUI',
+                            fontWeight: FontWeight.w700,
+                            fontSize: 15 * s,
+                            color: const Color(0xFF8256E8),
+                          ),
+                        ),
                       ],
                     ),
                   ),
-                ),
-                Positioned(
-                  left: _Mypage03Layout.heroLeft * s,
-                  top: _Mypage03Layout.dotsTop * s,
-                  width: _Mypage03Layout.heroWidth * s,
-                  child: IgnorePointer(
-                    child: Center(
-                      child: _WearablePageDots(
-                        scale: s,
-                        activeIndex: _pageIndex,
-                        itemCount: devices.length,
+                  Positioned(
+                    left: _Mypage03Layout.backLeft * s,
+                    top: _Mypage03Layout.backTop * s,
+                    width: _Mypage03Layout.backWidth * s,
+                    height: _Mypage03Layout.backHeight * s,
+                    child: TogedogA11y.button(
+                      label: '뒤로',
+                      hint: '이전 화면으로',
+                      child: GestureDetector(
+                        onTap: () => Navigator.of(context).pop(),
+                        behavior: HitTestBehavior.opaque,
+                        child: TogedogAssets.svg(
+                          _MypageWearableAssets.back,
+                          width: _Mypage03Layout.backWidth * s,
+                          height: _Mypage03Layout.backHeight * s,
+                        ),
                       ),
                     ),
                   ),
-                ),
-                Positioned(
-                  left: _Mypage03Layout.helpLeft * s,
-                  top: _Mypage03Layout.helpTop * s,
-                  width: _Mypage03Layout.helpWidth * s,
-                  child: Column(
-                    children: [
-                      Text(
-                        '기기가 보이지 않나요?',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontFamily: 'LGSmartUI',
-                          fontWeight: FontWeight.w400,
-                          fontSize: 15 * s,
-                          color: const Color(0xFF687080),
-                        ),
-                      ),
-                      SizedBox(height: 6 * s),
-                      Text(
-                        '도움 받기',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontFamily: 'LGSmartUI',
-                          fontWeight: FontWeight.w700,
-                          fontSize: 15 * s,
-                          color: const Color(0xFF8256E8),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Positioned(
-                  left: _Mypage03Layout.backLeft * s,
-                  top: _Mypage03Layout.backTop * s,
-                  width: _Mypage03Layout.backWidth * s,
-                  height: _Mypage03Layout.backHeight * s,
-                  child: TogedogA11y.button(
-                    label: '뒤로',
-                    hint: '이전 화면으로',
-                    child: GestureDetector(
-                      onTap: () => Navigator.of(context).pop(),
-                      behavior: HitTestBehavior.opaque,
-                      child: TogedogAssets.svg(
-                        _MypageWearableAssets.back,
-                        width: _Mypage03Layout.backWidth * s,
-                        height: _Mypage03Layout.backHeight * s,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
-    ),
     );
   }
 }
@@ -488,14 +476,14 @@ class _WearablePageDots extends StatelessWidget {
 }
 
 class _MypageWearableAssets {
-  static const back = 'asset/mypage/mypage_wearable_back.svg';
-  static const product = 'asset/mypage/mypage_wearable_product.png';
-  static const paw = 'asset/mypage/mypage_wearable_paw.svg';
-  static const pawBg1 = 'asset/mypage/mypage_wearable_paw_bg_1.svg';
-  static const pawBg2 = 'asset/mypage/mypage_wearable_paw_bg_2.svg';
-  static const pawBg3 = 'asset/mypage/mypage_wearable_paw_bg_3.svg';
-  static const starSm = 'asset/mypage/mypage_wearable_star_sm.svg';
-  static const starLg = 'asset/mypage/mypage_wearable_star_lg.svg';
+  static const back = 'assets/mypage/mypage_wearable_back.svg';
+  static const product = 'assets/mypage/mypage_wearable_product.png';
+  static const paw = 'assets/mypage/mypage_wearable_paw.svg';
+  static const pawBg1 = 'assets/mypage/mypage_wearable_paw_bg_1.svg';
+  static const pawBg2 = 'assets/mypage/mypage_wearable_paw_bg_2.svg';
+  static const pawBg3 = 'assets/mypage/mypage_wearable_paw_bg_3.svg';
+  static const starSm = 'assets/mypage/mypage_wearable_star_sm.svg';
+  static const starLg = 'assets/mypage/mypage_wearable_star_lg.svg';
 }
 
 class _DeviceCard extends StatelessWidget {
@@ -515,9 +503,7 @@ class _DeviceCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final statusLabel = status == WearableConnectionStatus.available
-        ? '연결 가능'
-        : '연결 중';
+    final statusLabel = status == WearableConnectionStatus.available ? '연결 가능' : '연결 중';
 
     return Container(
       padding: EdgeInsets.fromLTRB(20 * scale, 22 * scale, 35 * scale, 22 * scale),
@@ -627,17 +613,14 @@ class _MypageConnectButtonState extends State<_MypageConnectButton> {
   bool _isPressed = false;
   bool _isHovered = false;
 
-  bool get _isInteractive =>
-      widget.mode == WearableConnectButtonMode.available &&
-      widget.onPressed != null;
+  bool get _isInteractive => widget.mode == WearableConnectButtonMode.available && widget.onPressed != null;
 
   @override
   Widget build(BuildContext context) {
     final scale = widget.scale;
 
     return MouseRegion(
-      cursor:
-          _isInteractive ? SystemMouseCursors.click : SystemMouseCursors.basic,
+      cursor: _isInteractive ? SystemMouseCursors.click : SystemMouseCursors.basic,
       onEnter: _isInteractive ? (_) => setState(() => _isHovered = true) : null,
       onExit: _isInteractive
           ? (_) => setState(() {
@@ -654,12 +637,9 @@ class _MypageConnectButtonState extends State<_MypageConnectButton> {
                 : '${widget.deviceName} 연결',
         enabled: _isInteractive,
         child: GestureDetector(
-          onTapDown:
-              _isInteractive ? (_) => setState(() => _isPressed = true) : null,
-          onTapUp:
-              _isInteractive ? (_) => setState(() => _isPressed = false) : null,
-          onTapCancel:
-              _isInteractive ? () => setState(() => _isPressed = false) : null,
+          onTapDown: _isInteractive ? (_) => setState(() => _isPressed = true) : null,
+          onTapUp: _isInteractive ? (_) => setState(() => _isPressed = false) : null,
+          onTapCancel: _isInteractive ? () => setState(() => _isPressed = false) : null,
           onTap: widget.onPressed,
           behavior: HitTestBehavior.opaque,
           child: AnimatedContainer(

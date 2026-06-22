@@ -114,19 +114,19 @@ class MainOnboarding09Screen extends StatelessWidget {
       name: '근처 기기 허용',
       child: Scaffold(
         body: Stack(
-        fit: StackFit.expand,
-        children: [
-          IgnorePointer(
-            child: MainOnboarding05Screen(
-              initialSelectedMode: guidanceMode,
-              interactive: false,
+          fit: StackFit.expand,
+          children: [
+            IgnorePointer(
+              child: MainOnboarding05Screen(
+                initialSelectedMode: guidanceMode,
+                interactive: false,
+              ),
             ),
-          ),
-          const ColoredBox(color: dimOverlay),
-          modal,
-        ],
+            const ColoredBox(color: dimOverlay),
+            modal,
+          ],
+        ),
       ),
-    ),
     );
   }
 }
@@ -145,7 +145,7 @@ class _NearbyDeviceHeader extends StatelessWidget {
           width: MainOnboarding09Screen.iconSize * scale,
           height: MainOnboarding09Screen.iconSize * scale,
           child: SvgPicture.asset(
-            'asset/onboarding/onboarding_nearby_device_icon.svg',
+            'assets/onboarding/onboarding_nearby_device_icon.svg',
             fit: BoxFit.contain,
             alignment: Alignment.center,
           ),
@@ -230,12 +230,10 @@ class _NearbyDevicePermissionButton extends StatefulWidget {
   final VoidCallback onTap;
 
   @override
-  State<_NearbyDevicePermissionButton> createState() =>
-      _NearbyDevicePermissionButtonState();
+  State<_NearbyDevicePermissionButton> createState() => _NearbyDevicePermissionButtonState();
 }
 
-class _NearbyDevicePermissionButtonState
-    extends State<_NearbyDevicePermissionButton> {
+class _NearbyDevicePermissionButtonState extends State<_NearbyDevicePermissionButton> {
   bool _isHovered = false;
   bool _isPressed = false;
 
@@ -271,8 +269,7 @@ class _NearbyDevicePermissionButtonState
               style: TextStyle(
                 fontFamily: 'LGSmartUI',
                 fontWeight: FontWeight.w700,
-                fontSize:
-                    MainOnboarding09Screen.permissionButtonFontSize * scale,
+                fontSize: MainOnboarding09Screen.permissionButtonFontSize * scale,
                 height: 1.2,
                 color: MainOnboarding09Screen.textBlack,
                 letterSpacing: 0.036 * scale,

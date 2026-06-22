@@ -93,7 +93,7 @@ class WalkVibrationGuidePanel extends StatelessWidget {
               width: 83.223 * s,
               height: 61.737 * s,
               child: Image.asset(
-                'asset/walk/walk_voice_wave_left.png',
+                'assets/walk/walk_voice_wave_left.png',
                 fit: BoxFit.contain,
               ),
             ),
@@ -103,7 +103,7 @@ class WalkVibrationGuidePanel extends StatelessWidget {
               width: 83.223 * s,
               height: 61.737 * s,
               child: Image.asset(
-                'asset/walk/walk_voice_wave_right.png',
+                'assets/walk/walk_voice_wave_right.png',
                 fit: BoxFit.contain,
               ),
             ),
@@ -151,7 +151,7 @@ class WalkVibrationCenterVisualizer extends StatelessWidget {
         alignment: Alignment.center,
         children: [
           SvgPicture.asset(
-            'asset/walk/walk_vibration_center_rings.svg',
+            'assets/walk/walk_vibration_center_rings.svg',
             width: 169 * s,
             height: 169 * s,
             fit: BoxFit.contain,
@@ -165,7 +165,7 @@ class WalkVibrationCenterVisualizer extends StatelessWidget {
                 width: 58 * s,
                 height: 50 * s,
                 child: SvgPicture.asset(
-                  'asset/walk/walk_vibration_icon_figma.svg',
+                  'assets/walk/walk_vibration_icon_figma.svg',
                   fit: BoxFit.contain,
                 ),
               ),

@@ -23,11 +23,6 @@ class AppLiveStreamingView extends StatelessWidget {
             role: Role.receiver,
             showControlPanel: false,
             controller: WalkAiManager.instance.streamingController,
-            enableDetection: true,
-            enableSpeaker: false,
-            customModelPath: WalkAiManager.modelPath,
-            detectionInterval: const Duration(milliseconds: 100),
-            onDetected: WalkAiManager.instance.onDetected,
           ),
           if (!WalkSession.instance.active)
             const _InactiveView(),

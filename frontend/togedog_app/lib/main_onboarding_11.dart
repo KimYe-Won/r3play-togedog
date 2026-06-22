@@ -43,12 +43,12 @@ class MainOnboarding11Screen extends StatefulWidget {
   static const double buttonGap = 12;
   static const double bottomPadding = 28;
 
-  static const String dogImageAsset = 'asset/onboarding/onboarding_profile_dog.png';
-  static const String backButtonAsset = 'asset/onboarding/onboarding_profile_back.svg';
-  static const String pawsDecorationAsset = 'asset/onboarding/onboarding_profile_paws.svg';
-  static const String cameraBgAsset = 'asset/onboarding/onboarding_profile_camera_bg.svg';
-  static const String cameraIconAsset = 'asset/onboarding/onboarding_profile_camera_icon.svg';
-  static const String chevronIconAsset = 'asset/onboarding/onboarding_profile_chevron.svg';
+  static const String dogImageAsset = 'assets/onboarding/onboarding_profile_dog.png';
+  static const String backButtonAsset = 'assets/onboarding/onboarding_profile_back.svg';
+  static const String pawsDecorationAsset = 'assets/onboarding/onboarding_profile_paws.svg';
+  static const String cameraBgAsset = 'assets/onboarding/onboarding_profile_camera_bg.svg';
+  static const String cameraIconAsset = 'assets/onboarding/onboarding_profile_camera_icon.svg';
+  static const String chevronIconAsset = 'assets/onboarding/onboarding_profile_chevron.svg';
 
   static const Color brandPurple = Color(0xFF8756E7);
   static const Color gradientStart = Color(0xFFFBFBFF);
@@ -175,35 +175,35 @@ class _MainOnboarding11ScreenState extends State<MainOnboarding11Screen> {
     return TogedogA11y.screen(
       name: '반려견 프로필 등록',
       child: Scaffold(
-      backgroundColor: Colors.white,
-      body: SafeArea(
-        top: false,
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              _ProfileHeroSection(scale: scale, topPadding: topPadding),
-              Transform.translate(
-                offset: Offset(0, -31 * scale),
-                child: _ProfileFormSection(
-                  scale: scale,
-                  guardianNameController: _guardianNameController,
-                  petNameController: _petNameController,
-                  ageController: _ageController,
-                  isBreedExpanded: _isBreedExpanded,
-                  selectedBreed: _selectedBreed,
-                  onBreedToggle: _toggleBreedList,
-                  onBreedSelected: _selectBreed,
-                  canRegister: _canSubmit,
-                  onRegister: _registerAndGoToNextScreen,
-                  onLater: _skipToNextScreen,
+        backgroundColor: Colors.white,
+        body: SafeArea(
+          top: false,
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                _ProfileHeroSection(scale: scale, topPadding: topPadding),
+                Transform.translate(
+                  offset: Offset(0, -31 * scale),
+                  child: _ProfileFormSection(
+                    scale: scale,
+                    guardianNameController: _guardianNameController,
+                    petNameController: _petNameController,
+                    ageController: _ageController,
+                    isBreedExpanded: _isBreedExpanded,
+                    selectedBreed: _selectedBreed,
+                    onBreedToggle: _toggleBreedList,
+                    onBreedSelected: _selectBreed,
+                    canRegister: _canSubmit,
+                    onRegister: _registerAndGoToNextScreen,
+                    onLater: _skipToNextScreen,
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
-    ),
     );
   }
 }
@@ -305,13 +305,9 @@ class _ProfileHeroSection extends StatelessWidget {
           Positioned(
             left: MediaQuery.sizeOf(context).width * 0.1439,
             right: MediaQuery.sizeOf(context).width * 0.1455,
-            top: MainOnboarding11Screen.designScreenHeight *
-                MainOnboarding11Screen.pawsTopRatio *
-                scale,
+            top: MainOnboarding11Screen.designScreenHeight * MainOnboarding11Screen.pawsTopRatio * scale,
             height: MainOnboarding11Screen.designScreenHeight *
-                (1 -
-                    MainOnboarding11Screen.pawsTopRatio -
-                    MainOnboarding11Screen.pawsBottomRatio) *
+                (1 - MainOnboarding11Screen.pawsTopRatio - MainOnboarding11Screen.pawsBottomRatio) *
                 scale,
             child: TogedogA11y.decorative(
               SvgPicture.asset(
@@ -526,28 +522,28 @@ class _ProfileTextField extends StatelessWidget {
             hint: hintText,
             child: TextField(
               controller: controller,
-            style: TextStyle(
-              fontFamily: 'LGSmartUI',
-              fontWeight: FontWeight.w400,
-              fontSize: 14 * scale,
-              height: 24 / 14,
-              color: MainOnboarding11Screen.inputTextBlack,
-            ),
-            decoration: InputDecoration(
-              isDense: true,
-              border: InputBorder.none,
-              hintText: hintText,
-              hintStyle: TextStyle(
+              style: TextStyle(
                 fontFamily: 'LGSmartUI',
                 fontWeight: FontWeight.w400,
                 fontSize: 14 * scale,
                 height: 24 / 14,
-                color: MainOnboarding11Screen.placeholderGray,
+                color: MainOnboarding11Screen.inputTextBlack,
               ),
-              contentPadding: EdgeInsets.zero,
+              decoration: InputDecoration(
+                isDense: true,
+                border: InputBorder.none,
+                hintText: hintText,
+                hintStyle: TextStyle(
+                  fontFamily: 'LGSmartUI',
+                  fontWeight: FontWeight.w400,
+                  fontSize: 14 * scale,
+                  height: 24 / 14,
+                  color: MainOnboarding11Screen.placeholderGray,
+                ),
+                contentPadding: EdgeInsets.zero,
+              ),
             ),
           ),
-        ),
         ),
       ],
     );
@@ -577,35 +573,35 @@ class _AgeField extends StatelessWidget {
               child: _ProfileInputBox(
                 scale: scale,
                 child: TogedogA11y.textField(
-                label: '나이',
-                value: controller.text,
-                hint: '나이',
-                child: TextField(
-                  controller: controller,
-                  keyboardType: TextInputType.number,
-                  style: TextStyle(
-                    fontFamily: 'LGSmartUI',
-                    fontWeight: FontWeight.w400,
-                    fontSize: 14 * scale,
-                    height: 24 / 14,
-                    color: MainOnboarding11Screen.inputTextBlack,
-                  ),
-                  decoration: InputDecoration(
-                    isDense: true,
-                    border: InputBorder.none,
-                    hintText: '나이',
-                    hintStyle: TextStyle(
+                  label: '나이',
+                  value: controller.text,
+                  hint: '나이',
+                  child: TextField(
+                    controller: controller,
+                    keyboardType: TextInputType.number,
+                    style: TextStyle(
                       fontFamily: 'LGSmartUI',
                       fontWeight: FontWeight.w400,
                       fontSize: 14 * scale,
                       height: 24 / 14,
-                      color: MainOnboarding11Screen.placeholderGray,
+                      color: MainOnboarding11Screen.inputTextBlack,
                     ),
-                    contentPadding: EdgeInsets.zero,
+                    decoration: InputDecoration(
+                      isDense: true,
+                      border: InputBorder.none,
+                      hintText: '나이',
+                      hintStyle: TextStyle(
+                        fontFamily: 'LGSmartUI',
+                        fontWeight: FontWeight.w400,
+                        fontSize: 14 * scale,
+                        height: 24 / 14,
+                        color: MainOnboarding11Screen.placeholderGray,
+                      ),
+                      contentPadding: EdgeInsets.zero,
+                    ),
                   ),
                 ),
               ),
-            ),
             ),
             SizedBox(width: 16 * scale),
             Text(
@@ -654,29 +650,29 @@ class _BreedSelector extends StatelessWidget {
             onTap: onToggle,
             behavior: HitTestBehavior.opaque,
             child: Row(
-            children: [
-              Expanded(
-                child: _ProfileInputBox(
-                  scale: scale,
-                  child: Text(
-                    selectedBreed ?? '견종을 입력해주세요',
-                    style: TextStyle(
-                      fontFamily: 'LGSmartUI',
-                      fontWeight: FontWeight.w400,
-                      fontSize: 14 * scale,
-                      height: 24 / 14,
-                      color: selectedBreed == null
-                          ? MainOnboarding11Screen.placeholderGray
-                          : MainOnboarding11Screen.inputTextBlack,
+              children: [
+                Expanded(
+                  child: _ProfileInputBox(
+                    scale: scale,
+                    child: Text(
+                      selectedBreed ?? '견종을 입력해주세요',
+                      style: TextStyle(
+                        fontFamily: 'LGSmartUI',
+                        fontWeight: FontWeight.w400,
+                        fontSize: 14 * scale,
+                        height: 24 / 14,
+                        color: selectedBreed == null
+                            ? MainOnboarding11Screen.placeholderGray
+                            : MainOnboarding11Screen.inputTextBlack,
+                      ),
                     ),
                   ),
                 ),
-              ),
-              SizedBox(width: 10 * scale),
-              _ChevronButton(scale: scale, isExpanded: isExpanded),
-            ],
+                SizedBox(width: 10 * scale),
+                _ChevronButton(scale: scale, isExpanded: isExpanded),
+              ],
+            ),
           ),
-        ),
         ),
         AnimatedSize(
           duration: const Duration(milliseconds: 250),
@@ -749,41 +745,39 @@ class _BreedDropdownList extends StatelessWidget {
               label: breed,
               selected: isSelected,
               child: Material(
-                color: isSelected
-                    ? MainOnboarding11Screen.breedSelectedBackground
-                    : Colors.white,
+                color: isSelected ? MainOnboarding11Screen.breedSelectedBackground : Colors.white,
                 child: InkWell(
                   onTap: () => onBreedSelected(breed),
                   child: Padding(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 14 * scale,
-                    vertical: 10 * scale,
-                  ),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: Text(
-                          breed,
-                          style: TextStyle(
-                            fontFamily: 'LGSmartUI',
-                            fontWeight: FontWeight.w400,
-                            fontSize: 16 * scale,
-                            height: 24 / 16,
-                            color: MainOnboarding11Screen.inputTextBlack,
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 14 * scale,
+                      vertical: 10 * scale,
+                    ),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            breed,
+                            style: TextStyle(
+                              fontFamily: 'LGSmartUI',
+                              fontWeight: FontWeight.w400,
+                              fontSize: 16 * scale,
+                              height: 24 / 16,
+                              color: MainOnboarding11Screen.inputTextBlack,
+                            ),
                           ),
                         ),
-                      ),
-                      if (isSelected)
-                        Icon(
-                          Icons.check,
-                          size: 20 * scale,
-                          color: MainOnboarding11Screen.brandPurple,
-                        ),
-                    ],
+                        if (isSelected)
+                          Icon(
+                            Icons.check,
+                            size: 20 * scale,
+                            color: MainOnboarding11Screen.brandPurple,
+                          ),
+                      ],
+                    ),
                   ),
                 ),
               ),
-            ),
             );
           },
         ),
@@ -923,9 +917,7 @@ class _PrimaryActionButtonState extends State<_PrimaryActionButton> {
                 fontWeight: FontWeight.w700,
                 fontSize: 16 * scale,
                 height: 1,
-                color: enabled
-                    ? Colors.white
-                    : MainOnboarding11Screen.disabledButtonText,
+                color: enabled ? Colors.white : MainOnboarding11Screen.disabledButtonText,
               ),
             ),
           ),
@@ -989,35 +981,35 @@ class _SecondaryActionButtonState extends State<_SecondaryActionButton> {
           onTap: widget.onPressed,
           behavior: HitTestBehavior.opaque,
           child: AnimatedContainer(
-          duration: const Duration(milliseconds: 120),
-          height: MainOnboarding11Screen.buttonHeight * scale,
-          alignment: Alignment.center,
-          decoration: BoxDecoration(
-            color: _isPressed
-                ? const Color(0xFFF5F5F5)
-                : _isHovered
-                    ? const Color(0xFFFAFAFA)
-                    : Colors.white,
-            borderRadius: BorderRadius.circular(
-              MainOnboarding11Screen.buttonRadius * scale,
+            duration: const Duration(milliseconds: 120),
+            height: MainOnboarding11Screen.buttonHeight * scale,
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              color: _isPressed
+                  ? const Color(0xFFF5F5F5)
+                  : _isHovered
+                      ? const Color(0xFFFAFAFA)
+                      : Colors.white,
+              borderRadius: BorderRadius.circular(
+                MainOnboarding11Screen.buttonRadius * scale,
+              ),
+              border: Border.all(
+                color: MainOnboarding11Screen.secondaryButtonBorder,
+              ),
             ),
-            border: Border.all(
-              color: MainOnboarding11Screen.secondaryButtonBorder,
-            ),
-          ),
-          child: Text(
-            widget.label,
-            style: TextStyle(
-              fontFamily: 'LGSmartUI',
-              fontWeight: FontWeight.w700,
-              fontSize: 16 * scale,
-              height: 1,
-              color: const Color(0xFF1A1A1A),
+            child: Text(
+              widget.label,
+              style: TextStyle(
+                fontFamily: 'LGSmartUI',
+                fontWeight: FontWeight.w700,
+                fontSize: 16 * scale,
+                height: 1,
+                color: const Color(0xFF1A1A1A),
+              ),
             ),
           ),
         ),
       ),
-    ),
     );
   }
 }

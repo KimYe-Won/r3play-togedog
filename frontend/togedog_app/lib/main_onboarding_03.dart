@@ -16,14 +16,13 @@ class MainOnboarding03Screen extends StatefulWidget {
   static const double designWidth = 402;
   static const double gifWidth = 220;
   static const Duration loadingDuration = Duration(seconds: 3);
-  static const String gifAsset = 'asset/onboarding/onboarding_togedog_modal.gif';
+  static const String gifAsset = 'assets/onboarding/onboarding_togedog_modal.gif';
 
   @override
   State<MainOnboarding03Screen> createState() => _MainOnboarding03ScreenState();
 }
 
-class _MainOnboarding03ScreenState extends State<MainOnboarding03Screen>
-    with SingleTickerProviderStateMixin {
+class _MainOnboarding03ScreenState extends State<MainOnboarding03Screen> with SingleTickerProviderStateMixin {
   late final AnimationController _progressController;
   late final Animation<double> _progressAnimation;
 
@@ -83,77 +82,76 @@ class _MainOnboarding03ScreenState extends State<MainOnboarding03Screen>
 
   @override
   Widget build(BuildContext context) {
-    final scale =
-        MediaQuery.sizeOf(context).width / MainOnboarding03Screen.designWidth;
+    final scale = MediaQuery.sizeOf(context).width / MainOnboarding03Screen.designWidth;
 
     return TogedogA11y.screen(
       name: 'TogeDog 전환',
       child: Material(
-      color: Colors.transparent,
-      child: Center(
-        child: Container(
-          width: 320 * scale,
-          padding: EdgeInsets.fromLTRB(
-            20 * scale,
-            24 * scale,
-            20 * scale,
-            28 * scale,
-          ),
-          decoration: BoxDecoration(
-            color: const Color(0xFFFCFCFC),
-            borderRadius: BorderRadius.circular(24 * scale),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withValues(alpha: 0.12),
-                blurRadius: 24 * scale,
-                offset: Offset(0, 8 * scale),
-              ),
-            ],
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              SizedBox(
-                width: MainOnboarding03Screen.gifWidth * scale,
-                height: 160 * scale,
-                child: TogedogA11y.decorative(
-                  Gif(
-                    image: const AssetImage(MainOnboarding03Screen.gifAsset),
-                    autostart: Autostart.loop,
-                    fit: BoxFit.contain,
+        color: Colors.transparent,
+        child: Center(
+          child: Container(
+            width: 320 * scale,
+            padding: EdgeInsets.fromLTRB(
+              20 * scale,
+              24 * scale,
+              20 * scale,
+              28 * scale,
+            ),
+            decoration: BoxDecoration(
+              color: const Color(0xFFFCFCFC),
+              borderRadius: BorderRadius.circular(24 * scale),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.12),
+                  blurRadius: 24 * scale,
+                  offset: Offset(0, 8 * scale),
+                ),
+              ],
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                SizedBox(
+                  width: MainOnboarding03Screen.gifWidth * scale,
+                  height: 160 * scale,
+                  child: TogedogA11y.decorative(
+                    Gif(
+                      image: const AssetImage(MainOnboarding03Screen.gifAsset),
+                      autostart: Autostart.loop,
+                      fit: BoxFit.contain,
+                    ),
                   ),
                 ),
-              ),
-              SizedBox(height: 20 * scale),
-              Text(
-                'LG TogeDog으로\n전환 중입니다',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontFamily: 'LGSmartUI',
-                  fontWeight: FontWeight.w700,
-                  fontSize: 18 * scale,
-                  height: 26 / 18,
-                  color: const Color(0xFF111111),
+                SizedBox(height: 20 * scale),
+                Text(
+                  'LG TogeDog으로\n전환 중입니다',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontFamily: 'LGSmartUI',
+                    fontWeight: FontWeight.w700,
+                    fontSize: 18 * scale,
+                    height: 26 / 18,
+                    color: const Color(0xFF111111),
+                  ),
                 ),
-              ),
-              SizedBox(height: 24 * scale),
-              SizedBox(
-                width: MainOnboarding03Screen.gifWidth * scale,
-                child: AnimatedBuilder(
-                  animation: _progressAnimation,
-                  builder: (context, child) {
-                    return _LoadingBar(
-                      scale: scale,
-                      progress: _progressAnimation.value,
-                    );
-                  },
+                SizedBox(height: 24 * scale),
+                SizedBox(
+                  width: MainOnboarding03Screen.gifWidth * scale,
+                  child: AnimatedBuilder(
+                    animation: _progressAnimation,
+                    builder: (context, child) {
+                      return _LoadingBar(
+                        scale: scale,
+                        progress: _progressAnimation.value,
+                      );
+                    },
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
-    ),
     );
   }
 }

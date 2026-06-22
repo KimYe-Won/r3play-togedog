@@ -70,6 +70,8 @@ class _CameraScreenState extends State<CameraScreen> {
         quality: VideoQuality.fullHd1080,
         enableDetection: false,
         enableSpeaker: false,
+        showMirrorButton: true,
+        showPip: false,
       ),
     );
   }

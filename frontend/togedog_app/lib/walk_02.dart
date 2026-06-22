@@ -86,9 +86,7 @@ class _Walk02ScreenState extends State<Walk02Screen> {
     return WalkRealtimeShell(
       scale: scale,
       onBack: () => Navigator.of(context).pop(),
-      bottomOverlay: kWalk02UseSingleFlashlightLayout
-          ? _buildLayout1128(scale)
-          : _buildLayout1080(scale),
+      bottomOverlay: kWalk02UseSingleFlashlightLayout ? _buildLayout1128(scale) : _buildLayout1080(scale),
     );
   }
 

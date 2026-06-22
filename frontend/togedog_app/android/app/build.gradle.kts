@@ -49,3 +49,20 @@ flutter {
 configurations.all {
     exclude(group = "com.google.ai.edge.litert", module = "litert-api")
 }
+
+// tflite_flutter dlopens "libtensorflowlite_jni.so", but ultralytics_yolo forces
+// com.google.ai.edge.litert:litert to 2.1.5, which ships that same runtime as "libLiteRt.so"
+// (identical TFLite C API symbols). Duplicate the merged libLiteRt.so under the name
+// tflite_flutter expects so both consumers load one runtime.
+androidComponents {
+    onVariants(selector().all()) { variant ->
+        val capName = variant.name.replaceFirstChar { it.uppercaseChar() }
+        tasks.matching { it.name == "merge${capName}NativeLibs" }.configureEach {
+            doLast {
+                outputs.files.asFileTree.matching { include("**/libLiteRt.so") }.forEach { liteRt ->
+                    liteRt.copyTo(liteRt.resolveSibling("libtensorflowlite_jni.so"), overwrite = true)
+                }
+            }
+        }
+    }
+}

@@ -11,16 +11,16 @@ import 'togedog_accessibility.dart';
 enum ThinqTab { home, device, care, menu }
 
 class _ThinqAssets {
-  static const background = 'asset/onboarding/onboarding_thinq_home.png';
-  static const navBarBackground = 'asset/onboarding/onboarding_thinq_nav_bar_bg.png';
-  static const navHomeActive = 'asset/onboarding/onboarding_thinq_nav_home_active.svg';
-  static const navHomeInactive = 'asset/onboarding/onboarding_thinq_nav_home_inactive.svg';
-  static const navDeviceActive = 'asset/onboarding/onboarding_thinq_nav_device_active.svg';
-  static const navDeviceInactive = 'asset/onboarding/onboarding_thinq_nav_device_inactive.svg';
-  static const navCareActive = 'asset/onboarding/onboarding_thinq_nav_care_active.svg';
-  static const navCareInactive = 'asset/onboarding/onboarding_thinq_nav_care_inactive.svg';
-  static const navMenuActive = 'asset/onboarding/onboarding_thinq_nav_menu_active.svg';
-  static const navMenuInactive = 'asset/onboarding/onboarding_thinq_nav_menu_inactive.svg';
+  static const background = 'assets/onboarding/onboarding_thinq_home.png';
+  static const navBarBackground = 'assets/onboarding/onboarding_thinq_nav_bar_bg.png';
+  static const navHomeActive = 'assets/onboarding/onboarding_thinq_nav_home_active.svg';
+  static const navHomeInactive = 'assets/onboarding/onboarding_thinq_nav_home_inactive.svg';
+  static const navDeviceActive = 'assets/onboarding/onboarding_thinq_nav_device_active.svg';
+  static const navDeviceInactive = 'assets/onboarding/onboarding_thinq_nav_device_inactive.svg';
+  static const navCareActive = 'assets/onboarding/onboarding_thinq_nav_care_active.svg';
+  static const navCareInactive = 'assets/onboarding/onboarding_thinq_nav_care_inactive.svg';
+  static const navMenuActive = 'assets/onboarding/onboarding_thinq_nav_menu_active.svg';
+  static const navMenuInactive = 'assets/onboarding/onboarding_thinq_nav_menu_inactive.svg';
 }
 
 /// Figma: 온보딩 띵큐 (node 542:5854)
@@ -78,49 +78,49 @@ class _MainOnboarding01ScreenState extends State<MainOnboarding01Screen> {
     return TogedogA11y.screen(
       name: '띵큐 홈',
       child: Scaffold(
-      backgroundColor: Colors.white,
-      body: Column(
-        children: [
-          Expanded(
-            child: SingleChildScrollView(
-              physics: const BouncingScrollPhysics(),
-              child: SizedBox(
-                width: screenWidth,
-                height: contentHeight,
-                child: Stack(
-                  clipBehavior: Clip.none,
-                  children: [
-                    Positioned.fill(
-                      child: TogedogA11y.decorative(
-                        Image.asset(
-                          _ThinqAssets.background,
-                          fit: BoxFit.fill,
+        backgroundColor: Colors.white,
+        body: Column(
+          children: [
+            Expanded(
+              child: SingleChildScrollView(
+                physics: const BouncingScrollPhysics(),
+                child: SizedBox(
+                  width: screenWidth,
+                  height: contentHeight,
+                  child: Stack(
+                    clipBehavior: Clip.none,
+                    children: [
+                      Positioned.fill(
+                        child: TogedogA11y.decorative(
+                          Image.asset(
+                            _ThinqAssets.background,
+                            fit: BoxFit.fill,
+                          ),
                         ),
                       ),
-                    ),
-                    ..._ThinqScreenTexts.build(scale),
-                    if (!_isAppSwitchOpen)
-                      Positioned(
-                        left: 20 * scale,
-                        top: 42 * scale,
-                        child: HomeTitleButton(
-                          scale: scale,
-                          onPressed: _openAppSwitch,
+                      ..._ThinqScreenTexts.build(scale),
+                      if (!_isAppSwitchOpen)
+                        Positioned(
+                          left: 20 * scale,
+                          top: 42 * scale,
+                          child: HomeTitleButton(
+                            scale: scale,
+                            onPressed: _openAppSwitch,
+                          ),
                         ),
-                      ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),
-          ),
-          ThinqBottomNav(
-            scale: scale,
-            bottomInset: bottomInset,
-            activeTab: ThinqTab.home,
-          ),
-        ],
+            ThinqBottomNav(
+              scale: scale,
+              bottomInset: bottomInset,
+              activeTab: ThinqTab.home,
+            ),
+          ],
+        ),
       ),
-    ),
     );
   }
 }
@@ -132,8 +132,7 @@ class _ThinqScreenTexts {
   static const _white = Color(0xFFFFFFFF);
 
   static List<Widget> build(double scale) {
-    TextStyle regular(double size, Color color, {double? letterSpacing}) =>
-        TextStyle(
+    TextStyle regular(double size, Color color, {double? letterSpacing}) => TextStyle(
           fontFamily: 'LGSmartUI',
           fontWeight: FontWeight.w400,
           fontSize: size * scale,
@@ -142,8 +141,7 @@ class _ThinqScreenTexts {
           letterSpacing: letterSpacing != null ? letterSpacing * scale : null,
         );
 
-    TextStyle bold(double size, Color color, {double? letterSpacing}) =>
-        TextStyle(
+    TextStyle bold(double size, Color color, {double? letterSpacing}) => TextStyle(
           fontFamily: 'LGSmartUI',
           fontWeight: FontWeight.w700,
           fontSize: size * scale,
@@ -371,8 +369,7 @@ class _ThinqNavItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final color =
-        active ? ThinqBottomNav._activeColor : ThinqBottomNav._inactiveColor;
+    final color = active ? ThinqBottomNav._activeColor : ThinqBottomNav._inactiveColor;
 
     return Column(
       mainAxisSize: MainAxisSize.min,

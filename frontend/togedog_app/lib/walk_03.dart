@@ -92,7 +92,7 @@ class WalkVoiceGuidePanel extends StatelessWidget {
               width: 83.223 * s,
               height: 61.737 * s,
               child: Image.asset(
-                'asset/walk/walk_voice_wave_left.png',
+                'assets/walk/walk_voice_wave_left.png',
                 fit: BoxFit.contain,
               ),
             ),
@@ -102,7 +102,7 @@ class WalkVoiceGuidePanel extends StatelessWidget {
               width: 83.223 * s,
               height: 61.737 * s,
               child: Image.asset(
-                'asset/walk/walk_voice_wave_right.png',
+                'assets/walk/walk_voice_wave_right.png',
                 fit: BoxFit.contain,
               ),
             ),
@@ -114,7 +114,7 @@ class WalkVoiceGuidePanel extends StatelessWidget {
               child: Stack(
                 children: [
                   Image.asset(
-                    'asset/walk/walk_voice_center_group.png',
+                    'assets/walk/walk_voice_center_group.png',
                     width: 169 * s,
                     height: 169 * s,
                     fit: BoxFit.contain,

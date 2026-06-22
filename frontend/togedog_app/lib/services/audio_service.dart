@@ -11,8 +11,8 @@ class AudioAlert {
     required this.label,
     required this.confidence,
   });
-  final int priority;      // 1=위험, 2=경고, 3=조심
-  final String label;      // 한국어 이름
+  final int priority; // 1=위험, 2=경고, 3=조심
+  final String label; // 한국어 이름
   final double confidence;
 }
 
@@ -23,7 +23,7 @@ class _SoundInfo {
 }
 
 class AudioService {
-  static const String _modelPath = 'asset/deep_learning/yamnet.tflite';
+  static const String _modelPath = 'assets/deep_learning/yamnet.tflite';
   static const double _minConfidence = 0.3;
   static const Duration _highCooldown = Duration(seconds: 4);
   static const Duration _cooldown = Duration(seconds: 6);
@@ -31,20 +31,20 @@ class AudioService {
   // YAMNet 521개 클래스 중 관심 클래스 → 위험도 매핑 (521개 중 12개만 감지)
   static const Map<String, _SoundInfo> _soundMap = {
     // 위험
-    'Car':                             _SoundInfo(1, '차량 소리'),
+    'Car': _SoundInfo(1, '차량 소리'),
     'Vehicle horn, car horn, honking': _SoundInfo(1, '차량 경적'),
-    'Beeping, horn honking':           _SoundInfo(1, '차량 경적'),
-    'Siren':                           _SoundInfo(1, '사이렌'),
-    'Emergency vehicle':               _SoundInfo(1, '긴급차량'),
-    'Motorcycle':                      _SoundInfo(1, '오토바이 소리'),
-    'Engine':                          _SoundInfo(1, '오토바이 소리'),
+    'Beeping, horn honking': _SoundInfo(1, '차량 경적'),
+    'Siren': _SoundInfo(1, '사이렌'),
+    'Emergency vehicle': _SoundInfo(1, '긴급차량'),
+    'Motorcycle': _SoundInfo(1, '오토바이 소리'),
+    'Engine': _SoundInfo(1, '오토바이 소리'),
     // 경고
-    'Dog':                             _SoundInfo(2, '개 짖는 소리'),
-    'Bark':                            _SoundInfo(2, '개 짖는 소리'),
-    'Yip':                             _SoundInfo(2, '개 짖는 소리'),
+    'Dog': _SoundInfo(2, '개 짖는 소리'),
+    'Bark': _SoundInfo(2, '개 짖는 소리'),
+    'Yip': _SoundInfo(2, '개 짖는 소리'),
     // 조심
-    'Bicycle bell':                    _SoundInfo(3, '자전거 벨'),
-    'Bell':                            _SoundInfo(3, '벨 소리'),
+    'Bicycle bell': _SoundInfo(3, '자전거 벨'),
+    'Bell': _SoundInfo(3, '벨 소리'),
   };
 
   final _alertController = StreamController<AudioAlert>.broadcast();
@@ -120,7 +120,9 @@ class AudioService {
 
     final input = [audio];
     final scores = List.filled(521, 0.0);
-    final output = {0: [scores]};
+    final output = {
+      0: [scores]
+    };
 
     _interpreter!.runForMultipleInputs([input], output);
 

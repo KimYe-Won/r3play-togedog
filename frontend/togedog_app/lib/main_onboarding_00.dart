@@ -20,8 +20,7 @@ class SplashScreen extends StatefulWidget {
   State<SplashScreen> createState() => _SplashScreenState();
 }
 
-class _SplashScreenState extends State<SplashScreen>
-    with SingleTickerProviderStateMixin {
+class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderStateMixin {
   late final AnimationController _fadeOutController;
   late final Animation<double> _fadeOutAnimation;
 
@@ -73,8 +72,7 @@ class _SplashScreenState extends State<SplashScreen>
 
   @override
   Widget build(BuildContext context) {
-    final logoSize = MediaQuery.sizeOf(context).width *
-        (SplashScreen.logoWidth / SplashScreen.designWidth);
+    final logoSize = MediaQuery.sizeOf(context).width * (SplashScreen.logoWidth / SplashScreen.designWidth);
 
     return TogedogA11y.screen(
       name: '시작 화면',
@@ -86,10 +84,9 @@ class _SplashScreenState extends State<SplashScreen>
             child: TogedogA11y.decorative(
               SizedBox(
                 width: logoSize,
-                height:
-                    logoSize * (SplashScreen.logoHeight / SplashScreen.logoWidth),
+                height: logoSize * (SplashScreen.logoHeight / SplashScreen.logoWidth),
                 child: Image.asset(
-                  'asset/splash/splash_logo.png',
+                  'assets/splash/splash_logo.png',
                   fit: BoxFit.contain,
                 ),
               ),

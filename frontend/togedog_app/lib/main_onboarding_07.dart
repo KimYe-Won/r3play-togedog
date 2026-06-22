@@ -63,11 +63,11 @@ class MainOnboarding07Screen extends StatefulWidget {
   static const double pawHeight = 14.417;
 
   static const String preciseMapAsset =
-      'asset/onboarding/onboarding_location_precise_map.png';
+      'assets/onboarding/onboarding_location_precise_map.png';
   static const String approximateMapAsset =
-      'asset/onboarding/onboarding_location_approximate_map.png';
+      'assets/onboarding/onboarding_location_approximate_map.png';
   static const String chevronAsset =
-      'asset/onboarding/onboarding_location_chevron.svg';
+      'assets/onboarding/onboarding_location_chevron.svg';
 
   static const Color brandPurple = Color(0xFF8756E7);
   static const Color textBlack = Color(0xFF1A1A1A);
@@ -252,7 +252,7 @@ class _LocationPinIcon extends StatelessWidget {
         clipBehavior: Clip.hardEdge,
         children: [
           SvgPicture.asset(
-            'asset/onboarding/onboarding_location_pin_stroke.svg',
+            'assets/onboarding/onboarding_location_pin_stroke.svg',
             width: pinWidth,
             height: pinHeight,
             fit: BoxFit.contain,
@@ -261,7 +261,7 @@ class _LocationPinIcon extends StatelessWidget {
             left: MainOnboarding07Screen.pawOffsetLeft * scale,
             top: MainOnboarding07Screen.pawOffsetTop * scale,
             child: SvgPicture.asset(
-              'asset/onboarding/onboarding_location_paw.svg',
+              'assets/onboarding/onboarding_location_paw.svg',
               width: MainOnboarding07Screen.pawWidth * scale,
               height: MainOnboarding07Screen.pawHeight * scale,
               fit: BoxFit.contain,
@@ -344,7 +344,7 @@ class _PrivacyNoticeBox extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               SvgPicture.asset(
-                'asset/onboarding/onboarding_location_shield.svg',
+                'assets/onboarding/onboarding_location_shield.svg',
                 width: 24 * scale,
                 height: 24 * scale,
                 fit: BoxFit.contain,

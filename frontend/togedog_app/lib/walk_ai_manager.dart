@@ -14,10 +14,16 @@ class WalkAiManager extends ChangeNotifier {
   WalkAiManager._();
   static final WalkAiManager instance = WalkAiManager._();
 
-  static const String modelPath = 'asset/deep_learning/best_v3_float16.tflite';
+  static const String modelPath = 'assets/deep_learning/best_v3_float16.tflite';
   static const String _lastIpKey = 'walk_last_ip';
 
-  final LiveStreamingController streamingController = LiveStreamingController();
+  late final LiveStreamingController streamingController = LiveStreamingController(
+    role: Role.receiver,
+    enableSpeaker: false,
+    customModelPath: modelPath,
+    detectionInterval: const Duration(milliseconds: 100),
+    onDetected: onDetected,
+  );
   final TtsService _ttsService = TtsService();
   final AudioService _audioService = AudioService();
   final _detectionController = StreamController<List<YOLOResult>>.broadcast();
