@@ -7,7 +7,10 @@ import '../guidance_mode_store.dart';
 import '../main_onboarding_05.dart';
 import 'api_client.dart';
 import '../consent_store.dart';
+<<<<<<< HEAD
 import 'danger_type_mapper.dart';
+=======
+>>>>>>> 4a5ecf3 (﻿프론트엔드-백엔드 연동: 회원·반려견·산책·동의·웨어러블 API 연결, API 클라이언트·세션 Store 추가, 온보딩/산책/마이페이지에서 FastAPI 호출, Flutter 웹 CORS 대응 및 http 패키지 추가.)
 
 // [백엔드 연동] 온보딩 프로필 → members / dogs API
 class BackendSyncService {
