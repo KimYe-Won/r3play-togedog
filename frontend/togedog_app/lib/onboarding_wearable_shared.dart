@@ -414,7 +414,6 @@ class WearableConnectionCanvas extends StatelessWidget {
                 ),
               ),
             ),
-          ),
           Positioned(
             left: 0,
             right: 0,
