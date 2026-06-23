@@ -5,6 +5,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:ultralytics_yolo/ultralytics_yolo.dart';
 import 'package:vibration/vibration.dart';
+// 백엔드 연동
+import 'backend_sync_service.dart';
 
 class _DangerInfo {
   const _DangerInfo(
@@ -154,6 +156,16 @@ class TtsService {
     final message = _buildMessage(topDanger, topBox);
     debugPrint(
         '[TTS] fire label=$topLabel speech=$speechEnabled vib=$vibrationEnabled msg="$message"');
+    
+    // [백엔드 연동] 위험 감지 → RTDB 저장
+    unawaited(
+      BackendSyncService.instance.sendDangerDetection(
+        className: topLabel,
+        priority: topDanger.priority,
+        notificationMessage: message,
+      ),
+    );
+    
     if (speechEnabled) _speak(message);
     if (vibrationEnabled) _vibrate(topDanger.priority);
   }

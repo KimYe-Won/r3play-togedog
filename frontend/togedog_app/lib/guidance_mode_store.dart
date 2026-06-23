@@ -2,6 +2,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'main_onboarding_05.dart';
 
+// 백엔드 작업
+import 'services/backend_sync_service.dart';
+
+
 /// 온보딩 05 안내 방식 선택 — 앱 전역 유지
 class GuidanceModeStore {
   GuidanceModeStore._();
@@ -24,6 +28,9 @@ class GuidanceModeStore {
     _selectedMode = mode;
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString(_guidanceModeKey, mode.name);
+
+    // [백엔드 연동] member_id 있을 때만 (마이페이지 변경 등)
+    await BackendSyncService.instance.syncNotificationSettings(mode);
   }
 
   GuidanceMode? _parse(String? raw) {

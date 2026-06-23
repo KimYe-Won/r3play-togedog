@@ -7,6 +7,10 @@ import 'pet_profile_store.dart';
 import 'walk_ai_manager.dart';
 import 'wearable_connection_store.dart';
 
+// 백엔드 작업
+import 'backend_session_store.dart';
+import 'consent_store.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Future.wait([
@@ -14,6 +18,8 @@ void main() async {
     GuidanceModeStore.instance.load(),
     WearableConnectionStore.instance.load(),
     WalkAiManager.instance.init(),
+    BackendSessionStore.instance.load(), //[백엔드 연동] ID 복원
+    ConsentStore.instance.load(), //[백엔드 연동] 동의 상태 복원
   ]);
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(
