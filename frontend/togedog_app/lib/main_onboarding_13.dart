@@ -91,43 +91,43 @@ class _MainOnboarding13ScreenState extends State<MainOnboarding13Screen>
     return TogedogA11y.screen(
       name: '웨어러블 연결',
       child: Scaffold(
-      backgroundColor: Colors.white,
-      body: Stack(
-        fit: StackFit.expand,
-        children: [
-          const DecoratedBox(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [
-                  WearableConnectionTheme.gradientStart,
-                  WearableConnectionTheme.gradientEnd,
-                ],
-                stops: [0.43175, 1.0103],
+        backgroundColor: Colors.white,
+        body: Stack(
+          fit: StackFit.expand,
+          children: [
+            const DecoratedBox(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    WearableConnectionTheme.gradientStart,
+                    WearableConnectionTheme.gradientEnd,
+                  ],
+                  stops: [0.43175, 1.0103],
+                ),
               ),
             ),
-          ),
-          Positioned(
-            left: scaler.canvasLeft,
-            top: scaler.canvasTop,
-            width: scaler.canvasWidth,
-            height: scaler.canvasHeight,
-            child: AnimatedBuilder(
-              animation: _entranceController ?? kAlwaysCompleteAnimation,
-              builder: (context, child) {
-                return WearableConnectionCanvas(
-                  scale: scaler.scale,
-                  devices: _devices,
-                  onConnect: _onConnect,
-                  entrance: _entranceMotion,
-                );
-              },
+            Positioned(
+              left: scaler.canvasLeft,
+              top: scaler.canvasTop,
+              width: scaler.canvasWidth,
+              height: scaler.canvasHeight,
+              child: AnimatedBuilder(
+                animation: _entranceController ?? kAlwaysCompleteAnimation,
+                builder: (context, child) {
+                  return WearableConnectionCanvas(
+                    scale: scaler.scale,
+                    devices: _devices,
+                    onConnect: _onConnect,
+                    entrance: _entranceMotion,
+                  );
+                },
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
-    ),
     );
   }
 }

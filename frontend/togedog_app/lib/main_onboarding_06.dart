@@ -105,7 +105,7 @@ class _MainOnboarding06ScreenState extends State<MainOnboarding06Screen> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Text(
-                '약관 및',
+                '약관 및 동의',
                 style: TextStyle(
                   fontFamily: 'LGSmartUI',
                   fontWeight: FontWeight.w700,
