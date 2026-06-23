@@ -6,14 +6,13 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 import 'app_shell.dart';
 import 'main_onboarding_01.dart';
-import 'main_onboarding_03.dart';
 import 'main_onboarding_02.dart';
+import 'main_onboarding_03.dart';
 import 'mypage_02.dart';
 import 'pet_profile_store.dart';
 import 'report_shared.dart';
-import 'walk_02.dart';
-import 'walk_session.dart';
 import 'togedog_accessibility.dart';
+import 'walk_01.dart';
 
 /// Figma: 홈화면 (node 625:7472)
 class Home01Screen extends StatefulWidget {
@@ -26,17 +25,17 @@ class Home01Screen extends StatefulWidget {
 }
 
 class _HomeAssets {
-  static const background = 'asset/home/home_screen_background.png';
-  static const backgroundFallback = 'asset/home/home_screen_background.png';
-  static const petChevron = 'asset/home/home_pet_chevron.svg';
-  static const heartCircle = 'asset/home/home_heart_circle.svg';
-  static const heartIcon = 'asset/home/home_heart_icon.svg';
-  static const heartChart = 'asset/home/home_heart_chart.svg';
-  static const activityCircle = 'asset/home/home_activity_circle.svg';
-  static const activityIcon = 'asset/home/home_activity_icon.svg';
-  static const walkCard = 'asset/home/home_walk_mode_card.png';
-  static const petPhoto = 'asset/home/home_pet_kong.png';
-  static const petPhotoFallback = 'asset/home/home_pet_kong.png';
+  static const background = 'assets/home/home_screen_background.png';
+  static const backgroundFallback = 'assets/home/home_screen_background.png';
+  static const petChevron = 'assets/home/home_pet_chevron.svg';
+  static const heartCircle = 'assets/home/home_heart_circle.svg';
+  static const heartIcon = 'assets/home/home_heart_icon.svg';
+  static const heartChart = 'assets/home/home_heart_chart.svg';
+  static const activityCircle = 'assets/home/home_activity_circle.svg';
+  static const activityIcon = 'assets/home/home_activity_icon.svg';
+  static const walkCard = 'assets/home/home_walk_mode_card.png';
+  static const petPhoto = 'assets/home/home_pet_kong.png';
+  static const petPhotoFallback = 'assets/home/home_pet_kong.png';
 
   static const Color heartCircleColor = Color(0xFFFBE5EC);
   static const Color activityCircleColor = Color(0xFFF0EAFF);
@@ -53,14 +52,12 @@ class _HomeAssets {
       width: width,
       height: height,
       fit: fit,
-      colorFilter:
-          color != null ? ColorFilter.mode(color, BlendMode.srcIn) : null,
+      colorFilter: color != null ? ColorFilter.mode(color, BlendMode.srcIn) : null,
     );
   }
 }
 
-class _Home01ScreenState extends State<Home01Screen>
-    with SingleTickerProviderStateMixin {
+class _Home01ScreenState extends State<Home01Screen> with SingleTickerProviderStateMixin {
   static const Duration _statsRevealDelay = Duration(seconds: 2);
   static const Duration _statsAnimDuration = Duration(milliseconds: 700);
   static const int _targetHeartRate = 98;
@@ -113,9 +110,8 @@ class _Home01ScreenState extends State<Home01Screen>
   }
 
   void _openWalkMode() {
-    WalkSession.instance.startWalk();
     Navigator.of(context).push(
-      MaterialPageRoute<void>(builder: (_) => const Walk02Screen()),
+      MaterialPageRoute<void>(builder: (_) => const Walk01Screen()),
     );
   }
 
@@ -170,91 +166,90 @@ class _Home01ScreenState extends State<Home01Screen>
     return TogedogA11y.screen(
       name: '홈',
       child: Scaffold(
-      backgroundColor: Colors.white,
-      body: Stack(
-        fit: StackFit.expand,
-        children: [
-          Positioned.fill(
-            child: TogedogA11y.decorative(
-              Image.asset(
-                _HomeAssets.background,
-                fit: BoxFit.cover,
-                alignment: Alignment.topCenter,
-                filterQuality: FilterQuality.high,
-                errorBuilder: (_, __, ___) => Image.asset(
-                  _HomeAssets.backgroundFallback,
+        backgroundColor: Colors.white,
+        body: Stack(
+          fit: StackFit.expand,
+          children: [
+            Positioned.fill(
+              child: TogedogA11y.decorative(
+                Image.asset(
+                  _HomeAssets.background,
                   fit: BoxFit.cover,
                   alignment: Alignment.topCenter,
                   filterQuality: FilterQuality.high,
+                  errorBuilder: (_, __, ___) => Image.asset(
+                    _HomeAssets.backgroundFallback,
+                    fit: BoxFit.cover,
+                    alignment: Alignment.topCenter,
+                    filterQuality: FilterQuality.high,
+                  ),
                 ),
               ),
             ),
-          ),
-          SafeArea(
-            bottom: false,
-            child: Column(
-              children: [
-                Expanded(
-                  child: SingleChildScrollView(
-                    padding: EdgeInsets.fromLTRB(
-                      22 * scale,
-                      8 * scale,
-                      22 * scale,
-                      16 * scale,
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        _HomeScreenHeader(
-                          scale: scale,
-                          guardian: guardian,
-                          isAppSwitchOpen: _isAppSwitchOpen,
-                          onTitleTap: _openAppSwitch,
-                        ),
-                        SizedBox(height: 20 * scale),
-                        _PetStatusCard(
-                          scale: scale,
-                          petName: petName,
-                          petSubtitle: _profile.petSubtitle,
-                          statsCurve: _statsCurve,
-                          formatSteps: _formatSteps,
-                          targetHeartRate: _targetHeartRate,
-                          targetSteps: _targetSteps,
-                          onPetTap: _openPetProfile,
-                        ),
-                        SizedBox(height: 20 * scale),
-                        _WalkModeCard(
-                          scale: scale,
-                          petName: petName,
-                          onTap: _openWalkMode,
-                        ),
-                        SizedBox(height: 20 * scale),
-                        _HomeCalendar(
-                          scale: scale,
-                          displayedMonth: _displayedMonth,
-                          walkDays: walkDays,
-                          selectedDate: _selectedDate,
-                          onDateSelected: (date) =>
-                              setState(() => _selectedDate = date),
-                          onPrevMonth: _prevMonth,
-                          onNextMonth: _nextMonth,
-                        ),
-                        SizedBox(height: 100 * scale),
-                      ],
+            SafeArea(
+              bottom: false,
+              child: Column(
+                children: [
+                  Expanded(
+                    child: SingleChildScrollView(
+                      padding: EdgeInsets.fromLTRB(
+                        22 * scale,
+                        8 * scale,
+                        22 * scale,
+                        16 * scale,
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          _HomeScreenHeader(
+                            scale: scale,
+                            guardian: guardian,
+                            isAppSwitchOpen: _isAppSwitchOpen,
+                            onTitleTap: _openAppSwitch,
+                          ),
+                          SizedBox(height: 20 * scale),
+                          _PetStatusCard(
+                            scale: scale,
+                            petName: petName,
+                            petSubtitle: _profile.petSubtitle,
+                            statsCurve: _statsCurve,
+                            formatSteps: _formatSteps,
+                            targetHeartRate: _targetHeartRate,
+                            targetSteps: _targetSteps,
+                            onPetTap: _openPetProfile,
+                          ),
+                          SizedBox(height: 20 * scale),
+                          _WalkModeCard(
+                            scale: scale,
+                            petName: petName,
+                            onTap: _openWalkMode,
+                          ),
+                          SizedBox(height: 20 * scale),
+                          _HomeCalendar(
+                            scale: scale,
+                            displayedMonth: _displayedMonth,
+                            walkDays: walkDays,
+                            selectedDate: _selectedDate,
+                            onDateSelected: (date) => setState(() => _selectedDate = date),
+                            onPrevMonth: _prevMonth,
+                            onNextMonth: _nextMonth,
+                          ),
+                          SizedBox(height: 100 * scale),
+                        ],
+                      ),
                     ),
                   ),
-                ),
-                AppBottomNav(
-                  scale: scale,
-                  bottomInset: bottomInset,
-                  activeTab: AppTab.home,
-                ),
-              ],
+                  AppBottomNav(
+                    scale: scale,
+                    bottomInset: bottomInset,
+                    activeTab: AppTab.home,
+                  ),
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
-    ),
     );
   }
 }
@@ -344,6 +339,7 @@ class _PetStatusCard extends StatelessWidget {
   static const double cardPaddingTop = 18;
   static const double cardPaddingBottom = 41;
   static const double contentHeight = 125;
+
   /// Figma Frame 773: 심박수·활동량 블록 시작 y=51 (Frame 774 y=-28 + rows y=79)
   static const double liveStatsRowsTop = 51;
   static const double statusSectionGap = 33;
@@ -416,29 +412,29 @@ class _PetStatusCard extends StatelessWidget {
                                   onTap: onPetTap,
                                   behavior: HitTestBehavior.opaque,
                                   child: Row(
-                                  children: [
-                                    Flexible(
-                                      child: Text(
-                                        petName,
-                                        maxLines: 1,
-                                        overflow: TextOverflow.ellipsis,
-                                        style: TextStyle(
-                                          fontFamily: 'LGSmartUI',
-                                          fontWeight: FontWeight.w700,
-                                          fontSize: 20 * scale,
-                                          color: const Color(0xFF111111),
+                                    children: [
+                                      Flexible(
+                                        child: Text(
+                                          petName,
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: TextStyle(
+                                            fontFamily: 'LGSmartUI',
+                                            fontWeight: FontWeight.w700,
+                                            fontSize: 20 * scale,
+                                            color: const Color(0xFF111111),
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                    SizedBox(width: 10 * scale),
-                                    _HomeAssets.svg(
-                                      _HomeAssets.petChevron,
-                                      width: 4 * scale,
-                                      height: 9 * scale,
-                                    ),
-                                  ],
+                                      SizedBox(width: 10 * scale),
+                                      _HomeAssets.svg(
+                                        _HomeAssets.petChevron,
+                                        width: 4 * scale,
+                                        height: 9 * scale,
+                                      ),
+                                    ],
+                                  ),
                                 ),
-                              ),
                               ),
                               SizedBox(height: 6 * scale),
                               Text(
@@ -509,8 +505,7 @@ class _PetStatusCard extends StatelessWidget {
                     child: AnimatedBuilder(
                       animation: statsCurve,
                       builder: (context, _) {
-                        final heart =
-                            (targetHeartRate * statsCurve.value).round();
+                        final heart = (targetHeartRate * statsCurve.value).round();
                         final steps = (targetSteps * statsCurve.value).round();
                         final showValues = statsCurve.value > 0;
                         return Column(
@@ -745,76 +740,76 @@ class _WalkModeCard extends StatelessWidget {
       child: GestureDetector(
         onTap: onTap,
         child: SizedBox(
-        height: 115 * scale,
-        child: Stack(
-          clipBehavior: Clip.none,
-          children: [
-            Positioned(
-              left: 0,
-              right: 0,
-              top: 6 * scale,
-              height: 105 * scale,
-              child: DecoratedBox(
-                decoration: BoxDecoration(
-                  color: const Color(0xFFD1D1FF),
-                  borderRadius: BorderRadius.circular(20 * scale),
+          height: 115 * scale,
+          child: Stack(
+            clipBehavior: Clip.none,
+            children: [
+              Positioned(
+                left: 0,
+                right: 0,
+                top: 6 * scale,
+                height: 105 * scale,
+                child: DecoratedBox(
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFD1D1FF),
+                    borderRadius: BorderRadius.circular(20 * scale),
+                  ),
                 ),
               ),
-            ),
-            Positioned(
-              right: 7 * scale,
-              top: 0,
-              width: 191 * scale,
-              height: 115 * scale,
-              child: Image.asset(
-                _HomeAssets.walkCard,
-                fit: BoxFit.cover,
+              Positioned(
+                right: 7 * scale,
+                top: 0,
+                width: 191 * scale,
+                height: 115 * scale,
+                child: Image.asset(
+                  _HomeAssets.walkCard,
+                  fit: BoxFit.cover,
+                ),
               ),
-            ),
-            Positioned(
-              left: 17 * scale,
-              top: 27 * scale,
-              right: 160 * scale,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Text(
-                        '산책 모드 시작',
-                        style: TextStyle(
-                          fontFamily: 'LGSmartUI',
-                          fontWeight: FontWeight.w600,
-                          fontSize: 18 * scale,
-                          color: const Color(0xFF111111),
+              Positioned(
+                left: 17 * scale,
+                top: 27 * scale,
+                right: 160 * scale,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Text(
+                          '산책 모드 시작',
+                          style: TextStyle(
+                            fontFamily: 'LGSmartUI',
+                            fontWeight: FontWeight.w600,
+                            fontSize: 18 * scale,
+                            color: const Color(0xFF111111),
+                          ),
                         ),
-                      ),
-                      SizedBox(width: 12 * scale),
-                      _HomeAssets.svg(
-                        _HomeAssets.petChevron,
-                        width: 4 * scale,
-                        height: 9 * scale,
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 9 * scale),
-                  Text(
-                    'AI가 주변 위험을 감지하고\n$petName의 상태를 모니터링해요',
-                    style: TextStyle(
-                      fontFamily: 'LGSmartUI',
-                      fontWeight: FontWeight.w400,
-                      fontSize: 10 * scale,
-                      height: 1.35,
-                      color: const Color(0xFF111111),
+                        SizedBox(width: 12 * scale),
+                        _HomeAssets.svg(
+                          _HomeAssets.petChevron,
+                          width: 4 * scale,
+                          height: 9 * scale,
+                        ),
+                      ],
                     ),
-                  ),
-                ],
+                    SizedBox(height: 9 * scale),
+                    Text(
+                      'AI가 주변 위험을 감지하고\n$petName의 상태를 모니터링해요',
+                      style: TextStyle(
+                        fontFamily: 'LGSmartUI',
+                        fontWeight: FontWeight.w400,
+                        fontSize: 10 * scale,
+                        height: 1.35,
+                        color: const Color(0xFF111111),
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
-    ),
     );
   }
 }
@@ -1089,8 +1084,7 @@ class _CalendarDayCell extends StatelessWidget {
         selectedDate!.month == displayedMonth.month &&
         selectedDate!.day == day.day;
 
-    final isMutedSpot =
-        day.inMonth && displayedMonth.month == 6 && day.day == 25 && !isSelected;
+    final isMutedSpot = day.inMonth && displayedMonth.month == 6 && day.day == 25 && !isSelected;
 
     Color? bg;
     Color textColor = day.inMonth ? const Color(0xFF404040) : const Color(0xFF737373);

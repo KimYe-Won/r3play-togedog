@@ -1,36 +1,11 @@
 // TogeDog 음성 안내 오버레이 — Figma node 1080:989
 import 'package:flutter/material.dart';
-import 'package:flutter_tts/flutter_tts.dart';
 
 import 'app_shell.dart';
 import 'walk_shared.dart';
 
-class Walk03Screen extends StatefulWidget {
+class Walk03Screen extends StatelessWidget {
   const Walk03Screen({super.key});
-
-  @override
-  State<Walk03Screen> createState() => _Walk03ScreenState();
-}
-
-class _Walk03ScreenState extends State<Walk03Screen> {
-  final FlutterTts _tts = FlutterTts();
-
-  @override
-  void initState() {
-    super.initState();
-    _speakGuide();
-  }
-
-  Future<void> _speakGuide() async {
-    await _tts.setLanguage('ko-KR');
-    await _tts.speak('전방에 위험요소가 있습니다.');
-  }
-
-  @override
-  void dispose() {
-    _tts.stop();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -39,9 +14,13 @@ class _Walk03ScreenState extends State<Walk03Screen> {
     return WalkRealtimeShell(
       scale: scale,
       onBack: () => Navigator.of(context).pop(),
-      panel: WalkVoiceGuidePanel(
-        scale: scale,
-        onEnd: () => endWalkAndGoToWalk01(context),
+      showVideo: false,
+      panel: Semantics(
+        excludeSemantics: true,
+        child: WalkVoiceGuidePanel(
+          scale: scale,
+          onEnd: () => endWalkAndGoToWalk01(context),
+        ),
       ),
     );
   }
@@ -114,7 +93,7 @@ class WalkVoiceGuidePanel extends StatelessWidget {
               width: 83.223 * s,
               height: 61.737 * s,
               child: Image.asset(
-                'asset/walk/walk_voice_wave_left.png',
+                'assets/walk/walk_voice_wave_left.png',
                 fit: BoxFit.contain,
               ),
             ),
@@ -124,7 +103,7 @@ class WalkVoiceGuidePanel extends StatelessWidget {
               width: 83.223 * s,
               height: 61.737 * s,
               child: Image.asset(
-                'asset/walk/walk_voice_wave_right.png',
+                'assets/walk/walk_voice_wave_right.png',
                 fit: BoxFit.contain,
               ),
             ),
@@ -136,7 +115,7 @@ class WalkVoiceGuidePanel extends StatelessWidget {
               child: Stack(
                 children: [
                   Image.asset(
-                    'asset/walk/walk_voice_center_group.png',
+                    'assets/walk/walk_voice_center_group.png',
                     width: 169 * s,
                     height: 169 * s,
                     fit: BoxFit.contain,

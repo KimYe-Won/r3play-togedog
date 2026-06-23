@@ -1,11 +1,15 @@
 // TogeDog 실시간 산책 전체보기 — Figma node 1128:899 (기본)
 // 대체 레이아웃: Figma node 1080:912 — walk_shared.dart의 kWalk02UseSingleFlashlightLayout 참고
+import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 
+import 'app_shell.dart';
 import 'walk_03.dart';
 import 'walk_04.dart';
 import 'walk_flashlight.dart';
 import 'walk_shared.dart';
+
+enum _GuidePanel { none, voice, vibration }
 
 class Walk02Screen extends StatefulWidget {
   const Walk02Screen({super.key});
@@ -16,6 +20,44 @@ class Walk02Screen extends StatefulWidget {
 
 class _Walk02ScreenState extends State<Walk02Screen> {
   bool _flashlightOn = false;
+  CameraController? _torchController;
+  // 음성/진동 안내 패널은 새 화면(라우트)으로 띄우지 않고 walk_02 위에서 토글한다.
+  // 라우트를 올리면 안드로이드 플랫폼뷰(영상)가 밑에서 렌더되지 않아 화면이 하얘지기 때문.
+  _GuidePanel _panel = _GuidePanel.none;
+
+  @override
+  void initState() {
+    super.initState();
+    _initTorch();
+  }
+
+  Future<void> _initTorch() async {
+    try {
+      final cameras = await availableCameras();
+      final rear = cameras.firstWhere(
+        (c) => c.lensDirection == CameraLensDirection.back,
+        orElse: () => cameras.first,
+      );
+      final controller = CameraController(rear, ResolutionPreset.low, enableAudio: false);
+      await controller.initialize();
+      if (!mounted) {
+        await controller.dispose();
+        return;
+      }
+      _torchController = controller;
+      WalkFlashlight.bindController(controller);
+    } catch (_) {
+      // torch unavailable — silently ignore
+    }
+  }
+
+  @override
+  void dispose() {
+    WalkFlashlight.turnOff();
+    WalkFlashlight.bindController(null);
+    _torchController?.dispose();
+    super.dispose();
+  }
 
   Future<void> _toggleFlashlight() async {
     final success = await WalkFlashlight.toggle();
@@ -31,30 +73,46 @@ class _Walk02ScreenState extends State<Walk02Screen> {
     }
   }
 
-  void _openVoiceGuide() {
-    Navigator.of(context).push(
-      MaterialPageRoute<void>(builder: (_) => const Walk03Screen()),
-    );
-  }
+  void _openVoiceGuide() => setState(() => _panel = _GuidePanel.voice);
 
-  void _openVibrationGuide() {
-    Navigator.of(context).push(
-      MaterialPageRoute<void>(builder: (_) => const Walk04Screen()),
-    );
-  }
+  void _openVibrationGuide() => setState(() => _panel = _GuidePanel.vibration);
+
+  void _closePanel() => setState(() => _panel = _GuidePanel.none);
 
   @override
   Widget build(BuildContext context) {
     final scale = MediaQuery.sizeOf(context).width / kWalkDesignWidth;
 
-    return WalkRealtimeShell(
-      scale: scale,
-      bindFlashlight: true,
-      onBack: () => Navigator.of(context).pop(),
-      bottomOverlay: kWalk02UseSingleFlashlightLayout
-          ? _buildLayout1128(scale)
-          : _buildLayout1080(scale),
-    );
+    switch (_panel) {
+      case _GuidePanel.voice:
+        return WalkRealtimeShell(
+          scale: scale,
+          onBack: _closePanel,
+          // 패널 위젯의 최상위가 Positioned라서 Stack 직속이어야 한다.
+          // Semantics 등으로 감싸면 레이아웃이 깨져 화면이 하얗게 된다.
+          panel: WalkVoiceGuidePanel(
+            scale: scale,
+            onEnd: () => endWalkAndGoToWalk01(context),
+          ),
+        );
+      case _GuidePanel.vibration:
+        return WalkRealtimeShell(
+          scale: scale,
+          onBack: _closePanel,
+          panel: WalkVibrationGuidePanel(
+            scale: scale,
+            onEnd: () => endWalkAndGoToWalk01(context),
+          ),
+        );
+      case _GuidePanel.none:
+        return WalkRealtimeShell(
+          scale: scale,
+          onBack: () => Navigator.of(context).pop(),
+          bottomOverlay: kWalk02UseSingleFlashlightLayout
+              ? _buildLayout1128(scale)
+              : _buildLayout1080(scale),
+        );
+    }
   }
 
   /// Figma 1128:899 — 손전등 버튼만
@@ -64,17 +122,6 @@ class _Walk02ScreenState extends State<Walk02Screen> {
       flashlightOn: _flashlightOn,
       onFlashlightTap: _toggleFlashlight,
     );
-
-    // Figma 1080:912 — 3버튼 레이아웃으로 바꿀 때 아래 주석을 해제하고
-    // 위 return을 주석 처리하세요.
-    //
-    // return WalkThreeButtonControls(
-    //   scale: scale,
-    //   flashlightOn: _flashlightOn,
-    //   onVoiceTap: _openVoiceGuide,
-    //   onFlashlightTap: _toggleFlashlight,
-    //   onVibrationTap: _openVibrationGuide,
-    // );
   }
 
   /// Figma 1080:912 — 음성·손전등·진동 3버튼
@@ -86,14 +133,5 @@ class _Walk02ScreenState extends State<Walk02Screen> {
       onFlashlightTap: _toggleFlashlight,
       onVibrationTap: _openVibrationGuide,
     );
-
-    // Figma 1128:899 — 손전등만 표시할 때 아래 주석을 해제하고
-    // 위 return을 주석 처리하세요.
-    //
-    // return WalkSingleFlashlightControl(
-    //   scale: scale,
-    //   flashlightOn: _flashlightOn,
-    //   onFlashlightTap: _toggleFlashlight,
-    // );
   }
 }

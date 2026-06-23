@@ -25,11 +25,13 @@ class WalkService {
     _connector = LiveStreamingConnector(
       onUpdate: _onConnectorUpdate,
       onError: _onConnectorError,
+      quality: VideoQuality.fullHd1080,
     );
     _analyzer = YoloAnalyzer(
       onUpdate: _onAnalyzerUpdate,
       getRemoteTrack: () => _connector.remoteVideoTrack,
       customModelPath: modelPath,
+      interval: const Duration(milliseconds: 100),
     );
     await _connector.initRenderers();
     _initialized = true;

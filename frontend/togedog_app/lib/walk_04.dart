@@ -1,30 +1,12 @@
 // TogeDog 진동 안내 오버레이 — Figma node 1080:1183
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:vibration/vibration.dart';
 
 import 'app_shell.dart';
 import 'walk_shared.dart';
 
-class Walk04Screen extends StatefulWidget {
+class Walk04Screen extends StatelessWidget {
   const Walk04Screen({super.key});
-
-  @override
-  State<Walk04Screen> createState() => _Walk04ScreenState();
-}
-
-class _Walk04ScreenState extends State<Walk04Screen> {
-  @override
-  void initState() {
-    super.initState();
-    _triggerWarningVibration();
-  }
-
-  Future<void> _triggerWarningVibration() async {
-    final hasVibrator = await Vibration.hasVibrator();
-    if (hasVibrator != true) return;
-    await Vibration.vibrate(pattern: [0, 120, 80, 120, 80, 120]);
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,9 +15,13 @@ class _Walk04ScreenState extends State<Walk04Screen> {
     return WalkRealtimeShell(
       scale: scale,
       onBack: () => Navigator.of(context).pop(),
-      panel: WalkVibrationGuidePanel(
-        scale: scale,
-        onEnd: () => endWalkAndGoToWalk01(context),
+      showVideo: false,
+      panel: Semantics(
+        excludeSemantics: true,
+        child: WalkVibrationGuidePanel(
+          scale: scale,
+          onEnd: () => endWalkAndGoToWalk01(context),
+        ),
       ),
     );
   }
@@ -108,7 +94,7 @@ class WalkVibrationGuidePanel extends StatelessWidget {
               width: 83.223 * s,
               height: 61.737 * s,
               child: Image.asset(
-                'asset/walk/walk_voice_wave_left.png',
+                'assets/walk/walk_voice_wave_left.png',
                 fit: BoxFit.contain,
               ),
             ),
@@ -118,7 +104,7 @@ class WalkVibrationGuidePanel extends StatelessWidget {
               width: 83.223 * s,
               height: 61.737 * s,
               child: Image.asset(
-                'asset/walk/walk_voice_wave_right.png',
+                'assets/walk/walk_voice_wave_right.png',
                 fit: BoxFit.contain,
               ),
             ),
@@ -166,12 +152,11 @@ class WalkVibrationCenterVisualizer extends StatelessWidget {
         alignment: Alignment.center,
         children: [
           SvgPicture.asset(
-            'asset/walk/walk_vibration_center_rings.svg',
+            'assets/walk/walk_vibration_center_rings.svg',
             width: 169 * s,
             height: 169 * s,
             fit: BoxFit.contain,
           ),
-          // Figma 1080:1366 — 패널 (175, 135), 51×41.667 (약간 확대해 가독성 확보)
           Positioned(
             top: 40 * s,
             left: 0,
@@ -181,7 +166,7 @@ class WalkVibrationCenterVisualizer extends StatelessWidget {
                 width: 58 * s,
                 height: 50 * s,
                 child: SvgPicture.asset(
-                  'asset/walk/walk_vibration_icon_figma.svg',
+                  'assets/walk/walk_vibration_icon_figma.svg',
                   fit: BoxFit.contain,
                 ),
               ),

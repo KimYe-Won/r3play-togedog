@@ -380,14 +380,14 @@ class _GuidanceIcon extends StatelessWidget {
       alignment: Alignment.center,
       child: switch (type) {
         _GuidanceIconType.sound => SvgPicture.asset(
-            'asset/onboarding/onboarding_guidance_sound_icon.svg',
+            'assets/onboarding/onboarding_guidance_sound_icon.svg',
             width: size * 0.88,
             height: size * 0.88,
             fit: BoxFit.contain,
             clipBehavior: Clip.none,
           ),
         _GuidanceIconType.vibration => SvgPicture.asset(
-            'asset/onboarding/onboarding_guidance_vibration_icon.svg',
+            'assets/onboarding/onboarding_guidance_vibration_icon.svg',
             width: size * 0.88,
             height: size * 0.88,
             fit: BoxFit.contain,

@@ -39,350 +39,348 @@ class _Mypage02ScreenState extends State<Mypage02Screen> {
     return TogedogA11y.screen(
       name: '내 정보 수정',
       child: Scaffold(
-      backgroundColor: const Color(0xFFF8F5FF),
-      body: SafeArea(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Padding(
-              padding: EdgeInsets.fromLTRB(26 * scale, 8 * scale, 26 * scale, 0),
-              child: Row(
-                children: [
-                  TogedogA11y.button(
-                    label: '뒤로',
-                    hint: '이전 화면으로',
-                    child: GestureDetector(
-                      onTap: () => Navigator.of(context).pop(),
-                      behavior: HitTestBehavior.opaque,
-                      child: Padding(
-                        padding: EdgeInsets.only(right: 9 * scale),
-                        child: Icon(
-                          Icons.arrow_back_ios_new,
-                          size: 18 * scale,
-                          color: const Color(0xFF111111),
+        backgroundColor: const Color(0xFFF8F5FF),
+        body: SafeArea(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Padding(
+                padding: EdgeInsets.fromLTRB(26 * scale, 8 * scale, 26 * scale, 0),
+                child: Row(
+                  children: [
+                    TogedogA11y.button(
+                      label: '뒤로',
+                      hint: '이전 화면으로',
+                      child: GestureDetector(
+                        onTap: () => Navigator.of(context).pop(),
+                        behavior: HitTestBehavior.opaque,
+                        child: Padding(
+                          padding: EdgeInsets.only(right: 9 * scale),
+                          child: Icon(
+                            Icons.arrow_back_ios_new,
+                            size: 18 * scale,
+                            color: const Color(0xFF111111),
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                  Text(
-                    '내 정보 수정',
-                    style: TextStyle(
-                      fontFamily: 'LGSmartUI',
-                      fontWeight: FontWeight.w700,
-                      fontSize: 20 * scale,
-                      color: const Color(0xFF111111),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(height: 20 * scale),
-            Expanded(
-              child: SingleChildScrollView(
-                padding: EdgeInsets.symmetric(horizontal: 19 * scale),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    _InfoCard(
-                      scale: scale,
-                      sectionTitle: '사용자 정보',
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              _AvatarWithCamera(
-                                scale: scale,
-                                imageAsset: 'asset/mypage/mypage_profile_user.png',
-                              ),
-                              SizedBox(width: 16 * scale),
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    _NameRow(scale: scale, name: displayName),
-                                    SizedBox(height: 8 * scale),
-                                    Text(
-                                      'kongiappa@gmail.com',
-                                      style: TextStyle(
-                                        fontFamily: 'LGSmartUI',
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 14 * scale,
-                                        color: const Color(0xFF828282),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                          SizedBox(height: 18 * scale),
-                          const Divider(height: 1, color: Color(0xFFE8E8EC)),
-                          SizedBox(height: 16 * scale),
-                          Row(
-                            children: [
-                              Expanded(
-                                child: _InfoField(
-                                  scale: scale,
-                                  label: '연락처',
-                                  value: '010-1234-5678',
-                                ),
-                              ),
-                              Expanded(
-                                child: _InfoField(
-                                  scale: scale,
-                                  label: '선호 안내 방식',
-                                  value: '진동 중심 안내',
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                    SizedBox(height: 16 * scale),
-                    _InfoCard(
-                      scale: scale,
-                      sectionTitle: '반려견 정보',
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Expanded(
-                                flex: 2,
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    _AvatarWithCamera(
-                                      scale: scale,
-                                      imageAsset: 'asset/mypage/mypage_profile_pet.png',
-                                      fallbackAsset: TogedogAssets.petPhotoFallback,
-                                    ),
-                                    SizedBox(width: 16 * scale),
-                                    Expanded(
-                                      child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          _NameRow(scale: scale, name: petName),
-                                          SizedBox(height: 6 * scale),
-                                          Text(
-                                            petDetailLine,
-                                            style: TextStyle(
-                                              fontFamily: 'LGSmartUI',
-                                              fontWeight: FontWeight.w600,
-                                              fontSize: 14 * scale,
-                                              color: const Color(0xFF828282),
-                                            ),
-                                          ),
-                                          SizedBox(height: 4 * scale),
-                                          Text(
-                                            '4.2kg',
-                                            style: TextStyle(
-                                              fontFamily: 'LGSmartUI',
-                                              fontWeight: FontWeight.w600,
-                                              fontSize: 14 * scale,
-                                              color: const Color(0xFF1A1A1A),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              Expanded(
-                                flex: 1,
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      '접종 횟수',
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                        fontFamily: 'LGSmartUI',
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 12 * scale,
-                                        color: const Color(0xFF828282),
-                                      ),
-                                    ),
-                                    SizedBox(height: 6 * scale),
-                                    Text(
-                                      '3회',
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                        fontFamily: 'LGSmartUI',
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 14 * scale,
-                                        color: const Color(0xFF1A1A1A),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                          SizedBox(height: 18 * scale),
-                          const Divider(height: 1, color: Color(0xFFE8E8EC)),
-                          SizedBox(height: 16 * scale),
-                          Row(
-                            children: [
-                              Expanded(
-                                child: _InfoField(
-                                  scale: scale,
-                                  label: '생년월일',
-                                  value: '24.06.10',
-                                ),
-                              ),
-                              Expanded(
-                                child: _InfoField(
-                                  scale: scale,
-                                  label: '특이사항',
-                                  value: '알레르기 없음',
-                                ),
-                              ),
-                              Expanded(
-                                child: _InfoField(
-                                  scale: scale,
-                                  label: '중성화',
-                                  value: 'O',
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                    SizedBox(height: 20 * scale),
                     Text(
-                      '특이사항',
+                      '내 정보 수정',
                       style: TextStyle(
                         fontFamily: 'LGSmartUI',
-                        fontWeight: FontWeight.w600,
-                        fontSize: 14 * scale,
-                        color: const Color(0xFF404040),
+                        fontWeight: FontWeight.w700,
+                        fontSize: 20 * scale,
+                        color: const Color(0xFF111111),
                       ),
                     ),
-                    SizedBox(height: 6 * scale),
-                    Container(
-                      height: 86 * scale,
-                      padding: EdgeInsets.fromLTRB(
-                        14 * scale,
-                        12 * scale,
-                        14 * scale,
-                        10 * scale,
-                      ),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(10 * scale),
-                      ),
-                      child: Stack(
-                        children: [
-                          TogedogA11y.textField(
-                            label: '특이사항',
-                            value: _notesController.text,
-                            hint: '알레르기, 건강 상태 등 특이사항을 입력해주세요',
-                            child: TextField(
-                              controller: _notesController,
-                            maxLines: 3,
-                            maxLength: 200,
-                            onChanged: (_) => setState(() {}),
-                            decoration: InputDecoration(
-                              isDense: true,
-                              border: InputBorder.none,
-                              counterText: '',
-                              hintText: '알레르기, 건강 상태 등 특이사항을 입력해주세요',
-                              hintStyle: TextStyle(
-                                fontFamily: 'LGSmartUI',
-                                fontWeight: FontWeight.w400,
-                                fontSize: 12 * scale,
-                                color: const Color(0xFF828282),
-                              ),
-                            ),
-                            style: TextStyle(
-                              fontFamily: 'LGSmartUI',
-                              fontWeight: FontWeight.w400,
-                              fontSize: 12 * scale,
-                              color: const Color(0xFF1A1A1A),
-                            ),
-                          ),
-                          ),
-                          Positioned(
-                            right: 0,
-                            bottom: 0,
-                            child: Text(
-                              '$notesLength/200',
-                              style: TextStyle(
-                                fontFamily: 'LGSmartUI',
-                                fontWeight: FontWeight.w600,
-                                fontSize: 10 * scale,
-                                color: const Color(0xFFD4D4D4),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    SizedBox(height: 16 * scale),
-                    Container(
-                      height: 62 * scale,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(10 * scale),
-                        border: Border.all(
-                          color: const Color(0xFFD4BEFE),
-                          width: 2,
-                          strokeAlign: BorderSide.strokeAlignInside,
-                        ),
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Container(
-                            width: 20 * scale,
-                            height: 20 * scale,
-                            decoration: const BoxDecoration(
-                              color: Color(0xFF8756E7),
-                              shape: BoxShape.circle,
-                            ),
-                            child: Icon(
-                              Icons.add,
-                              size: 14 * scale,
-                              color: Colors.white,
-                            ),
-                          ),
-                          SizedBox(width: 8 * scale),
-                          Text(
-                            '반려견 추가하기',
-                            style: TextStyle(
-                              fontFamily: 'LGSmartUI',
-                              fontWeight: FontWeight.w600,
-                              fontSize: 16 * scale,
-                              color: const Color(0xFF8756E7),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    SizedBox(height: 24 * scale),
                   ],
                 ),
               ),
-            ),
-          ],
+              SizedBox(height: 20 * scale),
+              Expanded(
+                child: SingleChildScrollView(
+                  padding: EdgeInsets.symmetric(horizontal: 19 * scale),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      _InfoCard(
+                        scale: scale,
+                        sectionTitle: '사용자 정보',
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                _AvatarWithCamera(
+                                  scale: scale,
+                                  imageAsset: 'assets/mypage/mypage_profile_user.png',
+                                ),
+                                SizedBox(width: 16 * scale),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      _NameRow(scale: scale, name: displayName),
+                                      SizedBox(height: 8 * scale),
+                                      Text(
+                                        'kongiappa@gmail.com',
+                                        style: TextStyle(
+                                          fontFamily: 'LGSmartUI',
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: 14 * scale,
+                                          color: const Color(0xFF828282),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: 18 * scale),
+                            const Divider(height: 1, color: Color(0xFFE8E8EC)),
+                            SizedBox(height: 16 * scale),
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: _InfoField(
+                                    scale: scale,
+                                    label: '연락처',
+                                    value: '010-1234-5678',
+                                  ),
+                                ),
+                                Expanded(
+                                  child: _InfoField(
+                                    scale: scale,
+                                    label: '선호 안내 방식',
+                                    value: '진동 중심 안내',
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(height: 16 * scale),
+                      _InfoCard(
+                        scale: scale,
+                        sectionTitle: '반려견 정보',
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Expanded(
+                                  flex: 2,
+                                  child: Row(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      _AvatarWithCamera(
+                                        scale: scale,
+                                        imageAsset: 'assets/mypage/mypage_profile_pet.png',
+                                        fallbackAsset: TogedogAssets.petPhotoFallback,
+                                      ),
+                                      SizedBox(width: 16 * scale),
+                                      Expanded(
+                                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            _NameRow(scale: scale, name: petName),
+                                            SizedBox(height: 6 * scale),
+                                            Text(
+                                              petDetailLine,
+                                              style: TextStyle(
+                                                fontFamily: 'LGSmartUI',
+                                                fontWeight: FontWeight.w600,
+                                                fontSize: 14 * scale,
+                                                color: const Color(0xFF828282),
+                                              ),
+                                            ),
+                                            SizedBox(height: 4 * scale),
+                                            Text(
+                                              '4.2kg',
+                                              style: TextStyle(
+                                                fontFamily: 'LGSmartUI',
+                                                fontWeight: FontWeight.w600,
+                                                fontSize: 14 * scale,
+                                                color: const Color(0xFF1A1A1A),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                Expanded(
+                                  flex: 1,
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        '접종 횟수',
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                          fontFamily: 'LGSmartUI',
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: 12 * scale,
+                                          color: const Color(0xFF828282),
+                                        ),
+                                      ),
+                                      SizedBox(height: 6 * scale),
+                                      Text(
+                                        '3회',
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                          fontFamily: 'LGSmartUI',
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: 14 * scale,
+                                          color: const Color(0xFF1A1A1A),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: 18 * scale),
+                            const Divider(height: 1, color: Color(0xFFE8E8EC)),
+                            SizedBox(height: 16 * scale),
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: _InfoField(
+                                    scale: scale,
+                                    label: '생년월일',
+                                    value: '24.06.10',
+                                  ),
+                                ),
+                                Expanded(
+                                  child: _InfoField(
+                                    scale: scale,
+                                    label: '특이사항',
+                                    value: '알레르기 없음',
+                                  ),
+                                ),
+                                Expanded(
+                                  child: _InfoField(
+                                    scale: scale,
+                                    label: '중성화',
+                                    value: 'O',
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(height: 20 * scale),
+                      Text(
+                        '특이사항',
+                        style: TextStyle(
+                          fontFamily: 'LGSmartUI',
+                          fontWeight: FontWeight.w600,
+                          fontSize: 14 * scale,
+                          color: const Color(0xFF404040),
+                        ),
+                      ),
+                      SizedBox(height: 6 * scale),
+                      Container(
+                        height: 86 * scale,
+                        padding: EdgeInsets.fromLTRB(
+                          14 * scale,
+                          12 * scale,
+                          14 * scale,
+                          10 * scale,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(10 * scale),
+                        ),
+                        child: Stack(
+                          children: [
+                            TogedogA11y.textField(
+                              label: '특이사항',
+                              value: _notesController.text,
+                              hint: '알레르기, 건강 상태 등 특이사항을 입력해주세요',
+                              child: TextField(
+                                controller: _notesController,
+                                maxLines: 3,
+                                maxLength: 200,
+                                onChanged: (_) => setState(() {}),
+                                decoration: InputDecoration(
+                                  isDense: true,
+                                  border: InputBorder.none,
+                                  counterText: '',
+                                  hintText: '알레르기, 건강 상태 등 특이사항을 입력해주세요',
+                                  hintStyle: TextStyle(
+                                    fontFamily: 'LGSmartUI',
+                                    fontWeight: FontWeight.w400,
+                                    fontSize: 12 * scale,
+                                    color: const Color(0xFF828282),
+                                  ),
+                                ),
+                                style: TextStyle(
+                                  fontFamily: 'LGSmartUI',
+                                  fontWeight: FontWeight.w400,
+                                  fontSize: 12 * scale,
+                                  color: const Color(0xFF1A1A1A),
+                                ),
+                              ),
+                            ),
+                            Positioned(
+                              right: 0,
+                              bottom: 0,
+                              child: Text(
+                                '$notesLength/200',
+                                style: TextStyle(
+                                  fontFamily: 'LGSmartUI',
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 10 * scale,
+                                  color: const Color(0xFFD4D4D4),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(height: 16 * scale),
+                      Container(
+                        height: 62 * scale,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(10 * scale),
+                          border: Border.all(
+                            color: const Color(0xFFD4BEFE),
+                            width: 2,
+                            strokeAlign: BorderSide.strokeAlignInside,
+                          ),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Container(
+                              width: 20 * scale,
+                              height: 20 * scale,
+                              decoration: const BoxDecoration(
+                                color: Color(0xFF8756E7),
+                                shape: BoxShape.circle,
+                              ),
+                              child: Icon(
+                                Icons.add,
+                                size: 14 * scale,
+                                color: Colors.white,
+                              ),
+                            ),
+                            SizedBox(width: 8 * scale),
+                            Text(
+                              '반려견 추가하기',
+                              style: TextStyle(
+                                fontFamily: 'LGSmartUI',
+                                fontWeight: FontWeight.w600,
+                                fontSize: 16 * scale,
+                                color: const Color(0xFF8756E7),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(height: 24 * scale),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
-    ),
     );
   }
 
   String _petDetailLine(PetProfileStore profile) {
     final breed = profile.breed.isEmpty ? '푸들' : profile.breed;
-    final age = profile.age.isEmpty || profile.age == PetProfileStore.defaultAgeLabel
-        ? '3세'
-        : '${profile.age}세';
+    final age = profile.age.isEmpty || profile.age == PetProfileStore.defaultAgeLabel ? '3세' : '${profile.age}세';
     return '$breed • $age • 여';
   }
 }
@@ -515,7 +513,7 @@ class _NameRow extends StatelessWidget {
         ),
         SizedBox(width: 9 * scale),
         Image.asset(
-          'asset/mypage/mypage_edit_name.png',
+          'assets/mypage/mypage_edit_name.png',
           width: 15 * scale,
           height: 15 * scale,
           errorBuilder: (_, __, ___) => Icon(
