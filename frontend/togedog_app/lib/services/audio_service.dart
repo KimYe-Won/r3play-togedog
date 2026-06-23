@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:typed_data';
 
+import 'package:flutter/foundation.dart';
 import 'package:record/record.dart';
 import 'package:tflite_flutter/tflite_flutter.dart';
 import 'package:vibration/vibration.dart';
@@ -17,9 +18,10 @@ class AudioAlert {
 }
 
 class _SoundInfo {
-  const _SoundInfo(this.priority, this.label);
-  final int priority;
-  final String label;
+  const _SoundInfo(this.index, this.priority, this.label);
+  final int index;    // YAMNet 클래스 인덱스 (공식 yamnet_class_map.csv 기준)
+  final int priority; // 1=위험, 2=경고, 3=조심
+  final String label; // 한국어 이름
 }
 
 class AudioService {
@@ -28,23 +30,22 @@ class AudioService {
   static const Duration _highCooldown = Duration(seconds: 4);
   static const Duration _cooldown = Duration(seconds: 6);
 
-  // YAMNet 521개 클래스 중 관심 클래스 → 위험도 매핑 (521개 중 12개만 감지)
+  // YAMNet 521클래스 중 관심 클래스 → (인덱스, 위험도, 한국어).
+  // 인덱스는 공식 yamnet_class_map.csv 기준. (이전엔 인덱스가 전부 어긋나 매칭이 안 됐음)
   static const Map<String, _SoundInfo> _soundMap = {
     // 위험
-    'Car': _SoundInfo(1, '차량 소리'),
-    'Vehicle horn, car horn, honking': _SoundInfo(1, '차량 경적'),
-    'Beeping, horn honking': _SoundInfo(1, '차량 경적'),
-    'Siren': _SoundInfo(1, '사이렌'),
-    'Emergency vehicle': _SoundInfo(1, '긴급차량'),
-    'Motorcycle': _SoundInfo(1, '오토바이 소리'),
-    'Engine': _SoundInfo(1, '오토바이 소리'),
+    'Car':                             _SoundInfo(301, 1, '차량 소리'),
+    'Motor vehicle (road)':            _SoundInfo(300, 1, '차량 소리'),
+    'Vehicle horn, car horn, honking': _SoundInfo(302, 1, '차량 경적'),
+    'Siren':                           _SoundInfo(390, 1, '사이렌'),
+    'Emergency vehicle':               _SoundInfo(316, 1, '긴급차량'),
+    'Motorcycle':                      _SoundInfo(320, 1, '오토바이 소리'),
     // 경고
-    'Dog': _SoundInfo(2, '개 짖는 소리'),
-    'Bark': _SoundInfo(2, '개 짖는 소리'),
-    'Yip': _SoundInfo(2, '개 짖는 소리'),
+    'Dog':                             _SoundInfo(69, 2, '개 짖는 소리'),
+    'Bark':                            _SoundInfo(70, 2, '개 짖는 소리'),
+    'Yip':                             _SoundInfo(71, 2, '개 짖는 소리'),
     // 조심
-    'Bicycle bell': _SoundInfo(3, '자전거 벨'),
-    'Bell': _SoundInfo(3, '벨 소리'),
+    'Bicycle bell':                    _SoundInfo(198, 3, '자전거 벨'),
   };
 
   final _alertController = StreamController<AudioAlert>.broadcast();
@@ -63,6 +64,7 @@ class AudioService {
   Future<void> start() async {
     if (_running) return;
     _running = true;
+    debugPrint('[YAMNet] start');
     _inferLoop();
   }
 
@@ -97,7 +99,9 @@ class AudioService {
             _runInference(floats);
           }
         }
-      } catch (_) {
+      } catch (e) {
+        // 마이크 점유 충돌(WebRTC가 마이크를 잡고 있으면 여기로 떨어질 수 있음) 진단용.
+        debugPrint('[YAMNet] record error: $e');
         await Future.delayed(const Duration(seconds: 1));
       }
     }
@@ -133,7 +137,7 @@ class AudioService {
     double topScore = 0;
 
     for (final entry in _soundMap.entries) {
-      final idx = _yamnetIndex(entry.key);
+      final idx = entry.value.index;
       if (idx < 0 || idx >= rawScores.length) continue;
       final score = (rawScores[idx] as num).toDouble();
       if (score >= _minConfidence && (topSound == null || score > topScore)) {
@@ -151,31 +155,14 @@ class AudioService {
     if (last != null && now.difference(last) < cooldown) return;
 
     _lastAlertMap[topYamnetLabel] = now;
+    debugPrint(
+        '[YAMNet] alert=${topSound.label} ($topYamnetLabel) score=${topScore.toStringAsFixed(2)}');
     _vibrate(topSound.priority);
     _alertController.add(AudioAlert(
       priority: topSound.priority,
       label: topSound.label,
       confidence: topScore,
     ));
-  }
-
-  // YAMNet 클래스명 → 인덱스 (주요 클래스 하드코딩)
-  int _yamnetIndex(String label) {
-    const indices = {
-      'Car': 300,
-      'Vehicle horn, car horn, honking': 306,
-      'Beeping, horn honking': 307,
-      'Siren': 396,
-      'Emergency vehicle': 397,
-      'Motorcycle': 302,
-      'Engine': 303,
-      'Dog': 74,
-      'Bark': 75,
-      'Yip': 76,
-      'Bicycle bell': 395,
-      'Bell': 394,
-    };
-    return indices[label] ?? -1;
   }
 
   Future<void> _vibrate(int priority) async {

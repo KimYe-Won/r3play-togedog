@@ -71,12 +71,22 @@ class WalkAiManager extends ChangeNotifier {
     await _streamingController.startAsReceiver(ip);
     if (!_streamingController.isStarted) return false;
 
-    // 수신폰은 영상만 받는 단방향이다. 자기 마이크가 송신폰으로 넘어가지 않도록 송신 오디오를 끈다.
-    final localAudioTracks =
-        _streamingController.connection.localStream?.getAudioTracks() ??
+    // 수신폰은 영상만 '받는' 단방향이다. 패키지는 수신폰도 자기 카메라(1080p)를 켜서
+    // 송신폰으로 보내는데, 이 영상은 어디에도 안 쓰이면서 CPU/발열/대역폭만 잡아먹어
+    // 양쪽 화질을 떨어뜨리고 추론 렉을 유발한다. 그래서 로컬(카메라+마이크) 트랙을 모두 꺼서
+    // 수신폰 송신을 중단한다(받는 영상 품질·추론 성능 확보).
+    final localTracks =
+        _streamingController.connection.localStream?.getTracks() ??
             const <MediaStreamTrack>[];
-    for (final track in localAudioTracks) {
-      track.enabled = false;
+    for (final track in localTracks) {
+      // 오디오 트랙은 enabled=false(음소거)만으론 마이크 점유가 유지돼
+      // YAMNet(record)이 소리를 못 받는다. stop()으로 마이크를 완전히 해제한다.
+      // (수신폰은 어차피 영상/소리를 '받기'만 하므로 로컬 송신은 불필요)
+      if (track.kind == 'audio') {
+        await track.stop();
+      } else {
+        track.enabled = false;
+      }
     }
     // WebRTC가 오디오 포커스를 잡고 통신모드(이어피스)로 두면 TTS가 안 들린다.
     // 이 앱은 WebRTC 오디오를 쓰지 않으므로, 포커스 관리를 끄고 일반(미디어) 모드로 둬서

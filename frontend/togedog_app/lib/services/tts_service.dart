@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:ui' show Rect;
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter_tts/flutter_tts.dart';
@@ -26,18 +27,18 @@ class TtsService {
   // best_v3_float16.tflite 12클래스 — 위험 순위 + 한국어 알림 문구
   // priority 1=위험(4초쿨다운), 2=경고/3=조심(5초쿨다운)
   static const Map<String, _DangerInfo> _dangerMap = {
-    'person':           _DangerInfo(1, '사람이 있습니다', minBboxArea: 0.12, minFrames: 6),
-    'stairs':           _DangerInfo(1, '계단이 감지되었습니다', minFrames: 3),
-    'car':              _DangerInfo(1, '차량이 접근하고 있습니다', minFrames: 3),
-    'bicycle':          _DangerInfo(1, '자전거가 접근하고 있습니다', minFrames: 3),
-    'scooter':          _DangerInfo(1, '킥보드가 접근하고 있습니다', minFrames: 3),
-    'motorcycle':       _DangerInfo(1, '오토바이가 접근하고 있습니다', minFrames: 3),
-    'dog':              _DangerInfo(2, '전방에 다른 강아지가 접근하고 있습니다', useDirection: false, minFrames: 3),
-    'chair':            _DangerInfo(2, '의자가 있습니다', minFrames: 3),
-    'table':            _DangerInfo(2, '테이블이 있습니다', minFrames: 3),
-    'pole_obstacle':    _DangerInfo(3, '장애물이 있습니다', minFrames: 5),
-    'crosswalk':        _DangerInfo(3, '전방에 횡단보도입니다', useDirection: false, minFrames: 5),
-    'traffic_light':    _DangerInfo(3, '전방에 신호등이 감지되었습니다', useDirection: false, minFrames: 5),
+    'person':           _DangerInfo(1, '사람이 있습니다', minBboxArea: 0.12, minFrames: 4),
+    'stairs':           _DangerInfo(1, '계단이 감지되었습니다', minFrames: 2),
+    'car':              _DangerInfo(1, '차량이 접근하고 있습니다', minFrames: 2),
+    'bicycle':          _DangerInfo(1, '자전거가 접근하고 있습니다', minFrames: 2),
+    'scooter':          _DangerInfo(1, '킥보드가 접근하고 있습니다', minFrames: 2),
+    'motorcycle':       _DangerInfo(1, '오토바이가 접근하고 있습니다', minFrames: 2),
+    'dog':              _DangerInfo(2, '전방에 다른 강아지가 접근하고 있습니다', useDirection: false, minFrames: 2),
+    'chair':            _DangerInfo(2, '의자가 있습니다', minFrames: 2),
+    'table':            _DangerInfo(2, '테이블이 있습니다', minFrames: 2),
+    'pole_obstacle':    _DangerInfo(3, '장애물이 있습니다', minFrames: 3),
+    'crosswalk':        _DangerInfo(3, '전방에 횡단보도입니다', useDirection: false, minFrames: 3),
+    'traffic_light':    _DangerInfo(3, '전방에 신호등이 감지되었습니다', useDirection: false, minFrames: 3),
   };
 
   static const double _minConfidence = 0.5;
@@ -89,30 +90,28 @@ class TtsService {
   }
 
   void processDetections(List<YOLOResult> detections) {
-    // 진단: 프레임당 탐지 수/클래스/신뢰도를 찍어 트리거 미발생 원인(프레임 저하 vs 신뢰도 필터)을 확인.
-    if (detections.isNotEmpty) {
-      debugPrint(
-          '[YOLO] n=${detections.length} ${detections.map((d) => '${d.className}:${d.confidence.toStringAsFixed(2)}').join(',')}');
-    }
 
-    // 1. 현재 프레임에서 confidence + minBboxArea 필터를 통과한 라벨 집합 + 그 중심 x 좌표
+    // 1. 현재 프레임에서 confidence + minBboxArea 필터를 통과한 라벨 집합 + 그 박스
     final Set<String> detectedLabels = {};
-    final Map<String, double> centerXByLabel = {};
+    final Map<String, Rect> boxByLabel = {};
 
     for (final d in detections) {
       if (d.confidence < _minConfidence) continue;
       final info = _dangerMap[d.className];
       if (info == null) continue;
 
+      // normalizedBox(0~1)를 써야 한다. boundingBox는 픽셀 좌표라
+      // area 임계값(0~1)·방향(centerX 0.35/0.65) 비교가 전부 틀어진다(항상 '오른쪽'으로 나옴).
+      final box = d.normalizedBox;
+
       if (info.minBboxArea != null) {
-        final area = d.boundingBox.width * d.boundingBox.height;
+        final area = box.width * box.height;
         if (area < info.minBboxArea!) continue;
       }
 
       detectedLabels.add(d.className);
-      // 동일 라벨 다중 검출 시 마지막 검출의 중심 x 사용
-      centerXByLabel[d.className] =
-          d.boundingBox.left + d.boundingBox.width / 2;
+      // 동일 라벨 다중 검출 시 마지막 검출의 박스 사용
+      boxByLabel[d.className] = box;
     }
 
     // 2. 감지된 라벨은 증가, 감지 안 된 라벨은 감쇠(-1).
@@ -130,7 +129,7 @@ class TtsService {
     // 3. minFrames + 쿨다운 통과한 라벨들 중에서만 우선순위 경쟁
     _DangerInfo? topDanger;
     String? topLabel;
-    double topCenterX = 0.5;
+    Rect topBox = const Rect.fromLTRB(0.35, 0, 0.65, 1); // 기본=전방
     final now = DateTime.now();
 
     for (final label in detectedLabels) {
@@ -144,7 +143,7 @@ class TtsService {
       if (topDanger == null || info.priority < topDanger.priority) {
         topDanger = info;
         topLabel = label;
-        topCenterX = centerXByLabel[label] ?? 0.5;
+        topBox = boxByLabel[label] ?? topBox;
       }
     }
 
@@ -152,7 +151,7 @@ class TtsService {
 
     // 4. 발화 (쿨다운 이미 경쟁 단계에서 검증)
     _lastSpokeMap[topLabel] = now;
-    final message = _buildMessage(topDanger, topCenterX);
+    final message = _buildMessage(topDanger, topBox);
     debugPrint(
         '[TTS] fire label=$topLabel speech=$speechEnabled vib=$vibrationEnabled msg="$message"');
     if (speechEnabled) _speak(message);
@@ -164,17 +163,21 @@ class TtsService {
     debugPrint('[TTS] speak ret=$result');
   }
 
-  // bbox 중심 x 좌표로 방향 prefix를 붙여 최종 메시지 생성
-  String _buildMessage(_DangerInfo info, double centerX) {
+  // 박스 위치로 방향 prefix를 붙여 최종 메시지 생성.
+  // 경로(중앙선 x=0.5) 기준: 박스가 중앙선을 가로지르면 '전방'(내 경로 위),
+  // 완전히 왼쪽이면 '왼쪽', 완전히 오른쪽이면 '오른쪽'.
+  // → 코앞에 크게 잡혀 경로를 막는 물체는 중심이 약간 치우쳐도 '전방'으로 안내한다.
+  String _buildMessage(_DangerInfo info, Rect box) {
     if (!info.useDirection) return info.message;
 
+    const center = 0.5;
     final String direction;
-    if (centerX < 0.35) {
-      direction = '왼쪽에';
-    } else if (centerX > 0.65) {
-      direction = '오른쪽에';
-    } else {
+    if (box.left <= center && box.right >= center) {
       direction = '전방에';
+    } else if (box.right < center) {
+      direction = '왼쪽에';
+    } else {
+      direction = '오른쪽에';
     }
     return '$direction ${info.message}';
   }

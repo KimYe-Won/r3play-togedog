@@ -14,6 +14,7 @@ class Walk03Screen extends StatelessWidget {
     return WalkRealtimeShell(
       scale: scale,
       onBack: () => Navigator.of(context).pop(),
+      showVideo: false,
       panel: Semantics(
         excludeSemantics: true,
         child: WalkVoiceGuidePanel(

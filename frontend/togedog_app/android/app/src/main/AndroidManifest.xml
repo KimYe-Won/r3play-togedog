@@ -32,6 +32,11 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+        <!-- Impeller(Vulkan)와 WebRTC 플랫폼뷰(RTCVideoView)가 함께 쓰일 때
+             장시간/스트레스 상황에서 화면 전체가 하얘지는 문제가 있어 Skia로 폴백한다. -->
+        <meta-data
+            android:name="io.flutter.embedding.android.EnableImpeller"
+            android:value="false" />
         <!-- Don't delete the meta-data below.
              This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->
         <meta-data

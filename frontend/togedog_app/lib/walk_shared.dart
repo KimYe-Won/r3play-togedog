@@ -4,7 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import 'app_live_streaming_view.dart';
+import 'walk_ai_manager.dart';
 import 'walk_session.dart';
+import 'widgets/audio_alert_banner.dart';
 
 const double kWalkDesignWidth = 402;
 
@@ -24,23 +26,26 @@ class WalkRealtimeShell extends StatelessWidget {
     required this.onBack,
     this.bottomOverlay,
     this.panel,
+    this.showVideo = true,
   });
 
   final double scale;
   final VoidCallback onBack;
   final Widget? bottomOverlay;
   final Widget? panel;
+  // false면 영상 뷰를 띄우지 않는다(투명 오버레이 라우트에서 밑 화면의 단일 영상만 그리게 함).
+  final bool showVideo;
 
   @override
   Widget build(BuildContext context) {
     final bottomInset = MediaQuery.paddingOf(context).bottom;
 
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: showVideo ? Colors.black : Colors.transparent,
       body: Stack(
         fit: StackFit.expand,
         children: [
-          const Positioned.fill(child: AppLiveStreamingView()),
+          if (showVideo) const Positioned.fill(child: AppLiveStreamingView()),
           Positioned(
             left: 0,
             right: 0,
@@ -99,6 +104,16 @@ class WalkRealtimeShell extends StatelessWidget {
             ),
           ),
           if (panel != null) panel!,
+          // 소리(YAMNet) 감지 시 상단에 클래스명 배너 — 청각장애인(진동) 모드 전용.
+          // 알림이 없으면 SizedBox.shrink라 평소엔 보이지 않는다.
+          Positioned(
+            top: 0,
+            left: 0,
+            right: 0,
+            child: AudioAlertBanner(
+              stream: WalkAiManager.instance.audioAlertStream,
+            ),
+          ),
         ],
       ),
     );

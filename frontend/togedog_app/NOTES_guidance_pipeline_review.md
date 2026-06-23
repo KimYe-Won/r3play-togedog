@@ -5,39 +5,49 @@
 - **TTS 안 들림**: WebRTC가 안드로이드 오디오를 통신모드(MODE_IN_COMMUNICATION/이어피스)로 잡아 TTS(미디어 음성)가 안 들림. `_vibrate`는 무조건 호출돼 진동만 났음. 수정: 연결 후 `Helper.setAndroidAudioConfiguration(AndroidAudioConfiguration.media)`로 미디어(normal) 모드 고정 → TTS 스피커 출력.
 - **되울림**: `enableSpeaker: true` → **false**(송신폰 마이크 소리 재생 안 함). + 수신폰 로컬 오디오 트랙 `enabled=false`(마이크 송신 차단).
 - **모드별 진동 분리**: `TtsService.vibrationEnabled` 추가 + `processDetections`에서 `if (vibrationEnabled) _vibrate(...)`. `_applyGuidanceMode`에서 sound(시각장애인)=음성O/진동X, vibration(청각장애인)=음성X/진동O+YAMNet배너, text=둘다X.
-- **성능**: 화질 fullHd1080 유지 + detectionInterval **300ms**(모델 끊김 대응).
+- **성능**: 화질 fullHd1080 유지 + detectionInterval **200ms**.
 
 ### 용어 정리
 - "효과음" = YAMNet(`AudioService`, 수신폰 마이크 소리분류) → `AudioAlertBanner`(상단 텍스트 배너) + 진동. 실제 사운드 아님. 청각장애인(vibration) 모드 전용.
 - `enableSpeaker` = WebRTC로 받은 송신폰 마이크 소리를 스피커로 재생할지. 앱 안내(TTS/진동/배너)와 무관.
 
 
-## 현재 상태 (2026-06-22)
-- **베이스 = 사용자 패치 버전**(직접 빌드/설치한 현재 코드). 이 위에 아래 항목을 "현재 코드 테스트 후" 패치 예정.
-- 사용자 패치가 이미 해결한 것:
-  - 모델 로딩: `asset/` → `assets/` 폴더 리네임 + `modelPath = 'assets/deep_learning/best_v3_float16.tflite'` → ultralytics_yolo 경로 해석기가 정상 인식.
-  - 전체화면/재연결 2버그: `yolo_live_stream` 0.8.0의 `LiveStreamingController`가 세션을 직접 소유 → 화면 이동에도 스트림 유지.
-- 주의: 아래 항목들은 이전에 한 번 적용했다가 패치(git reset/clean 추정)로 **되돌아간** 상태. 현재 코드엔 미반영.
+## 진행 상황 스냅샷 (2026-06-22 저녁, 내일 이어서)
 
-## ⏳ 테스트 후 다시 패치할 항목 (현재 코드 기준)
+### ✅ 사용자 확인 완료 (정상 동작)
+- 모델 탐지 + 재접속 안정성 (yolo_live_stream **0.10.0** 내부 `_isBusy` 리셋 + 컨트롤러 재사용 `late final`).
+- TTS 발화 + 진동이 **모드별로 분리** 동작 (시각장애인=TTS만 / 청각장애인=진동만).
+- `_frameCount` decay 적용, detectionInterval **200ms**, 추론 속도/프레임 양호.
 
-### P0 (정확도 핵심)
-- [ ] `lib/services/tts_service.dart` `processDetections`: 면적(area)/중심X(centerX) 계산을 `boundingBox`(픽셀) → **`normalizedBox`(0~1)** 로 변경.
-  - 증상: 방향 안내가 항상 "오른쪽"으로 치우침, person 근접(면적) 필터가 사실상 무력화.
+### ✅ 이번 세션 코드 수정 → 빌드·설치 완료, **사용자 검증 대기**
+1. **이슈4 방향 항상 "오른쪽"** — `tts_service.processDetections`에서 `boundingBox`(픽셀) → **`normalizedBox`(0~1)** 로 변경 (area/centerX 둘 다). → 수신폰 설치됨.
+2. **이슈2 패널(음성/진동) 진입 시 흰 막 + 헤더/패널 UI 사라짐** — 원인: `walk_02`에서 패널을 `Semantics`로 감싸 패널 최상위 `Positioned`가 Stack 직속이 아니게 됨 → 레이아웃 깨짐. 수정: `Semantics` 래퍼 제거(패널을 Stack 직속으로). → 수신폰 설치됨.
+3. **이슈1 재접속 시 화질 저하(첫 연결만 좋고 이후 계속 나쁨)** — 원인: 송신폰이 peerConnection을 1번만 만들고 재접속 때 같은 PC 재사용 → 낮아진 인코더 상태 잔존. 수정: `camera_app/lib/main.dart`를 명시적 `LiveStreamingController` + 리스너로 바꿔 **수신 연결 true→false 감지 시 `stop()`+`startAsSender()`로 세션 자동 리셋**. → 송신폰(SM_S901N) 설치됨.
 
-### P1 (안정성)
-- [ ] `tts_service` `_frameCount`: 미검출 시 즉시 0 리셋 → **minFrames 상한 + 미검출 시 1씩 decay** 로 변경 (YOLO 깜빡임 대응).
-- [ ] 진동/모드 분리: `TtsService.vibrationEnabled` 플래그 추가 후 `walk_ai_manager._applyGuidanceMode`에서
-  - 음성모드 = 음성만, 진동모드 = 진동(+청각), 텍스트모드 = 둘 다 off.
-  - 현재: `_vibrate`가 모드와 무관하게 항상 호출됨.
+### 설치 상태
+- 수신앱(togedog_app): **SM_S916N / R3CWC01MWNA** — 이슈2·4 반영본.
+- 송신앱(camera_app): **SM_S901N / R5CT40EEDTH** — 이슈1 반영본. (start 눌러두면 자동 리셋 동작)
 
-### P2 (보강)
-- [ ] `lib/services/audio_service.dart` YAMNet 인덱스를 공식 `yamnet_class_map.csv` 기준으로 정정. 인덱스를 `_SoundInfo`에 통합해 이중 맵 제거. 표준 AudioSet 521클래스/순서 확인.
-- [ ] `walk_ai_manager` `detectionInterval` 100ms → 200ms (성능/발열).
+## 06-23 진행
 
-## 실기기 검증 체크리스트 (현재 코드)
-- [ ] 모델 로드 성공 (logcat에 `ModelNotLoadedException` 없음), 탐지 박스 표시됨
-- [ ] YOLO `className` 이 `tts_service._dangerMap` 키와 일치 (라벨 메타데이터 확인) — 불일치 시 진동/음성 안 울림
-- [ ] 방향 안내 좌/중/우 정상
-- [ ] 음성/진동/텍스트 모드별 채널 동작
-- [ ] 소리(YAMNet) 경고 동작
+### ✅ 전방 판정(경로 기준)으로 변경 — 사용자 확정
+- `tts_service._buildMessage`: 중심점(centerX 0.35/0.65) 기준 → **박스 Rect** 기준.
+  - 박스가 중앙선(x=0.5)을 가로지르면 '전방', `box.right<0.5` 왼쪽, 그 외 오른쪽.
+  - 의도: 코앞에 크게 잡혀 경로를 막는 물체는 중심이 약간 치우쳐도 '전방'.
+
+### ✅ 이슈3 (얌넷 배너) 코드 수정 완료 — 빌드/검증 대기
+1. **인덱스 전면 정정**: 기존 `_yamnetIndex` 하드코딩이 **전부 어긋남**(Car 300→**301**, horn 306→**302**, Siren 396→**390**, Emergency 397→**316**, Motorcycle 302→**320**, Dog 74→**69**, Bark 75→**70**, Yip 76→**71**, Bicycle bell 395→**198**). 공식 `yamnet_class_map.csv` 기준으로 정정, 인덱스를 `_SoundInfo(index, priority, label)`에 통합, `_yamnetIndex` 제거. 무효 'Beeping, horn honking' 삭제, 일반/오탐 'Engine'·'Bell' 제거, 'Motor vehicle (road)'(300) 추가.
+2. **배너 위치**: `AudioAlertBanner`를 공용 `WalkRealtimeShell`(walk_shared.dart) 최상단에 추가 → walk_02에서도 표시. (walk_01은 자체 Scaffold라 중복 아님)
+3. **마이크 해제**: `walk_ai_manager.connect()`에서 로컬 **오디오 트랙은 `stop()`**(마이크 완전 해제), 비디오는 `enabled=false` 유지. WebRTC 마이크 점유로 YAMNet(record)이 소리를 못 받던 문제 대응.
+4. 진단 로그: `[YAMNet] start / alert=라벨(키) score / record error`.
+- 주의: 얌넷은 여전히 **진동(청각장애인) 모드에서만** `_audioService.start()` 호출(설계). 배너 확인하려면 진동 모드로 테스트.
+
+### 검증 체크리스트 (실기기)
+- [ ] 전방: 박스가 화면 중앙 가로지를 때 '전방', 한쪽이면 좌/우
+- [ ] 이슈2: 음성/진동 가이드 버튼 → 헤더·패널 정상, 영상 유지 (흰 막 없음)
+- [ ] 이슈4: 의자 좌/중/우 → "왼쪽에/전방에/오른쪽에" 정확
+- [ ] 이슈1: 송신폰 start 후 연결→끊기→재연결 시 화질이 첫 연결처럼 유지
+- [ ] 이슈3: 진동 모드에서 차량/경적/사이렌/개/자전거벨 소리 → 상단 배너에 클래스명 표시 (`[YAMNet] alert` 로그 확인)
+
+### 로그
+- 스냅샷: `logs/2026-06-22_receiver_logcat.txt` (수신폰 flutter 로그 덤프).

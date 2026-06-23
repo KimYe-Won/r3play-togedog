@@ -1,0 +1,28 @@
+# 2026-06-22 빌드/실행 로그 스냅샷
+# (세션 종료 시 기기가 adb에서 분리되어 logcat 실시간 덤프는 비어 있음.
+#  아래는 flutter run 빌드/실행 출력 스냅샷.)
+
+## 수신앱 (togedog_app) — SM S916N / R3CWC01MWNA — 이슈2(흰화면)·4(방향) 반영본
+명령: flutter run --release -d R3CWC01MWNA
+
+Running Gradle task 'assembleRelease'...                           27.9s
+√ Built build\app\outputs\flutter-apk\app-release.apk (105.9MB)
+Installing build\app\outputs\flutter-apk\app-release.apk...        24.9s
+
+I/flutter (15721): Impeller opt-out (EnableImpeller=false, Skia 폴백) — deprecation 경고만, 동작엔 영향 없음
+W/FlutterWebRTCPlugin(15721): audioFocusChangeListener [Earpiece] / [Speakerphone, Earpiece]
+I/flutter (15721): [TTS] engines=[com.google.android.tts] koAvailable=true
+
+## 송신앱 (camera_app) — SM S901N / R5CT40EEDTH — 이슈1(세션 자동 리셋) 반영본
+명령: flutter run --release -d R5CT40EEDTH
+
+Running Gradle task 'assembleRelease'...                           35.5s
+√ Built build\app\outputs\flutter-apk\app-release.apk (71.5MB)
+Installing build\app\outputs\flutter-apk\app-release.apk...        22.9s
+
+I/flutter (21921): Using the Impeller rendering backend (Vulkan).
+W/FlutterWebRTCPlugin(21921): audioFocusChangeListener [Earpiece] / [Speakerphone, Earpiece]
+
+# 참고: 다음 실행 때 실시간 로그가 필요하면 기기 연결 후
+#   adb -s <serial> logcat -s flutter:* ultralytics:* AndroidRuntime:*
+# TTS/YOLO 진단 로그 태그: [TTS], [YOLO]
