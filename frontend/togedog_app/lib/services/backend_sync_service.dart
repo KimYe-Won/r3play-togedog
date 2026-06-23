@@ -7,6 +7,7 @@ import '../guidance_mode_store.dart';
 import '../main_onboarding_05.dart';
 import 'api_client.dart';
 import '../consent_store.dart';
+import 'danger_type_mapper.dart';
 
 // [백엔드 연동] 온보딩 프로필 → members / dogs API
 class BackendSyncService {
@@ -229,5 +230,49 @@ class BackendSyncService {
 
     await BackendSessionStore.instance.saveWalkId(null);
     return true;
+  }
+
+  // [백엔드 연동] POST /danger-detections — TTS 알림 시 호출
+  Future<void> sendDangerDetection({
+    required String className,
+    required int priority,
+    required String notificationMessage,
+  }) async {
+    final walkId = BackendSessionStore.instance.walkId;
+    if (walkId == null || walkId.isEmpty) {
+      debugPrint('[백엔드 연동] walk_id 없음 — danger-detections 스킵');
+      return;
+    }
+
+    final dangerType = DangerTypeMapper.yoloClassToDangerType(className);
+    if (dangerType == null) {
+      debugPrint('[백엔드 연동] 매핑 없는 className=$className — 스킵');
+      return;
+    }
+
+    try {
+      final mode = GuidanceModeStore.instance.selectedMode;
+      final response = await ApiClient.instance.post(
+        '/danger-detections',
+        withMember: false, // 이 API는 인증 불필요
+        body: {
+          'walk_id': walkId,
+          'danger_type': dangerType,
+          'danger_level': DangerTypeMapper.priorityToDangerLevel(priority),
+          'detected_at': DateTime.now().toUtc().toIso8601String(),
+          'notification_message': notificationMessage,
+          'notification_channel':
+              DangerTypeMapper.guidanceModeToChannel(mode),
+        },
+      );
+      if (response.statusCode != 201) {
+        debugPrint(
+          '[백엔드 연동] POST /danger-detections 실패: '
+          '${response.statusCode} ${response.body}',
+        );
+      }
+    } catch (e, st) {
+      debugPrint('[백엔드 연동] sendDangerDetection 오류: $e\n$st');
+    }
   }
 }
