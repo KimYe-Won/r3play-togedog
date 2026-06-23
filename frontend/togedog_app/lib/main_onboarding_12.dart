@@ -28,6 +28,7 @@ class MainOnboarding12Screen extends StatefulWidget {
   static const double productTop = 224;
   static const double productWidth = 140;
   static const double productHeight = 180;
+
   /// PNG 여백 보정 + 추가 확대 (기존 1.55 × 1.5)
   static const double productVisualScale = 2.325;
   static const double loadingBarLeft = 22;
@@ -36,6 +37,7 @@ class MainOnboarding12Screen extends StatefulWidget {
   static const double loadingBarHeight = 3;
   static const double loadingSegmentWidth = 195;
   static const double loadingTailWidth = 22;
+
   /// 롤링 게이지 — 보라 덩어리 사이 흰 간격 (디자인 px)
   static const double loadingHeadGap = 118;
   static const double statusCardLeft = 37;
@@ -49,14 +51,14 @@ class MainOnboarding12Screen extends StatefulWidget {
   static const double buttonHeight = 47;
   static const double buttonRadius = 9;
 
-  static const String productImageAsset = 'asset/onboarding/onboarding_device_product.png';
-  static const String backButtonAsset = 'asset/onboarding/onboarding_profile_back.svg';
-  static const String cardIconAsset = 'asset/onboarding/onboarding_device_search_card_icon.svg';
-  static const String pawDecor1Asset = 'asset/onboarding/onboarding_device_search_paw_decor_1.svg';
-  static const String pawDecor2Asset = 'asset/onboarding/onboarding_device_search_paw_decor_2.svg';
-  static const String pawDecor3Asset = 'asset/onboarding/onboarding_device_search_paw_decor_3.svg';
-  static const String starAsset = 'asset/onboarding/onboarding_device_search_star.svg';
-  static const String starSmallAsset = 'asset/onboarding/onboarding_device_search_star_sm.svg';
+  static const String productImageAsset = 'assets/onboarding/onboarding_device_product.png';
+  static const String backButtonAsset = 'assets/onboarding/onboarding_profile_back.svg';
+  static const String cardIconAsset = 'assets/onboarding/onboarding_device_search_card_icon.svg';
+  static const String pawDecor1Asset = 'assets/onboarding/onboarding_device_search_paw_decor_1.svg';
+  static const String pawDecor2Asset = 'assets/onboarding/onboarding_device_search_paw_decor_2.svg';
+  static const String pawDecor3Asset = 'assets/onboarding/onboarding_device_search_paw_decor_3.svg';
+  static const String starAsset = 'assets/onboarding/onboarding_device_search_star.svg';
+  static const String starSmallAsset = 'assets/onboarding/onboarding_device_search_star_sm.svg';
 
   static const Color brandPurple = Color(0xFF8756E7);
   static const Color brandPurpleAlt = Color(0xFF8256E8);
@@ -72,8 +74,7 @@ class MainOnboarding12Screen extends StatefulWidget {
   State<MainOnboarding12Screen> createState() => _MainOnboarding12ScreenState();
 }
 
-class _MainOnboarding12ScreenState extends State<MainOnboarding12Screen>
-    with TickerProviderStateMixin {
+class _MainOnboarding12ScreenState extends State<MainOnboarding12Screen> with TickerProviderStateMixin {
   static const Duration _exitDuration = Duration(milliseconds: 480);
 
   static const Duration _autoNavDelay = Duration(seconds: 6);
@@ -177,39 +178,39 @@ class _MainOnboarding12ScreenState extends State<MainOnboarding12Screen>
     return TogedogA11y.screen(
       name: '디바이스 검색',
       child: Scaffold(
-      backgroundColor: Colors.white,
-      body: Stack(
-        fit: StackFit.expand,
-        children: [
-          const DecoratedBox(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [
-                  MainOnboarding12Screen.gradientStart,
-                  MainOnboarding12Screen.gradientEnd,
-                ],
-                stops: [0.43175, 1.0103],
+        backgroundColor: Colors.white,
+        body: Stack(
+          fit: StackFit.expand,
+          children: [
+            const DecoratedBox(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    MainOnboarding12Screen.gradientStart,
+                    MainOnboarding12Screen.gradientEnd,
+                  ],
+                  stops: [0.43175, 1.0103],
+                ),
               ),
             ),
-          ),
-          Positioned(
-            left: canvasLeft,
-            top: canvasTop,
-            width: canvasWidth,
-            height: canvasHeight,
-            child: _DesignCanvas(
-              scale: scale,
-              ringController: _ringController,
-              loadingController: _loadingController,
-              exitController: _exitController,
-              onCancel: _onCancel,
+            Positioned(
+              left: canvasLeft,
+              top: canvasTop,
+              width: canvasWidth,
+              height: canvasHeight,
+              child: _DesignCanvas(
+                scale: scale,
+                ringController: _ringController,
+                loadingController: _loadingController,
+                exitController: _exitController,
+                onCancel: _onCancel,
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
-    ),
     );
   }
 }
@@ -235,14 +236,10 @@ class _DesignCanvas extends StatelessWidget {
   double y(double designY) => designY * scale;
 
   static double _productWidth(double scale) =>
-      MainOnboarding12Screen.productWidth *
-      MainOnboarding12Screen.productVisualScale *
-      scale;
+      MainOnboarding12Screen.productWidth * MainOnboarding12Screen.productVisualScale * scale;
 
   static double _productHeight(double scale) =>
-      MainOnboarding12Screen.productHeight *
-      MainOnboarding12Screen.productVisualScale *
-      scale;
+      MainOnboarding12Screen.productHeight * MainOnboarding12Screen.productVisualScale * scale;
 
   @override
   Widget build(BuildContext context) {
@@ -782,29 +779,29 @@ class _CancelButtonState extends State<_CancelButton> {
           onTap: widget.onPressed,
           behavior: HitTestBehavior.opaque,
           child: AnimatedContainer(
-          duration: const Duration(milliseconds: 120),
-          width: double.infinity,
-          height: MainOnboarding12Screen.buttonHeight * scale,
-          alignment: Alignment.center,
-          decoration: BoxDecoration(
-            color: _buttonColor,
-            borderRadius: BorderRadius.circular(
-              MainOnboarding12Screen.buttonRadius * scale,
+            duration: const Duration(milliseconds: 120),
+            width: double.infinity,
+            height: MainOnboarding12Screen.buttonHeight * scale,
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              color: _buttonColor,
+              borderRadius: BorderRadius.circular(
+                MainOnboarding12Screen.buttonRadius * scale,
+              ),
             ),
-          ),
-          child: Text(
-            '취소',
-            style: TextStyle(
-              fontFamily: 'LGSmartUI',
-              fontWeight: FontWeight.w700,
-              fontSize: 16 * scale,
-              height: 1,
-              color: Colors.white,
+            child: Text(
+              '취소',
+              style: TextStyle(
+                fontFamily: 'LGSmartUI',
+                fontWeight: FontWeight.w700,
+                fontSize: 16 * scale,
+                height: 1,
+                color: Colors.white,
+              ),
             ),
           ),
         ),
       ),
-    ),
     );
   }
 

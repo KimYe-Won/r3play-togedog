@@ -7,35 +7,35 @@ import 'togedog_accessibility.dart';
 const Color kReportScreenBackground = Color(0xFFF8F5FF);
 
 class ReportAssets {
-  static const safety = 'asset/report/report_safety.svg';
-  static const statusPet = 'asset/report/report_status_pet.png';
-  static const heartMetric = 'asset/report/report_heart_metric.svg';
-  static const sleepMetric = 'asset/report/report_sleep_icon.svg';
-  static const activityMetric = 'asset/report/report_activity_metric.svg';
-  static const mealMetric = 'asset/report/report_meal_icon.svg';
-  static const aiDog = 'asset/report/report_ai_dog.png';
-  static const walkPaw = 'asset/report/report_walk_paw.svg';
-  static const dangerCheck = 'asset/report/report_danger_check.svg';
-  static const dangerMap = 'asset/report/report_danger_map.png';
+  static const safety = 'assets/report/report_safety.svg';
+  static const statusPet = 'assets/report/report_status_pet.png';
+  static const heartMetric = 'assets/report/report_heart_metric.svg';
+  static const sleepMetric = 'assets/report/report_sleep_icon.svg';
+  static const activityMetric = 'assets/report/report_activity_metric.svg';
+  static const mealMetric = 'assets/report/report_meal_icon.svg';
+  static const aiDog = 'assets/report/report_ai_dog.png';
+  static const walkPaw = 'assets/report/report_walk_paw.svg';
+  static const dangerCheck = 'assets/report/report_danger_check.svg';
+  static const dangerMap = 'assets/report/report_danger_map.png';
 
-  static const weeklyPet = 'asset/report/report_weekly_pet.png';
-  static const weeklyPetGlow = 'asset/report/report_weekly_pet_glow.svg';
-  static const weeklySummaryIllus = 'asset/report/report_weekly_summary_illus.png';
-  static const weeklyChartGrid = 'asset/report/report_weekly_chart_grid.svg';
-  static const weeklyLegendThis = 'asset/report/report_weekly_legend_this.svg';
-  static const weeklyLegendLast = 'asset/report/report_weekly_legend_last.svg';
-  static const weeklyCheck = 'asset/report/report_weekly_check.svg';
+  static const weeklyPet = 'assets/report/report_weekly_pet.png';
+  static const weeklyPetGlow = 'assets/report/report_weekly_pet_glow.svg';
+  static const weeklySummaryIllus = 'assets/report/report_weekly_summary_illus.png';
+  static const weeklyChartGrid = 'assets/report/report_weekly_chart_grid.svg';
+  static const weeklyLegendThis = 'assets/report/report_weekly_legend_this.svg';
+  static const weeklyLegendLast = 'assets/report/report_weekly_legend_last.svg';
+  static const weeklyCheck = 'assets/report/report_weekly_check.svg';
 
-  static const monthlyPet = 'asset/report/report_monthly_pet.png';
-  static const monthlyWalk = 'asset/report/report_monthly_walk.svg';
-  static const monthlyClock = 'asset/report/report_monthly_clock.svg';
-  static const monthlyDistancePaw = 'asset/report/report_monthly_distance_paw.svg';
-  static const monthlyDistancePin = 'asset/report/report_monthly_distance_pin.svg';
-  static const monthlyDanger = 'asset/report/report_monthly_danger.svg';
-  static const monthlyLegendWalk = 'asset/report/report_monthly_legend_walk.svg';
-  static const monthlyLegendDanger = 'asset/report/report_monthly_legend_danger.svg';
-  static const monthlyChevronLeft = 'asset/report/report_monthly_chevron_left.svg';
-  static const monthlyChevronRight = 'asset/report/report_monthly_chevron_right.svg';
+  static const monthlyPet = 'assets/report/report_monthly_pet.png';
+  static const monthlyWalk = 'assets/report/report_monthly_walk.svg';
+  static const monthlyClock = 'assets/report/report_monthly_clock.svg';
+  static const monthlyDistancePaw = 'assets/report/report_monthly_distance_paw.svg';
+  static const monthlyDistancePin = 'assets/report/report_monthly_distance_pin.svg';
+  static const monthlyDanger = 'assets/report/report_monthly_danger.svg';
+  static const monthlyLegendWalk = 'assets/report/report_monthly_legend_walk.svg';
+  static const monthlyLegendDanger = 'assets/report/report_monthly_legend_danger.svg';
+  static const monthlyChevronLeft = 'assets/report/report_monthly_chevron_left.svg';
+  static const monthlyChevronRight = 'assets/report/report_monthly_chevron_right.svg';
 }
 
 /// 카드 내부 콘텐츠 왼쪽 여백
@@ -76,9 +76,8 @@ class MonthlyReportData {
   int get walkHours => totalWalkMinutes ~/ 60;
   int get walkMinutesRemainder => totalWalkMinutes % 60;
 
-  String get distanceLabel => distanceKm == distanceKm.roundToDouble()
-      ? distanceKm.toStringAsFixed(0)
-      : distanceKm.toStringAsFixed(1);
+  String get distanceLabel =>
+      distanceKm == distanceKm.roundToDouble() ? distanceKm.toStringAsFixed(0) : distanceKm.toStringAsFixed(1);
 }
 
 MonthlyReportData monthlyReportDataFor(DateTime month) {
@@ -100,8 +99,7 @@ MonthlyReportData monthlyReportDataFor(DateTime month) {
   final walkDays = _pickWalkDays(month.year, month.month, walkCount);
   final minutesPerWalk = 55 + (seed % 40);
   final totalWalkMinutes = walkCount * minutesPerWalk;
-  final distanceKm =
-      double.parse((walkCount * (9.5 + (seed % 15) / 10)).toStringAsFixed(1));
+  final distanceKm = double.parse((walkCount * (9.5 + (seed % 15) / 10)).toStringAsFixed(1));
   final dangerCount = walkCount == 0 ? 0 : (walkCount * (1 + seed % 3));
 
   return MonthlyReportData(
@@ -168,9 +166,7 @@ class ReportTabBar extends StatelessWidget {
       builder: (context, constraints) {
         final tabWidth = constraints.maxWidth / kReportTabLabels.length;
         final indicatorWidth = 97 * scale;
-        final indicatorLeft = 4 * scale +
-            selected * tabWidth +
-            (tabWidth - indicatorWidth) / 2;
+        final indicatorLeft = 4 * scale + selected * tabWidth + (tabWidth - indicatorWidth) / 2;
 
         return Container(
           height: 37 * scale,
@@ -212,9 +208,7 @@ class ReportTabBar extends StatelessWidget {
                             style: reportFont(
                               scale,
                               size: 11,
-                              color: selected == i
-                                  ? Colors.white
-                                  : const Color(0xFF6A6A6A),
+                              color: selected == i ? Colors.white : const Color(0xFF6A6A6A),
                             ),
                           ),
                         ),

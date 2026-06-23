@@ -28,8 +28,7 @@ class WearableHarnessDevice {
     );
   }
 
-  String get statusLabel =>
-      status == WearableConnectionStatus.available ? '연결 가능' : '연결 중';
+  String get statusLabel => status == WearableConnectionStatus.available ? '연결 가능' : '연결 중';
 }
 
 /// Figma 488:359 / 582:12748 공통 웨어러블 연결 레이아웃
@@ -47,6 +46,7 @@ class WearableConnectionTheme {
   static const double heroLeft = 75;
   static const double heroTop = 203;
   static const double heroWidth = 252;
+
   /// Figma 슬롯 172×222, 12화면 보정 스케일
   static const double productSlotWidth = 172;
   static const double productSlotHeight = 222;
@@ -54,21 +54,21 @@ class WearableConnectionTheme {
   static const double productBaseHeight = 180;
   static const double productVisualScale = 2.325;
   static const double productImageTopOffset = 3;
+
   /// 12화면 로딩바와 동일 (main_onboarding_12.dart)
   static const double loadingBarTop = 494;
   static const double loadingBarHeight = 3;
   static const double loadingBarBottom = loadingBarTop + loadingBarHeight;
+
   /// 12 로딩바↔상태카드 / 13 Harness↔콩이 하네스 카드 (Figma 34px)
   static const double harnessToCardGap = 34;
   static const double harnessTitleFontSize = 25;
   static const double harnessTitleLineHeight = 1.1;
-  static const double harnessTitleMetricsHeight =
-      harnessTitleFontSize * harnessTitleLineHeight;
+  static const double harnessTitleMetricsHeight = harnessTitleFontSize * harnessTitleLineHeight;
   static const double cardLeft = 37;
   static const double card1Top = 531;
   static const double harnessTitleBottom = card1Top - harnessToCardGap;
-  static const double harnessTitleTop =
-      harnessTitleBottom - harnessTitleMetricsHeight;
+  static const double harnessTitleTop = harnessTitleBottom - harnessTitleMetricsHeight;
   static const double card2Top = 647;
   static const double cardWidth = 338;
   static const double cardHeight = 100;
@@ -77,14 +77,13 @@ class WearableConnectionTheme {
   static const double modalTop = 445;
   static const double modalHeight = 429;
   static const double modalRadius = 23;
+
   /// Figma 585:12845 모달 내 제품 GIF 슬롯 (604:12878)
   static const double modalProductWidth = 136;
   static const double modalProductHeight = 201;
   static const double modalProductDisplayScale = 2;
-  static double get modalProductDisplayWidth =>
-      modalProductWidth * modalProductDisplayScale;
-  static double get modalProductDisplayHeight =>
-      modalProductHeight * modalProductDisplayScale;
+  static double get modalProductDisplayWidth => modalProductWidth * modalProductDisplayScale;
+  static double get modalProductDisplayHeight => modalProductHeight * modalProductDisplayScale;
   static const double modalHeaderToProductGap = 50;
   static const double modalProductToBatteryGap = 25;
 
@@ -108,32 +107,22 @@ class WearableConnectionTheme {
     return zoneCenter - renderHeightDesign / 2 + productImageTopOffset;
   }
 
-  static double get productRenderWidthDesign =>
-      productBaseWidth * productVisualScale;
+  static double get productRenderWidthDesign => productBaseWidth * productVisualScale;
 
-  static double get productRenderHeightDesign =>
-      productBaseHeight * productVisualScale;
+  static double get productRenderHeightDesign => productBaseHeight * productVisualScale;
 
-  static const String productImageAsset = 'asset/onboarding/onboarding_device_product.png';
-  static const String productGifAsset = 'asset/onboarding/onboarding_wearable_product.gif';
-  static const String productFrontAsset =
-      'asset/onboarding/onboarding_device_product_front.png';
-  static const String backButtonAsset = 'asset/onboarding/onboarding_profile_back.svg';
-  static const String cardIconAsset =
-      'asset/onboarding/onboarding_device_search_card_icon.svg';
-  static const String pawDecor1Asset =
-      'asset/onboarding/onboarding_device_search_paw_decor_1.svg';
-  static const String pawDecor2Asset =
-      'asset/onboarding/onboarding_device_search_paw_decor_2.svg';
-  static const String pawDecor3Asset =
-      'asset/onboarding/onboarding_device_search_paw_decor_3.svg';
-  static const String starAsset = 'asset/onboarding/onboarding_device_search_star.svg';
-  static const String starSmallAsset =
-      'asset/onboarding/onboarding_device_search_star_sm.svg';
-  static const String batteryLightningAsset =
-      'asset/onboarding/onboarding_wearable_battery_lightning.svg';
-  static const String batteryTipAsset =
-      'asset/onboarding/onboarding_wearable_battery_tip.svg';
+  static const String productImageAsset = 'assets/onboarding/onboarding_device_product.png';
+  static const String productGifAsset = 'assets/onboarding/onboarding_wearable_product.gif';
+  static const String productFrontAsset = 'assets/onboarding/onboarding_device_product_front.png';
+  static const String backButtonAsset = 'assets/onboarding/onboarding_profile_back.svg';
+  static const String cardIconAsset = 'assets/onboarding/onboarding_device_search_card_icon.svg';
+  static const String pawDecor1Asset = 'assets/onboarding/onboarding_device_search_paw_decor_1.svg';
+  static const String pawDecor2Asset = 'assets/onboarding/onboarding_device_search_paw_decor_2.svg';
+  static const String pawDecor3Asset = 'assets/onboarding/onboarding_device_search_paw_decor_3.svg';
+  static const String starAsset = 'assets/onboarding/onboarding_device_search_star.svg';
+  static const String starSmallAsset = 'assets/onboarding/onboarding_device_search_star_sm.svg';
+  static const String batteryLightningAsset = 'assets/onboarding/onboarding_wearable_battery_lightning.svg';
+  static const String batteryTipAsset = 'assets/onboarding/onboarding_wearable_battery_tip.svg';
 
   static const List<WearableHarnessDevice> initialDevices = [
     WearableHarnessDevice(
@@ -253,10 +242,8 @@ class WearableConnectionCanvas extends StatelessWidget {
   Widget build(BuildContext context) {
     final canvasWidth = WearableConnectionTheme.designWidth * scale;
     final canvasHeight = WearableConnectionTheme.designHeight * scale;
-    final productRenderWidth =
-        WearableConnectionTheme.productRenderWidthDesign * scale;
-    final productRenderHeight =
-        WearableConnectionTheme.productRenderHeightDesign * scale;
+    final productRenderWidth = WearableConnectionTheme.productRenderWidthDesign * scale;
+    final productRenderHeight = WearableConnectionTheme.productRenderHeightDesign * scale;
     final productTop = y(
       WearableConnectionTheme.productImageTop(
         WearableConnectionTheme.productRenderHeightDesign,
@@ -301,8 +288,7 @@ class WearableConnectionCanvas extends StatelessWidget {
           Positioned(
             left: 0,
             right: 0,
-            top: y(WearableConnectionTheme.harnessTitleTop) +
-                (1 - entrance.harnessTitle) * harnessRiseDesign * scale,
+            top: y(WearableConnectionTheme.harnessTitleTop) + (1 - entrance.harnessTitle) * harnessRiseDesign * scale,
             child: Opacity(
               opacity: entrance.harnessTitle.clamp(0, 1),
               child: Text(
@@ -311,8 +297,7 @@ class WearableConnectionCanvas extends StatelessWidget {
                 style: TextStyle(
                   fontFamily: 'LGSmartUI',
                   fontWeight: FontWeight.w700,
-                  fontSize:
-                      WearableConnectionTheme.harnessTitleFontSize * scale,
+                  fontSize: WearableConnectionTheme.harnessTitleFontSize * scale,
                   height: WearableConnectionTheme.harnessTitleLineHeight,
                   color: WearableConnectionTheme.titleBlack,
                 ),
@@ -400,40 +385,32 @@ class WearableConnectionCanvas extends StatelessWidget {
             Positioned(
               left: WearableConnectionTheme.cardLeft * scale,
               top: y(
-                entry.key == 0
-                    ? WearableConnectionTheme.card1Top
-                    : WearableConnectionTheme.card2Top,
-              ) +
-                  (1 -
-                          (entry.key == 0
-                              ? entrance.card1
-                              : entrance.card2)) *
-                      (entry.key == 0
-                          ? cardRiseDesign
-                          : cardRiseDesign * 1.5) *
+                    entry.key == 0 ? WearableConnectionTheme.card1Top : WearableConnectionTheme.card2Top,
+                  ) +
+                  (1 - (entry.key == 0 ? entrance.card1 : entrance.card2)) *
+                      (entry.key == 0 ? cardRiseDesign : cardRiseDesign * 1.5) *
                       scale,
               width: WearableConnectionTheme.cardWidth * scale,
               height: WearableConnectionTheme.cardHeight * scale,
               child: IgnorePointer(
                 ignoring: (entry.key == 0 ? entrance.card1 : entrance.card2) < 0.01,
                 child: Opacity(
-                opacity: (entry.key == 0 ? entrance.card1 : entrance.card2)
-                    .clamp(0, 1),
-                child: _WearableDeviceCard(
-                  scale: scale,
-                  device: entry.value,
-                  buttonMode: _connectButtonMode(
-                    entry.value,
-                    anyConnecting: anyConnecting,
-                    connectEnabled: connectEnabled,
+                  opacity: (entry.key == 0 ? entrance.card1 : entrance.card2).clamp(0, 1),
+                  child: _WearableDeviceCard(
+                    scale: scale,
+                    device: entry.value,
+                    buttonMode: _connectButtonMode(
+                      entry.value,
+                      anyConnecting: anyConnecting,
+                      connectEnabled: connectEnabled,
+                    ),
+                    onConnect: connectEnabled &&
+                            !anyConnecting &&
+                            entry.value.status == WearableConnectionStatus.available &&
+                            onConnect != null
+                        ? () => onConnect!(entry.value.id)
+                        : null,
                   ),
-                  onConnect: connectEnabled &&
-                          !anyConnecting &&
-                          entry.value.status ==
-                              WearableConnectionStatus.available &&
-                          onConnect != null
-                      ? () => onConnect!(entry.value.id)
-                      : null,
                 ),
               ),
             ),
@@ -441,8 +418,7 @@ class WearableConnectionCanvas extends StatelessWidget {
           Positioned(
             left: 0,
             right: 0,
-            top: y(WearableConnectionTheme.helpTop) +
-                (1 - entrance.help) * 40 * scale,
+            top: y(WearableConnectionTheme.helpTop) + (1 - entrance.help) * 40 * scale,
             child: Opacity(
               opacity: entrance.help.clamp(0, 1),
               child: TogedogA11y.link(
@@ -606,17 +582,14 @@ class _ConnectButtonState extends State<_ConnectButton> {
   bool _isPressed = false;
   bool _isHovered = false;
 
-  bool get _isInteractive =>
-      widget.mode == WearableConnectButtonMode.available &&
-      widget.onPressed != null;
+  bool get _isInteractive => widget.mode == WearableConnectButtonMode.available && widget.onPressed != null;
 
   @override
   Widget build(BuildContext context) {
     final scale = widget.scale;
 
     return MouseRegion(
-      cursor:
-          _isInteractive ? SystemMouseCursors.click : SystemMouseCursors.basic,
+      cursor: _isInteractive ? SystemMouseCursors.click : SystemMouseCursors.basic,
       onEnter: _isInteractive ? (_) => setState(() => _isHovered = true) : null,
       onExit: _isInteractive
           ? (_) => setState(() {
@@ -633,36 +606,33 @@ class _ConnectButtonState extends State<_ConnectButton> {
                 : null,
         enabled: _isInteractive,
         child: GestureDetector(
-          onTapDown:
-              _isInteractive ? (_) => setState(() => _isPressed = true) : null,
-          onTapUp:
-              _isInteractive ? (_) => setState(() => _isPressed = false) : null,
-          onTapCancel:
-              _isInteractive ? () => setState(() => _isPressed = false) : null,
+          onTapDown: _isInteractive ? (_) => setState(() => _isPressed = true) : null,
+          onTapUp: _isInteractive ? (_) => setState(() => _isPressed = false) : null,
+          onTapCancel: _isInteractive ? () => setState(() => _isPressed = false) : null,
           onTap: widget.onPressed,
           behavior: HitTestBehavior.opaque,
           child: AnimatedContainer(
-          duration: const Duration(milliseconds: 120),
-          width: 54 * scale,
-          height: 26.526 * scale,
-          alignment: Alignment.center,
-          decoration: BoxDecoration(
-            color: _backgroundColor(),
-            borderRadius: BorderRadius.circular(14 * scale),
-          ),
-          child: Text(
-            '연결',
-            style: TextStyle(
-              fontFamily: 'LGSmartUI',
-              fontWeight: FontWeight.w600,
-              fontSize: 12 * scale,
-              height: 1,
-              color: _textColor(),
+            duration: const Duration(milliseconds: 120),
+            width: 54 * scale,
+            height: 26.526 * scale,
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              color: _backgroundColor(),
+              borderRadius: BorderRadius.circular(14 * scale),
+            ),
+            child: Text(
+              '연결',
+              style: TextStyle(
+                fontFamily: 'LGSmartUI',
+                fontWeight: FontWeight.w600,
+                fontSize: 12 * scale,
+                height: 1,
+                color: _textColor(),
+              ),
             ),
           ),
         ),
       ),
-    ),
     );
   }
 
@@ -793,73 +763,73 @@ class _WearableDecorLayer extends StatelessWidget {
       child: Stack(
         clipBehavior: Clip.none,
         children: [
-        _InsetAsset(
-          asset: WearableConnectionTheme.pawDecor1Asset,
-          topRatio: 0.2574,
-          rightRatio: 0.831,
-          bottomRatio: 0.6995,
-          leftRatio: 0.0697,
-          rotation: -21.05 * math.pi / 180,
-          canvasWidth: canvasWidth,
-          canvasHeight: canvasHeight,
-        ),
-        _InsetAsset(
-          asset: WearableConnectionTheme.pawDecor2Asset,
-          topRatio: 0.4439,
-          rightRatio: 0.7617,
-          bottomRatio: 0.5098,
-          leftRatio: 0.1343,
-          rotation: -30.63 * math.pi / 180,
-          canvasWidth: canvasWidth,
-          canvasHeight: canvasHeight,
-        ),
-        _InsetAsset(
-          asset: WearableConnectionTheme.pawDecor3Asset,
-          topRatio: 0.3513,
-          rightRatio: 0.1054,
-          bottomRatio: 0.6076,
-          leftRatio: 0.7985,
-          rotation: 16.53 * math.pi / 180,
-          canvasWidth: canvasWidth,
-          canvasHeight: canvasHeight,
-        ),
-        _InsetAsset(
-          asset: WearableConnectionTheme.starAsset,
-          topRatio: 0.2174,
-          rightRatio: 0.2015,
-          bottomRatio: 0.7677,
-          leftRatio: 0.7662,
-          canvasWidth: canvasWidth,
-          canvasHeight: canvasHeight,
-        ),
-        _InsetAsset(
-          asset: WearableConnectionTheme.starAsset,
-          topRatio: 0.4851,
-          rightRatio: 0.2786,
-          bottomRatio: 0.5,
-          leftRatio: 0.6891,
-          canvasWidth: canvasWidth,
-          canvasHeight: canvasHeight,
-        ),
-        _InsetAsset(
-          asset: WearableConnectionTheme.starAsset,
-          topRatio: 0.2323,
-          rightRatio: 0.7612,
-          bottomRatio: 0.7529,
-          leftRatio: 0.2065,
-          canvasWidth: canvasWidth,
-          canvasHeight: canvasHeight,
-        ),
-        _InsetAsset(
-          asset: WearableConnectionTheme.starSmallAsset,
-          topRatio: 0.4039,
-          rightRatio: 0.8881,
-          bottomRatio: 0.5755,
-          leftRatio: 0.0672,
-          canvasWidth: canvasWidth,
-          canvasHeight: canvasHeight,
-        ),
-      ],
+          _InsetAsset(
+            asset: WearableConnectionTheme.pawDecor1Asset,
+            topRatio: 0.2574,
+            rightRatio: 0.831,
+            bottomRatio: 0.6995,
+            leftRatio: 0.0697,
+            rotation: -21.05 * math.pi / 180,
+            canvasWidth: canvasWidth,
+            canvasHeight: canvasHeight,
+          ),
+          _InsetAsset(
+            asset: WearableConnectionTheme.pawDecor2Asset,
+            topRatio: 0.4439,
+            rightRatio: 0.7617,
+            bottomRatio: 0.5098,
+            leftRatio: 0.1343,
+            rotation: -30.63 * math.pi / 180,
+            canvasWidth: canvasWidth,
+            canvasHeight: canvasHeight,
+          ),
+          _InsetAsset(
+            asset: WearableConnectionTheme.pawDecor3Asset,
+            topRatio: 0.3513,
+            rightRatio: 0.1054,
+            bottomRatio: 0.6076,
+            leftRatio: 0.7985,
+            rotation: 16.53 * math.pi / 180,
+            canvasWidth: canvasWidth,
+            canvasHeight: canvasHeight,
+          ),
+          _InsetAsset(
+            asset: WearableConnectionTheme.starAsset,
+            topRatio: 0.2174,
+            rightRatio: 0.2015,
+            bottomRatio: 0.7677,
+            leftRatio: 0.7662,
+            canvasWidth: canvasWidth,
+            canvasHeight: canvasHeight,
+          ),
+          _InsetAsset(
+            asset: WearableConnectionTheme.starAsset,
+            topRatio: 0.4851,
+            rightRatio: 0.2786,
+            bottomRatio: 0.5,
+            leftRatio: 0.6891,
+            canvasWidth: canvasWidth,
+            canvasHeight: canvasHeight,
+          ),
+          _InsetAsset(
+            asset: WearableConnectionTheme.starAsset,
+            topRatio: 0.2323,
+            rightRatio: 0.7612,
+            bottomRatio: 0.7529,
+            leftRatio: 0.2065,
+            canvasWidth: canvasWidth,
+            canvasHeight: canvasHeight,
+          ),
+          _InsetAsset(
+            asset: WearableConnectionTheme.starSmallAsset,
+            topRatio: 0.4039,
+            rightRatio: 0.8881,
+            bottomRatio: 0.5755,
+            leftRatio: 0.0672,
+            canvasWidth: canvasWidth,
+            canvasHeight: canvasHeight,
+          ),
+        ],
       ),
     );
   }

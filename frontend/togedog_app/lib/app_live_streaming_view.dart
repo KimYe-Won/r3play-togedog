@@ -5,36 +5,29 @@ import 'togedog_accessibility.dart';
 import 'walk_ai_manager.dart';
 import 'walk_session.dart';
 
-/// 공유 수신 영상을 그리는 위젯.
-/// 연결·렌더러는 [WalkAiManager]가 단 하나만 소유하므로, 이 위젯을 화면마다 띄워도
-/// 모두 같은 스트림을 그린다. WalkSession.active가 false이면 비활성 오버레이를 띄운다.
+/// LiveStreamingView를 앱 전용으로 래핑한 위젯.
+/// WalkSession.active가 false이면 비활성 오버레이를 자동으로 띄운다.
+/// 공유 controller로 Walk01↔Walk02↔Walk03/04가 같은 WebRTC 연결을 함께 쓴다.
+/// 각 화면은 자기 렌더러로 동일 스트림을 그린다.
 class AppLiveStreamingView extends StatelessWidget {
   const AppLiveStreamingView({super.key});
 
   @override
   Widget build(BuildContext context) {
     return ListenableBuilder(
-      listenable: Listenable.merge([
-        WalkSession.instance,
-        WalkAiManager.instance,
-      ]),
-      builder: (context, _) {
-        final manager = WalkAiManager.instance;
-        return Stack(
-          fit: StackFit.expand,
-          children: [
-            if (manager.hasRemoteVideo)
-              DetectionOverlay(
-                renderer: manager.remoteRenderer,
-                detections: manager.detections,
-                mirror: manager.remoteIsFrontCamera,
-              )
-            else
-              const ColoredBox(color: Color(0xFF0E0E12)),
-            if (!WalkSession.instance.active) const _InactiveView(),
-          ],
-        );
-      },
+      listenable: WalkSession.instance,
+      builder: (context, _) => Stack(
+        fit: StackFit.expand,
+        children: [
+          LiveStreamingView(
+            role: Role.receiver,
+            showControlPanel: false,
+            controller: WalkAiManager.instance.streamingController,
+          ),
+          if (!WalkSession.instance.active)
+            const _InactiveView(),
+        ],
+      ),
     );
   }
 }

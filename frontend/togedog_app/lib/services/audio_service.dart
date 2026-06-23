@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:typed_data';
 
+import 'package:flutter/foundation.dart';
 import 'package:record/record.dart';
 import 'package:tflite_flutter/tflite_flutter.dart';
 import 'package:vibration/vibration.dart';
@@ -11,42 +12,39 @@ class AudioAlert {
     required this.label,
     required this.confidence,
   });
-  final int priority;      // 1=위험, 2=경고, 3=조심
-  final String label;      // 한국어 이름
+  final int priority; // 1=위험, 2=경고, 3=조심
+  final String label; // 한국어 이름
   final double confidence;
 }
 
 class _SoundInfo {
   const _SoundInfo(this.index, this.priority, this.label);
-  final int index; // YAMNet(AudioSet) 클래스 인덱스 — 공식 yamnet_class_map.csv 기준
-  final int priority;
-  final String label;
+  final int index;    // YAMNet 클래스 인덱스 (공식 yamnet_class_map.csv 기준)
+  final int priority; // 1=위험, 2=경고, 3=조심
+  final String label; // 한국어 이름
 }
 
 class AudioService {
-  static const String _modelPath = 'asset/deep_learning/yamnet.tflite';
+  static const String _modelPath = 'assets/deep_learning/yamnet.tflite';
   static const double _minConfidence = 0.3;
   static const Duration _highCooldown = Duration(seconds: 4);
   static const Duration _cooldown = Duration(seconds: 6);
 
-  // YAMNet 521개 클래스 중 관심 클래스 → (인덱스, 위험도, 한국어) 매핑.
-  // 인덱스는 공식 yamnet_class_map.csv 기준이며, 키 문자열은 가독성용이다.
+  // YAMNet 521클래스 중 관심 클래스 → (인덱스, 위험도, 한국어).
+  // 인덱스는 공식 yamnet_class_map.csv 기준. (이전엔 인덱스가 전부 어긋나 매칭이 안 됐음)
   static const Map<String, _SoundInfo> _soundMap = {
     // 위험
-    'Motor vehicle (road)':            _SoundInfo(300, 1, '차량 소리'),
     'Car':                             _SoundInfo(301, 1, '차량 소리'),
+    'Motor vehicle (road)':            _SoundInfo(300, 1, '차량 소리'),
     'Vehicle horn, car horn, honking': _SoundInfo(302, 1, '차량 경적'),
-    'Truck':                           _SoundInfo(310, 1, '차량 소리'),
+    'Siren':                           _SoundInfo(390, 1, '사이렌'),
     'Emergency vehicle':               _SoundInfo(316, 1, '긴급차량'),
     'Motorcycle':                      _SoundInfo(320, 1, '오토바이 소리'),
-    'Engine':                          _SoundInfo(337, 1, '엔진 소리'),
-    'Siren':                           _SoundInfo(390, 1, '사이렌'),
     // 경고
     'Dog':                             _SoundInfo(69, 2, '개 짖는 소리'),
     'Bark':                            _SoundInfo(70, 2, '개 짖는 소리'),
     'Yip':                             _SoundInfo(71, 2, '개 짖는 소리'),
     // 조심
-    'Bell':                            _SoundInfo(195, 3, '벨 소리'),
     'Bicycle bell':                    _SoundInfo(198, 3, '자전거 벨'),
   };
 
@@ -66,6 +64,7 @@ class AudioService {
   Future<void> start() async {
     if (_running) return;
     _running = true;
+    debugPrint('[YAMNet] start');
     _inferLoop();
   }
 
@@ -100,7 +99,9 @@ class AudioService {
             _runInference(floats);
           }
         }
-      } catch (_) {
+      } catch (e) {
+        // 마이크 점유 충돌(WebRTC가 마이크를 잡고 있으면 여기로 떨어질 수 있음) 진단용.
+        debugPrint('[YAMNet] record error: $e');
         await Future.delayed(const Duration(seconds: 1));
       }
     }
@@ -123,7 +124,9 @@ class AudioService {
 
     final input = [audio];
     final scores = List.filled(521, 0.0);
-    final output = {0: [scores]};
+    final output = {
+      0: [scores]
+    };
 
     _interpreter!.runForMultipleInputs([input], output);
 
@@ -152,6 +155,8 @@ class AudioService {
     if (last != null && now.difference(last) < cooldown) return;
 
     _lastAlertMap[topYamnetLabel] = now;
+    debugPrint(
+        '[YAMNet] alert=${topSound.label} ($topYamnetLabel) score=${topScore.toStringAsFixed(2)}');
     _vibrate(topSound.priority);
     _alertController.add(AudioAlert(
       priority: topSound.priority,
