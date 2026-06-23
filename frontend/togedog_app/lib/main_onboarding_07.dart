@@ -9,6 +9,10 @@ import 'main_onboarding_08.dart';
 import 'onboarding_transitions.dart';
 import 'togedog_accessibility.dart';
 
+// 백엔드 작업
+import 'consent_store.dart';
+
+
 /// Figma: 위치 동의 (node 817:3215) — 모달 Frame 756 (546:6285)
 enum LocationPrecision { precise, approximate }
 
@@ -83,7 +87,12 @@ class MainOnboarding07Screen extends StatefulWidget {
 class _MainOnboarding07ScreenState extends State<MainOnboarding07Screen> {
   LocationPrecision _selectedPrecision = LocationPrecision.precise;
 
-  void _onPermissionSelected(LocationPermissionChoice choice) {
+  void _onPermissionSelected(LocationPermissionChoice choice) async {
+  // [백엔드 연동] location_consent
+    final allowed = choice != LocationPermissionChoice.deny;
+    await ConsentStore.instance.setLocationConsent(allowed);
+
+    
     if (widget.onCompleted != null) {
       widget.onCompleted!();
       return;

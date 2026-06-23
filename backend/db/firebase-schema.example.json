@@ -1,0 +1,144 @@
+{
+  "togedog": {
+    "members": {
+      "firebase_auth_uid_example": {
+        "member_id": "firebase_auth_uid_example",
+        "name": "김엘지",
+        "email": "user@example.com",
+        "phone": "010-1234-5678",
+        "guide_mode": "VOICE",
+        "joined_at": "2026-06-12T09:00:00Z",
+        "location_consent": true,
+        "notification_consent": true,
+        "device_consent": true,
+        "camera_consent": true
+      }
+    },
+    "notification_settings": {
+      "firebase_auth_uid_example": {
+        "setting_id": "firebase_auth_uid_example",
+        "member_id": "firebase_auth_uid_example",
+        "guide_mode": "VOICE",
+        "voice_enabled": true,
+        "vibration_enabled": false,
+        "text_enabled": true
+      }
+    },
+    "dogs": {
+      "dog_001": {
+        "dog_id": "dog_001",
+        "member_id": "firebase_auth_uid_example",
+        "name": "콩이",
+        "breed": "말티즈",
+        "gender": "MALE",
+        "birth_date": "2020-03-15",
+        "special_notes": "슬개골 주의",
+        "neutered": true,
+        "profile_image_url": "https://storage.example.com/dogs/dog_001.jpg"
+      }
+    },
+    "devices": {
+      "device_001": {
+        "device_id": "device_001",
+        "dog_id": "dog_001",
+        "device_name": "콩이 하네스",
+        "connection_status": "CONNECTED",
+        "battery_level": 89,
+        "last_synced_at": "2026-06-12T10:30:00Z"
+      }
+    },
+    "walks": {
+      "walk_001": {
+        "walk_id": "walk_001",
+        "member_id": "firebase_auth_uid_example",
+        "dog_id": "dog_001",
+        "started_at": "2026-06-12T10:00:00Z",
+        "ended_at": "2026-06-12T10:45:00Z",
+        "status": "COMPLETED"
+      }
+    },
+    "danger_detections": {
+      "danger_001": {
+        "danger_id": "danger_001",
+        "walk_id": "walk_001",
+        "danger_type": "VEHICLE",
+        "danger_level": "HIGH",
+        "detected_at": "2026-06-12T10:15:30Z",
+        "notification_message": "전방 5m 이내에 차량이 감지되었습니다.",
+        "notification_channel": "VOICE",
+        "is_confirmed": false,
+        "sent_at": "2026-06-12T10:15:31Z",
+        "distance_m": 4.5
+      }
+    },
+    "biometrics": {
+      "dog_001": {
+        "bio_001": {
+          "biometric_id": "bio_001",
+          "dog_id": "dog_001",
+          "heart_rate": 95,
+          "activity_level": 42,
+          "measured_at": "2026-06-12T10:30:00Z"
+        }
+      }
+    },
+    "daily_reports": {
+      "dog_001": {
+        "2026-06-12": {
+          "report_id": "dog_001_2026-06-12",
+          "dog_id": "dog_001",
+          "report_date": "2026-06-12",
+          "health_summary": "심박수와 활동량이 정상 범위입니다.",
+          "behavior_summary": "오늘 45분 산책, 평소와 유사한 활동 패턴입니다.",
+          "abnormal_signs": ""
+        }
+      }
+    },
+    "indexes": {
+      "member_dogs": {
+        "firebase_auth_uid_example": {
+          "dog_001": true
+        }
+      },
+      "member_walks": {
+        "firebase_auth_uid_example": {
+          "walk_001": {
+            "started_at": "2026-06-12T10:00:00Z",
+            "ended_at": "2026-06-12T10:45:00Z",
+            "dog_id": "dog_001",
+            "status": "COMPLETED"
+          }
+        }
+      },
+      "dog_walks": {
+        "dog_001": {
+          "walk_001": {
+            "started_at": "2026-06-12T10:00:00Z",
+            "status": "COMPLETED"
+          }
+        }
+      },
+      "walk_dangers": {
+        "walk_001": {
+          "danger_001": {
+            "detected_at": "2026-06-12T10:15:30Z",
+            "danger_level": "HIGH",
+            "danger_type": "VEHICLE"
+          }
+        }
+      },
+      "dog_devices": {
+        "dog_001": {
+          "device_001": true
+        }
+      },
+      "member_latest_biometric": {
+        "dog_001": {
+          "heart_rate": 95,
+          "activity_level": 42,
+          "measured_at": "2026-06-12T10:30:00Z"
+        }
+      }
+    }
+  }
+}
