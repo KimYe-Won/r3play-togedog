@@ -33,6 +33,8 @@ class _CameraScreenState extends State<CameraScreen> {
   LiveStreamingController? _controller;
   bool _wasConnected = false;
   bool _restarting = false;
+  // 시작/재시작마다 후면 카메라를 한 번 적용했는지. 로컬 영상이 끊기면 다시 false.
+  bool _rearApplied = false;
 
   @override
   void initState() {
@@ -65,11 +67,31 @@ class _CameraScreenState extends State<CameraScreen> {
   void _onControllerUpdate() {
     final controller = _controller;
     if (controller == null) return;
+
+    // 패키지는 항상 전면(셀카, facingMode "user")으로 카메라를 연다. 강아지 시점은 후면이므로,
+    // 시작/재시작마다 로컬 영상이 올라오는 순간 후면으로 한 번 전환한다.
+    // (재접속 때 _restartSession이 startAsSender를 다시 불러 셀카로 되돌아가는 문제 해결)
+    final hasLocalVideo = controller.connection.hasLocalVideo;
+    if (hasLocalVideo && !_rearApplied) {
+      _rearApplied = true;
+      _applyRearCamera();
+    } else if (!hasLocalVideo) {
+      _rearApplied = false;
+    }
+
     final connected = controller.isConnected;
     if (_wasConnected && !connected && !_restarting) {
       _restartSession();
     }
     _wasConnected = connected;
+  }
+
+  // 패키지가 전면으로 열기 때문에 한 번 전환하면 후면이 된다.
+  // 사용자가 세션 도중 수동으로 다시 전면으로 바꾸면 _rearApplied가 유지돼 간섭하지 않는다.
+  Future<void> _applyRearCamera() async {
+    final controller = _controller;
+    if (controller == null) return;
+    await controller.switchCamera();
   }
 
   Future<void> _restartSession() async {

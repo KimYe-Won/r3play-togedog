@@ -33,17 +33,13 @@ class WalkSession extends ChangeNotifier {
   Timer? _walkTimer;
   Timer? _metricsTimer;
 
-    Future<void> startWalk() async {
+  void startWalk() {
     if (active) return;
     _walkTimer?.cancel();
     _metricsTimer?.cancel();
 
-    // [백엔드 연동] POST /walks/start — walk_id 저장
-    final ok = await BackendSyncService.instance.startWalkOnBackend();
-    if (!ok) {
-      debugPrint('[백엔드 연동] 산책 시작 API 실패 — 로컬 타이머는 동작');
-    }
-
+    // 세션 활성화/타이머를 먼저 켠다. 백엔드 응답을 기다리면(await) 서버 미가동·미도달 시
+    // active가 영영 false로 남아 "시작을 누르세요" 화면이 영상을 덮는다.
     active = true;
     elapsed = Duration.zero;
     _resetMetrics();
@@ -57,21 +53,34 @@ class WalkSession extends ChangeNotifier {
       notifyListeners();
     });
     notifyListeners();
+
+    // [백엔드 연동] POST /walks/start — walk_id 저장. 백그라운드 전송(UI 비차단).
+    unawaited(
+      BackendSyncService.instance.startWalkOnBackend().then((ok) {
+        if (!ok) {
+          debugPrint('[백엔드 연동] 산책 시작 API 실패 — 로컬 타이머는 동작');
+        }
+      }),
+    );
   }
 
-    Future<void> stopWalk() async {
-    // [백엔드 연동] POST /walks/{walkId}/end
-    final ok = await BackendSyncService.instance.endWalkOnBackend();
-    if (!ok) {
-      debugPrint('[백엔드 연동] 산책 종료 API 실패 — 로컬 타이머는 중지');
-    }
-
+  void stopWalk() {
+    // 로컬 종료를 먼저 처리(타이머 중지·비활성화). 백엔드는 백그라운드로.
     _walkTimer?.cancel();
     _metricsTimer?.cancel();
     active = false;
     elapsed = Duration.zero;
     _resetMetrics();
     notifyListeners();
+
+    // [백엔드 연동] POST /walks/{walkId}/end — 백그라운드 전송(UI 비차단).
+    unawaited(
+      BackendSyncService.instance.endWalkOnBackend().then((ok) {
+        if (!ok) {
+          debugPrint('[백엔드 연동] 산책 종료 API 실패 — 로컬 타이머는 중지');
+        }
+      }),
+    );
   }
 
   void _resetMetrics() {

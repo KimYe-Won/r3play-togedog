@@ -1,4 +1,6 @@
 // TogeDog 반려견 프로필 등록 화면
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -146,39 +148,42 @@ class _MainOnboarding11ScreenState extends State<MainOnboarding11Screen> {
     });
   }
 
-  Future<void> _registerAndGoToNextScreen() async {
-  if (!_canSubmit) return;
+  void _registerAndGoToNextScreen() {
+    if (!_canSubmit) return;
 
-  final guardianName = _guardianNameController.text.trim();
-  final petName = _petNameController.text.trim();
-  final breed = _selectedBreed!;
-  final age = _ageController.text.trim();
+    final guardianName = _guardianNameController.text.trim();
+    final petName = _petNameController.text.trim();
+    final breed = _selectedBreed!;
+    final age = _ageController.text.trim();
 
-  PetProfileStore.instance.update(
-    guardianName: guardianName,
-    petName: petName,
-    breed: breed,
-    age: age,
-  );
+    PetProfileStore.instance.update(
+      guardianName: guardianName,
+      petName: petName,
+      breed: breed,
+      age: age,
+    );
 
-  // [백엔드 연동] POST /members + POST /dogs
-  final ok = await BackendSyncService.instance.syncProfileFromOnboarding(
-    guardianName: guardianName,
-    petName: petName,
-    breed: breed,
-    age: age,
-  );
-  if (!ok) {
-    debugPrint('[백엔드 연동] 프로필 동기화 실패 — 로컬 저장은 완료됨');
+    // [백엔드 연동] POST /members + POST /dogs — 백그라운드 전송.
+    // 화면 전환을 막지 않도록 await 하지 않는다(전송은 비동기로 계속 진행됨).
+    unawaited(
+      BackendSyncService.instance.syncProfileFromOnboarding(
+        guardianName: guardianName,
+        petName: petName,
+        breed: breed,
+        age: age,
+      ).then((ok) {
+        if (!ok) {
+          debugPrint('[백엔드 연동] 프로필 동기화 실패 — 로컬 저장은 완료됨');
+        }
+      }),
+    );
+
+    Navigator.of(context).push(
+      OnboardingFadeRoute<void>(
+        builder: (_) => const MainOnboarding12Screen(),
+      ),
+    );
   }
-
-  if (!mounted) return;
-  Navigator.of(context).push(
-    OnboardingFadeRoute<void>(
-      builder: (_) => const MainOnboarding12Screen(),
-    ),
-  );
-}
 
   void _skipToNextScreen() {
     PetProfileStore.instance.applySkipDefaults();
