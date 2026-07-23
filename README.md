@@ -24,7 +24,7 @@ r3play-togedog/
 - Firebase 연동
 
 #### 딥러닝 모델
-- YOLOv11 모델 학습 및 추론
+- YOLOv26 모델 학습 및 추론
 - 객체 탐지 결과 제공
 - 백엔드 API 연동
   
@@ -32,6 +32,6 @@ r3play-togedog/
 - Flutter
 - FastAPI
 - Firebase Realtime Database
-- YOLOv11
+- YOLOv26
 - WebSocket
 - GitHub
